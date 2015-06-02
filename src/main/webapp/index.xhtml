@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/WEB-INF/facelets/templates/indexTemplate.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.Aplicacion}" />
+        </ui:define>
+        <ui:define name="content">
+           <f:metadata>  
+                
+           </f:metadata>             
+            <h:form>
+                <p:panel header="Detalle de los alcances del servicio" style="position: absolute; top:15%; left:50%; width:800px; margin-left:-400px;">
+                    <h:outputText value="El servicio de Personas pone a disposición..." /><br></br>
+                    <h:outputText value=" " /><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Persona Juridica"/><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Persona Fisica"/><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Establecimiento"/><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Actividad"/><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Especialidad"/><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Perfil"/><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Estado"/><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Tipo de Establecimiento"/><br></br>
+                    <h:outputText value="&ensp;&ensp;&ensp;&sect; Tipo de Persona Juridica"/><br></br>
+
+                    <h:outputText value="La presente aplicación constituye la interface de administración y mantenimiento de toda esta información."/><br></br>
+                </p:panel>
+            </h:form>
+        </ui:define> 
+    </ui:composition>
+    
+</html>
