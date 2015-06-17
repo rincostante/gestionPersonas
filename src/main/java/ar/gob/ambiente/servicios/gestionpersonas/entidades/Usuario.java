@@ -124,7 +124,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.gestiontramites.entidades.Usuario[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Usuario[ id=" + id + " ]";
     }
     
 }

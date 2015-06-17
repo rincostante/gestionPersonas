@@ -196,7 +196,7 @@ public class AdminEntidad implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.especiesforestales.entidades.AdminEntidad[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.AdminEntidad[ id=" + id + " ]";
     }
     
 }

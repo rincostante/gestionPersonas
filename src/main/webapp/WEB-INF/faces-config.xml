@@ -17,20 +17,24 @@
             <to-view-id>http://localhost:8080/gestionPersonas/faces/index.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
-    
-     <managed-bean>
+    <managed-bean>
         <managed-bean-name>mbLogin</managed-bean-name>
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>mbActividad</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedbeans.MbActividad</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>mbUsuario</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedbeans.MbUsuario</managed-bean-class>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbUsuario</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>mbActividad</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbActividad</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>mbDomicilio</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbDomicilio</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>

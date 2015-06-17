@@ -11,7 +11,7 @@
         </ui:define>
         <ui:define name="content">
            <f:metadata>  
-                
+                <f:event listener="#{mbLogin.iniciar}" type="preRenderView"></f:event>  
            </f:metadata>             
             <h:form>
                 <p:panel header="Detalle de los alcances del servicio" style="position: absolute; top:15%; left:50%; width:800px; margin-left:-400px;">
