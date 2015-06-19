@@ -6,11 +6,10 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Especialidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
 import java.io.Serializable;
 import java.util.Enumeration;
@@ -34,12 +33,12 @@ import javax.servlet.http.HttpSession;
  *
  * @author rodriguezn
  */
-public class MbDomicilio implements Serializable{
+public class MbEspecialidad implements Serializable{
     
-    private Domicilio current;
+    private Especialidad current;
     private DataModel items = null;
-    private List<Domicilio> listado = null;
-    private List<Domicilio> listaFilter;
+    private List<Especialidad> listado = null;
+    private List<Especialidad> listaFilter;
     
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
     private MbLogin login;
@@ -47,38 +46,42 @@ public class MbDomicilio implements Serializable{
     private boolean iniciado;
 
     @EJB
-    private DomicilioFacade domicilioFacade;
+    private EspecialidadFacade especialidadFacade;
+    
+    private String nombre;
+    //private List<perJuridica> listaPerJuridicas;
+    //private List<perFisica> listaPerFisicas;
 
     /**
-     * Creates a new instance of MbDomicilio
+     * Creates a new instance of MbEspecialidad
      */
-    public MbDomicilio() {
+    public MbEspecialidad() {
     }
 
-    public Domicilio getCurrent() {
+    public Especialidad getCurrent() {
         return current;
     }
 
-    public void setCurrent(Domicilio current) {
+    public void setCurrent(Especialidad current) {
         this.current = current;
     }
 
-    public List<Domicilio> getListado() {
+    public List<Especialidad> getListado() {
         if (listado == null || listado.isEmpty()) {
             listado = getFacade().findAll();
         }
         return listado;
     }
 
-    public void setListado(List<Domicilio> listado) {
+    public void setListado(List<Especialidad> listado) {
         this.listado = listado;
     }
 
-    public List<Domicilio> getListaFilter() {
+    public List<Especialidad> getListaFilter() {
         return listaFilter;
     }
 
-    public void setListaFilter(List<Domicilio> listaFilter) {
+    public void setListaFilter(List<Especialidad> listaFilter) {
         this.listaFilter = listaFilter;
     }
 
@@ -114,12 +117,12 @@ public class MbDomicilio implements Serializable{
         this.iniciado = iniciado;
     }
 
-    public DomicilioFacade getDomicilioFacade() {
-        return domicilioFacade;
+    public EspecialidadFacade getEspecialidadFacade() {
+        return especialidadFacade;
     }
 
-    public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
-        this.domicilioFacade = domicilioFacade;
+    public void setEspecialidadFacade(EspecialidadFacade especialidadFacade) {
+        this.especialidadFacade = especialidadFacade;
     }
     
     /**
@@ -222,9 +225,9 @@ public class MbDomicilio implements Serializable{
      * @return 
      */
     
-    public Domicilio getSelected() {
+    public Especialidad getSelected() {
         if (current == null) {
-            current = new Domicilio();
+            current = new Especialidad();
             //selectedItemIndex = -1;
         }
         return current;
@@ -243,8 +246,8 @@ public class MbDomicilio implements Serializable{
      * METODOS PRIVADOS
      */
     
-    private DomicilioFacade getFacade() {
-        return domicilioFacade;
+    private EspecialidadFacade getFacade() {
+        return especialidadFacade;
     }
     
     /**
@@ -267,9 +270,9 @@ public class MbDomicilio implements Serializable{
     private void performDestroy() {
         try {
             //getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EspecialidadDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EspecialidadDeletedErrorOccured"));
         }
     }
     
@@ -287,7 +290,7 @@ public class MbDomicilio implements Serializable{
        } 
         else{
             //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioNonDeletable"));            
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EspecialidadNonDeletable"));            
         }
     } 
     
@@ -298,35 +301,35 @@ public class MbDomicilio implements Serializable{
      * @return la totalidad de las entidades persistidas formateadas
      */
     public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(domicilioFacade.findAll(), false);
+        return JsfUtil.getSelectItems(especialidadFacade.findAll(), false);
     }
 
     /**
      * @return de a una las entidades persistidas formateadas
      */
     public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(domicilioFacade.findAll(), true);
+        return JsfUtil.getSelectItems(especialidadFacade.findAll(), true);
     }
 
-    private Domicilio getDomicilio(java.lang.Long id) {
-        return domicilioFacade.find(id);
+    private Especialidad getEspecialidad(java.lang.Long id) {
+        return especialidadFacade.find(id);
     }
  
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
    
-    @FacesConverter(forClass = Domicilio.class)
-    public static class DomicilioControllerConverter implements Converter {
+    @FacesConverter(forClass = Especialidad.class)
+    public static class EspecialidadControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbDomicilio controller = (MbDomicilio) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbDomicilio");
-            return controller.getDomicilio(getKey(value));
+            MbEspecialidad controller = (MbEspecialidad) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbEspecialidad");
+            return controller.getEspecialidad(getKey(value));
         }
 
         
@@ -353,11 +356,11 @@ public class MbDomicilio implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof Domicilio) {
-                Domicilio o = (Domicilio) object;
+            if (object instanceof Especialidad) {
+                Especialidad o = (Especialidad) object;
                 return getStringKey(o.getId());
             } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Domicilio.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Especialidad.class.getName());
             }
         }
     }        

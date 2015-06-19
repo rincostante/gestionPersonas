@@ -6,11 +6,10 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
 import java.io.Serializable;
 import java.util.Enumeration;
@@ -34,51 +33,51 @@ import javax.servlet.http.HttpSession;
  *
  * @author rodriguezn
  */
-public class MbDomicilio implements Serializable{
+public class MbExpediente implements Serializable{
     
-    private Domicilio current;
+    private Expediente current;
     private DataModel items = null;
-    private List<Domicilio> listado = null;
-    private List<Domicilio> listaFilter;
+    private List<Expediente> listado = null;
+    private List<Expediente> listaFilter;
     
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
     private MbLogin login;
     private Usuario usLogeado;   
     private boolean iniciado;
-
+    private boolean hola;
     @EJB
-    private DomicilioFacade domicilioFacade;
+    private ExpedienteFacade expedienteFacade;
 
     /**
-     * Creates a new instance of MbDomicilio
+     * Creates a new instance of MbExpediente
      */
-    public MbDomicilio() {
+    public MbExpediente() {
     }
 
-    public Domicilio getCurrent() {
+    public Expediente getCurrent() {
         return current;
     }
 
-    public void setCurrent(Domicilio current) {
+    public void setCurrent(Expediente current) {
         this.current = current;
     }
 
-    public List<Domicilio> getListado() {
+    public List<Expediente> getListado() {
         if (listado == null || listado.isEmpty()) {
             listado = getFacade().findAll();
         }
         return listado;
     }
 
-    public void setListado(List<Domicilio> listado) {
+    public void setListado(List<Expediente> listado) {
         this.listado = listado;
     }
 
-    public List<Domicilio> getListaFilter() {
+    public List<Expediente> getListaFilter() {
         return listaFilter;
     }
 
-    public void setListaFilter(List<Domicilio> listaFilter) {
+    public void setListaFilter(List<Expediente> listaFilter) {
         this.listaFilter = listaFilter;
     }
 
@@ -114,12 +113,12 @@ public class MbDomicilio implements Serializable{
         this.iniciado = iniciado;
     }
 
-    public DomicilioFacade getDomicilioFacade() {
-        return domicilioFacade;
+    public ExpedienteFacade getExpedienteFacade() {
+        return expedienteFacade;
     }
 
-    public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
-        this.domicilioFacade = domicilioFacade;
+    public void setExpedienteFacade(ExpedienteFacade expedienteFacade) {
+        this.expedienteFacade = expedienteFacade;
     }
     
     /**
@@ -203,13 +202,13 @@ public class MbDomicilio implements Serializable{
      * @param arg1: objeto de la vista que hace el llamado
      * @param arg2: contenido del campo de texto a validar 
      * @throws ValidatorException 
-     */
+     
     public void validarUpdate(FacesContext arg0, UIComponent arg1, Object arg2){
-        if(!current.getId().equals((String)arg2)){
+        if(!current.getNumero().equals((int)arg2)){
             validarExistente(arg2);
         }
     }
-    
+    */
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste(null,current)){ 
             throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateGeneroExistente")));
@@ -222,9 +221,9 @@ public class MbDomicilio implements Serializable{
      * @return 
      */
     
-    public Domicilio getSelected() {
+    public Expediente getSelected() {
         if (current == null) {
-            current = new Domicilio();
+            current = new Expediente();
             //selectedItemIndex = -1;
         }
         return current;
@@ -243,8 +242,8 @@ public class MbDomicilio implements Serializable{
      * METODOS PRIVADOS
      */
     
-    private DomicilioFacade getFacade() {
-        return domicilioFacade;
+    private ExpedienteFacade getFacade() {
+        return expedienteFacade;
     }
     
     /**
@@ -267,9 +266,9 @@ public class MbDomicilio implements Serializable{
     private void performDestroy() {
         try {
             //getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeletedErrorOccured"));
         }
     }
     
@@ -287,7 +286,7 @@ public class MbDomicilio implements Serializable{
        } 
         else{
             //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioNonDeletable"));            
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteNonDeletable"));            
         }
     } 
     
@@ -298,35 +297,35 @@ public class MbDomicilio implements Serializable{
      * @return la totalidad de las entidades persistidas formateadas
      */
     public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(domicilioFacade.findAll(), false);
+        return JsfUtil.getSelectItems(expedienteFacade.findAll(), false);
     }
 
     /**
      * @return de a una las entidades persistidas formateadas
      */
     public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(domicilioFacade.findAll(), true);
+        return JsfUtil.getSelectItems(expedienteFacade.findAll(), true);
     }
 
-    private Domicilio getDomicilio(java.lang.Long id) {
-        return domicilioFacade.find(id);
+    private Expediente getExpediente(java.lang.Long id) {
+        return expedienteFacade.find(id);
     }
  
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
    
-    @FacesConverter(forClass = Domicilio.class)
-    public static class DomicilioControllerConverter implements Converter {
+    @FacesConverter(forClass = Expediente.class)
+    public static class ExpedienteControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbDomicilio controller = (MbDomicilio) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbDomicilio");
-            return controller.getDomicilio(getKey(value));
+            MbExpediente controller = (MbExpediente) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbExpediente");
+            return controller.getExpediente(getKey(value));
         }
 
         
@@ -353,11 +352,11 @@ public class MbDomicilio implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof Domicilio) {
-                Domicilio o = (Domicilio) object;
+            if (object instanceof Expediente) {
+                Expediente o = (Expediente) object;
                 return getStringKey(o.getId());
             } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Domicilio.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Expediente.class.getName());
             }
         }
     }        
