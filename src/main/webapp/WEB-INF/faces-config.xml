@@ -57,4 +57,29 @@
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbExpediente</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>mbPerfil</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbPerfil</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>mbTipoEstablecimiento</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbTipoEstablecimiento</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>mbTipoPersonaJuridica</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbTipoPersonaJuridica</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>mbPerJuridica</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbPerJuridica</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>mbPerFisica</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbPerFisica</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 </faces-config>
