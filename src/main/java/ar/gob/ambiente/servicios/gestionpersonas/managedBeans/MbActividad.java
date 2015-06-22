@@ -44,7 +44,7 @@ public class MbActividad implements Serializable{
     private MbLogin login;
     private Usuario usLogeado;   
     private boolean iniciado;
-    
+    private String hola; 
     @EJB
     private ActividadFacade actividadFacade;
 
