@@ -7,9 +7,13 @@
 package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Especialidad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
 import java.io.Serializable;
 import java.util.Enumeration;
@@ -23,6 +27,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
@@ -47,10 +52,14 @@ public class MbEspecialidad implements Serializable{
 
     @EJB
     private EspecialidadFacade especialidadFacade;
+    @EJB
+    private PerJuridicaFacade perJuridicaFacade;
+
     
-    private String nombre;
-    //private List<perJuridica> listaPerJuridicas;
-    //private List<perFisica> listaPerFisicas;
+    private List<PerJuridica> listaPerJuridicasFilter;
+    private List<PerFisica> listaPerFisicasFilter;
+    private PerJuridica selectPerJuridica;
+    private List<PerJuridica> comboPerJuridicas;
 
     /**
      * Creates a new instance of MbEspecialidad
@@ -58,6 +67,46 @@ public class MbEspecialidad implements Serializable{
     public MbEspecialidad() {
     }
 
+    public PerJuridicaFacade getPerJuridicaFacade() {
+        return perJuridicaFacade;
+    }
+
+    public void setPerJuridicaFacade(PerJuridicaFacade perJuridicaFacade) {
+        this.perJuridicaFacade = perJuridicaFacade;
+    }
+
+    public List<PerJuridica> getListaPerJuridicasFilter() {
+        return listaPerJuridicasFilter;
+    }
+
+    public void setListaPerJuridicasFilter(List<PerJuridica> listaPerJuridicasFilter) {
+        this.listaPerJuridicasFilter = listaPerJuridicasFilter;
+    }
+
+    public List<PerFisica> getListaPerFisicasFilter() {
+        return listaPerFisicasFilter;
+    }
+
+    public void setListaPerFisicasFilter(List<PerFisica> listaPerFisicasFilter) {
+        this.listaPerFisicasFilter = listaPerFisicasFilter;
+    }
+
+    public PerJuridica getSelectPerJuridica() {
+        return selectPerJuridica;
+    }
+
+    public void setSelectPerJuridica(PerJuridica selectPerJuridica) {
+        this.selectPerJuridica = selectPerJuridica;
+    }
+
+    public List<PerJuridica> getComboPerJuridicas() {
+        return comboPerJuridicas;
+    }
+
+    public void setComboPerJuridicas(List<PerJuridica> comboPerJuridicas) {
+        this.comboPerJuridicas = comboPerJuridicas;
+    }
+    
     public Especialidad getCurrent() {
         return current;
     }
@@ -363,7 +412,7 @@ public class MbEspecialidad implements Serializable{
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Especialidad.class.getName());
             }
         }
-    }        
+    } 
 
  
 }

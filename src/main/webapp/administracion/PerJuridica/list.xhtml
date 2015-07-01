@@ -38,6 +38,21 @@
                 <p:column headerText="Razon Social" filterMatchMode="contains" sortBy="#{e.razonSocial}" filterBy="#{e.razonSocial}">
                     <p:outputLabel value="#{e.razonSocial}"/>
                 </p:column>
+                <p:column headerText="Cuit" filterMatchMode="contains" sortBy="#{e.cuit}" filterBy="#{e.cuit}">
+                    <p:outputLabel value="#{e.cuit}"/>
+                </p:column>
+                <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{e.tipoPersonaJuridica}" filterBy="#{e.tipoPersonaJuridica}">
+                    <p:outputLabel value="#{e.tipoPersonaJuridica}"/>
+                </p:column>
+                <p:column headerText="E-Mail" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
+                    <p:outputLabel value="#{e.correoElectronico}"/>
+                </p:column>
+                <p:column headerText="Telefono" filterMatchMode="contains" sortBy="#{e.telefono}" filterBy="#{e.telefono}">
+                    <p:outputLabel value="#{e.telefono}"/>
+                </p:column>
+                <p:column headerText="Expediente" filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente}">
+                    <p:outputLabel value="#{e.expediente}"/>
+                </p:column>
 
                 <p:column headerText="Acciones" style="width:140px">
                     <p:growl id="messages" showDetail="true" />                           

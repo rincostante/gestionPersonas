@@ -6,9 +6,11 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
 import java.io.Serializable;
@@ -23,6 +25,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
@@ -47,11 +50,75 @@ public class MbTipoPersonaJuridica implements Serializable{
     private boolean hola;
     @EJB
     private TipoPersonaJuridicaFacade tipoPersonaJuridicaFacade;
+    @EJB
+    private PerJuridicaFacade perJuridicaFacade;
+    
+    private List<PerJuridica> listaPerJuridicas;
+    private List<PerJuridica> listaPerJuridicasFilter;
+    private PerJuridica selectPerJuridica;
+    private List<PerJuridica> comboPerJuridicas;
+    private List<PerJuridica> listaPerJuridica;
 
     /**
      * Creates a new instance of MbTipoPersonaJuridica
      */
     public MbTipoPersonaJuridica() {
+    }
+
+    public boolean isHola() {
+        return hola;
+    }
+
+    public void setHola(boolean hola) {
+        this.hola = hola;
+    }
+
+    public PerJuridicaFacade getPerJuridicaFacade() {
+        return perJuridicaFacade;
+    }
+
+    public void setPerJuridicaFacade(PerJuridicaFacade perJuridicaFacade) {
+        this.perJuridicaFacade = perJuridicaFacade;
+    }
+
+    public List<PerJuridica> getListaPerJuridicas() {
+        return listaPerJuridicas;
+    }
+
+    public void setListaPerJuridicas(List<PerJuridica> listaPerJuridicas) {
+        this.listaPerJuridicas = listaPerJuridicas;
+    }
+
+    public List<PerJuridica> getListaPerJuridicasFilter() {
+        return listaPerJuridicasFilter;
+    }
+
+    public void setListaPerJuridicasFilter(List<PerJuridica> listaPerJuridicasFilter) {
+        this.listaPerJuridicasFilter = listaPerJuridicasFilter;
+    }
+
+    public PerJuridica getSelectPerJuridica() {
+        return selectPerJuridica;
+    }
+
+    public void setSelectPerJuridica(PerJuridica selectPerJuridica) {
+        this.selectPerJuridica = selectPerJuridica;
+    }
+
+    public List<PerJuridica> getComboPerJuridicas() {
+        return comboPerJuridicas;
+    }
+
+    public void setComboPerJuridicas(List<PerJuridica> comboPerJuridicas) {
+        this.comboPerJuridicas = comboPerJuridicas;
+    }
+
+    public List<PerJuridica> getListaPerJuridica() {
+        return listaPerJuridica;
+    }
+
+    public void setListaPerJuridica(List<PerJuridica> listaPerJuridica) {
+        this.listaPerJuridica = listaPerJuridica;
     }
 
     public TipoPersonaJuridica getCurrent() {
@@ -359,7 +426,12 @@ public class MbTipoPersonaJuridica implements Serializable{
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + TipoPersonaJuridica.class.getName());
             }
         }
-    }        
+    }    
+    
+    public void perJuridicaChangeListener(ValueChangeEvent event) {      
+        selectPerJuridica = (PerJuridica)event.getNewValue();      
+        comboPerJuridicas = perJuridicaFacade.getNombres(selectPerJuridica);      
+    }
 
  
 }

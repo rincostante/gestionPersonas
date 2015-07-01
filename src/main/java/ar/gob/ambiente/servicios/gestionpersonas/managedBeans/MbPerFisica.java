@@ -10,6 +10,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
 import java.io.Serializable;
 import java.util.Enumeration;
@@ -44,7 +45,11 @@ public class MbPerFisica implements Serializable{
     private MbLogin login;
     private Usuario usLogeado;   
     private boolean iniciado;
-
+    
+    
+    
+    @EJB
+    private PerJuridicaFacade perJuridicaFacade;
     @EJB
     private PerFisicaFacade perFisicaFacade;
 

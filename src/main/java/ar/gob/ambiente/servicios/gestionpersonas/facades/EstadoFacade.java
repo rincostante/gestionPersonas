@@ -107,4 +107,8 @@ public class EstadoFacade extends AbstractFacade<Estado> {
                 .setParameter("idParam", id);
         return q.getResultList().isEmpty();
     }  
+
+    public List<Estado> getNombres(Estado selectEstado) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

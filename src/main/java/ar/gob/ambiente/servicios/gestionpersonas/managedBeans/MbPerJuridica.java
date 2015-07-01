@@ -9,6 +9,7 @@ package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
 import java.io.Serializable;
@@ -47,6 +48,8 @@ public class MbPerJuridica implements Serializable{
 
     @EJB
     private PerJuridicaFacade perJuridicaFacade;
+    @EJB
+    private PerFisicaFacade perFisicaFacade;
 
     /**
      * Creates a new instance of MbPerJuridica

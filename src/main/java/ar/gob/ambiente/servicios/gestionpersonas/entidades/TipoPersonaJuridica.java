@@ -54,7 +54,7 @@ public class TipoPersonaJuridica implements Serializable {
         return perJuridica;
     }
 
-    public void setPerJuridicas(List<PerJuridica> perJuridicas) {
+    public void setPerJuridica(List<PerJuridica> perJuridica) {
         this.perJuridica = perJuridica;
     }
 

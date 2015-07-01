@@ -12,17 +12,17 @@
             <f:event listener="#{mbDomicilio.iniciar}" type="preRenderView"></f:event>  
         </f:metadata>  
         <h:form>
-            <p:panel id="actividadForm" header="#{bundle.ActividadListTitle}" style="margin-bottom:10px;">
+            <p:panel id="domicilioForm" header="#{bundle.DomicilioListTitle}" style="margin-bottom:10px;">
                 <h:panelGrid columns="6">
                     <p:commandButton icon="ui-icon-newwin" value="Agregar Nuevo" action="#{mbDomicilio.prepareCreate}"/>
-                    <p:commandButton icon="ui-icon-refresh" value="Refrescar Listado" action="#{mbDomicilio.prepareList}" update="actividadList"/>
+                    <p:commandButton icon="ui-icon-refresh" value="Refrescar Listado" action="#{mbDomicilio.prepareList}" update="domicilioList"/>
                 </h:panelGrid>
             </p:panel>
 
             <p:dataTable value="#{mbDomicilio.listado}" 
                          filteredValue="#{mbDomicilio.listaFilter}"
                          var="e" 
-                         id="actividadList" 
+                         id="domicilioList" 
                          rows="5"
                          paginator="true"
                          widgetVar="famTable"                             
@@ -30,13 +30,31 @@
                          rowsPerPageTemplate="5,10,15">
 
                 <f:facet name="header"> 
-                    #{bundle.ActividadListTitle}  
+                    #{bundle.DomicilioListTitle}  
                     <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
-                    <p:columnToggler datasource="actividadList" trigger="toggler" />
+                    <p:columnToggler datasource="domicilioList" trigger="toggler" />
                 </f:facet>
 
-                <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
-                    <p:outputLabel value="#{e.nombre}"/>
+                <p:column headerText="Calle" filterMatchMode="contains" sortBy="#{e.calle}" filterBy="#{e.calle}">
+                    <p:outputLabel value="#{e.calle}"/>
+                </p:column>
+                <p:column headerText="Numero" filterMatchMode="contains" sortBy="#{e.numero}" filterBy="#{e.numero}">
+                    <p:outputLabel value="#{e.numero}"/>
+                </p:column>
+                <p:column headerText="Piso" filterMatchMode="contains" sortBy="#{e.piso}" filterBy="#{e.piso}">
+                    <p:outputLabel value="#{e.piso}"/>
+                </p:column>
+                <p:column headerText="Dpto" filterMatchMode="contains" sortBy="#{e.dpto}" filterBy="#{e.dpto}">
+                    <p:outputLabel value="#{e.dpto}"/>
+                </p:column>            
+                <p:column headerText="Id" filterMatchMode="contains" sortBy="#{e.idLocalidad}" filterBy="#{e.idLocalidad}">
+                    <p:outputLabel value="#{e.idLocalidad}"/>
+                </p:column>
+                <p:column headerText="Localidad" filterMatchMode="contains" sortBy="#{e.localidad}" filterBy="#{e.localidad}">
+                    <p:outputLabel value="#{e.localidad}"/>
+                </p:column>
+                <p:column headerText="Provincia" filterMatchMode="contains" sortBy="#{e.provincia}" filterBy="#{e.provincia}">
+                    <p:outputLabel value="#{e.provincia}"/>
                 </p:column>
 
                 <p:column headerText="Acciones" style="width:140px">
@@ -47,12 +65,7 @@
 
                     <p:commandButton icon="ui-icon-pencil" action="#{mbDomicilio.prepareEdit}" title="Editar" >
                         <f:setPropertyActionListener value="#{e}" target="#{mbDomicilio.current}" /> 
-                    </p:commandButton>
-
-                    <p:commandButton icon="ui-icon-close" action="#{mbDomicilio.prepareDestroy}" title="Eliminar" update="actividadList">
-                        <f:setPropertyActionListener value="#{e}" target="#{mbDomicilio.current}" />
-                        <p:confirm header="Confirmar" message="¿Desea eliminar a este Actividad?" icon="ui-icon-alert" />
-                    </p:commandButton>                
+                    </p:commandButton>               
 
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

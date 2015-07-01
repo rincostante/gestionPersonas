@@ -6,10 +6,22 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstablecimientoFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
 import java.io.Serializable;
 import java.util.Enumeration;
@@ -23,6 +35,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
@@ -47,10 +60,51 @@ public class MbEstablecimiento implements Serializable{
 
     @EJB
     private EstablecimientoFacade establecimientoFacade;
+    @EJB
+    private PerJuridicaFacade perJuridicaFacade;
+    @EJB
+    private PerFisicaFacade perFisicaFacade;
+    @EJB
+    private TipoEstablecimientoFacade tipoEstablecimientoFacade;
+    @EJB
+    private ActividadFacade actividadFacade;
+    @EJB
+    private DomicilioFacade domicilioFacade;
+    @EJB
+    private EstadoFacade estadoFacade;
     
-    private String nombre;
-    //private List<perJuridica> listaPerJuridicas;
-    //private List<perFisica> listaPerFisicas;
+    private List<PerJuridica> listaPerJuridicas;
+    private List<PerJuridica> listaPerJuridicasFilter;
+    private PerJuridica selectPerJuridica;
+    private List<PerJuridica> comboPerJuridicas;
+    private List<PerJuridica> listaPerJuridica;
+    
+    private List<TipoEstablecimiento> listaTipoEstablecimientos;
+    private List<TipoEstablecimiento> listaTipoEstablecimientosFilter;
+    private TipoEstablecimiento selectTipoEstablecimiento;
+    private List<TipoEstablecimiento> comboTipoEstablecimientos;
+    private List<TipoEstablecimiento> listaTipoEstablecimiento;
+    
+    private List<Actividad> listaActividad;
+    private List<Actividad> listaActividadFilter;
+    private Actividad selectActividad;
+    private List<Actividad> comboActividad;
+    
+    private List<Domicilio> listaDomicilio;
+    private List<Domicilio> listaDomicilioFilter;
+    private Domicilio selectDomicilio;
+    private List<Domicilio> comboDomicilio;
+    
+    private List<Estado> listaEstado;
+    private List<Estado> listaEstadoFilter;
+    private Estado selectEstado;
+    private List<Estado> comboEstado;
+    
+    private List<PerFisica> listaPerFisicas;
+    private List<PerFisica> listaPerFisicasFilter;
+
+    
+    
 
     /**
      * Creates a new instance of MbEstablecimiento
@@ -58,6 +112,246 @@ public class MbEstablecimiento implements Serializable{
     public MbEstablecimiento() {
     }
 
+    public EstadoFacade getEstadoFacade() {
+        return estadoFacade;
+    }
+
+    public void setEstadoFacade(EstadoFacade estadoFacade) {
+        this.estadoFacade = estadoFacade;
+    }
+
+    public List<Estado> getListaEstado() {
+        return listaEstado;
+    }
+
+    public void setListaEstado(List<Estado> listaEstado) {
+        this.listaEstado = listaEstado;
+    }
+
+    public List<Estado> getListaEstadoFilter() {
+        return listaEstadoFilter;
+    }
+
+    public void setListaEstadoFilter(List<Estado> listaEstadoFilter) {
+        this.listaEstadoFilter = listaEstadoFilter;
+    }
+
+    public Estado getSelectEstado() {
+        return selectEstado;
+    }
+
+    public void setSelectEstado(Estado selectEstado) {
+        this.selectEstado = selectEstado;
+    }
+
+    public List<Estado> getComboEstado() {
+        return comboEstado;
+    }
+
+    public void setComboEstado(List<Estado> comboEstado) {
+        this.comboEstado = comboEstado;
+    }
+
+    public DomicilioFacade getDomicilioFacade() {
+        return domicilioFacade;
+    }
+
+    public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
+        this.domicilioFacade = domicilioFacade;
+    }
+
+    public List<Domicilio> getListaDomicilio() {
+        return listaDomicilio;
+    }
+
+    public void setListaDomicilio(List<Domicilio> listaDomicilio) {
+        this.listaDomicilio = listaDomicilio;
+    }
+
+    public List<Domicilio> getListaDomicilioFilter() {
+        return listaDomicilioFilter;
+    }
+
+    public void setListaDomicilioFilter(List<Domicilio> listaDomicilioFilter) {
+        this.listaDomicilioFilter = listaDomicilioFilter;
+    }
+
+    public Domicilio getSelectDomicilio() {
+        return selectDomicilio;
+    }
+
+    public void setSelectDomicilio(Domicilio selectDomicilio) {
+        this.selectDomicilio = selectDomicilio;
+    }
+
+    public List<Domicilio> getComboDomicilio() {
+        return comboDomicilio;
+    }
+
+    public void setComboDomicilio(List<Domicilio> comboDomicilio) {
+        this.comboDomicilio = comboDomicilio;
+    }
+    
+    public TipoEstablecimientoFacade getTipoEstablecimientoFacade() {
+        return tipoEstablecimientoFacade;
+    }
+
+    public void setTipoEstablecimientoFacade(TipoEstablecimientoFacade tipoEstablecimientoFacade) {
+        this.tipoEstablecimientoFacade = tipoEstablecimientoFacade;
+    }
+
+    public ActividadFacade getActividadFacade() {
+        return actividadFacade;
+    }
+
+    public void setActividadFacade(ActividadFacade actividadFacade) {
+        this.actividadFacade = actividadFacade;
+    }
+
+    public List<Actividad> getListaActividad() {
+        return listaActividad;
+    }
+
+    public void setListaActividad(List<Actividad> listaActividad) {
+        this.listaActividad = listaActividad;
+    }
+
+    public List<Actividad> getListaActividadFilter() {
+        return listaActividadFilter;
+    }
+
+    public void setListaActividadFilter(List<Actividad> listaActividadFilter) {
+        this.listaActividadFilter = listaActividadFilter;
+    }
+
+    public Actividad getSelectActividad() {
+        return selectActividad;
+    }
+
+    public void setSelectActividad(Actividad selectActividad) {
+        this.selectActividad = selectActividad;
+    }
+
+    public List<Actividad> getComboActividad() {
+        return comboActividad;
+    }
+
+    public void setComboActividad(List<Actividad> comboActividad) {
+        this.comboActividad = comboActividad;
+    }
+
+    public List<TipoEstablecimiento> getListaTipoEstablecimientos() {
+        return listaTipoEstablecimientos;
+    }
+
+    public void setListaTipoEstablecimientos(List<TipoEstablecimiento> listaTipoEstablecimientos) {
+        this.listaTipoEstablecimientos = listaTipoEstablecimientos;
+    }
+
+    public List<TipoEstablecimiento> getListaTipoEstablecimientosFilter() {
+        return listaTipoEstablecimientosFilter;
+    }
+
+    public void setListaTipoEstablecimientosFilter(List<TipoEstablecimiento> listaTipoEstablecimientosFilter) {
+        this.listaTipoEstablecimientosFilter = listaTipoEstablecimientosFilter;
+    }
+
+    public TipoEstablecimiento getSelectTipoEstablecimiento() {
+        return selectTipoEstablecimiento;
+    }
+
+    public void setSelectTipoEstablecimiento(TipoEstablecimiento selectTipoEstablecimiento) {
+        this.selectTipoEstablecimiento = selectTipoEstablecimiento;
+    }
+
+    public List<TipoEstablecimiento> getComboTipoEstablecimientos() {
+        return comboTipoEstablecimientos;
+    }
+
+    public void setComboTipoEstablecimientos(List<TipoEstablecimiento> comboTipoEstablecimientos) {
+        this.comboTipoEstablecimientos = comboTipoEstablecimientos;
+    }
+
+    public List<TipoEstablecimiento> getListaTipoEstablecimiento() {
+        return listaTipoEstablecimiento;
+    }
+
+    public void setListaTipoEstablecimiento(List<TipoEstablecimiento> listaTipoEstablecimiento) {
+        this.listaTipoEstablecimiento = listaTipoEstablecimiento;
+    }
+
+    public PerJuridicaFacade getPerJuridicaFacade() {
+        return perJuridicaFacade;
+    }
+
+    public void setPerJuridicaFacade(PerJuridicaFacade perJuridicaFacade) {
+        this.perJuridicaFacade = perJuridicaFacade;
+    }
+
+    public PerFisicaFacade getPerFisicaFacade() {
+        return perFisicaFacade;
+    }
+
+    public void setPerFisicaFacade(PerFisicaFacade perFisicaFacade) {
+        this.perFisicaFacade = perFisicaFacade;
+    }
+
+    public List<PerJuridica> getListaPerJuridicas() {
+        return listaPerJuridicas;
+    }
+
+    public void setListaPerJuridicas(List<PerJuridica> listaPerJuridicas) {
+        this.listaPerJuridicas = listaPerJuridicas;
+    }
+
+    public List<PerFisica> getListaPerFisicas() {
+        return listaPerFisicas;
+    }
+
+    public void setListaPerFisicas(List<PerFisica> listaPerFisicas) {
+        this.listaPerFisicas = listaPerFisicas;
+    }
+
+    public List<PerJuridica> getListaPerJuridicasFilter() {
+        return listaPerJuridicasFilter;
+    }
+
+    public void setListaPerJuridicasFilter(List<PerJuridica> listaPerJuridicasFilter) {
+        this.listaPerJuridicasFilter = listaPerJuridicasFilter;
+    }
+
+    public List<PerFisica> getListaPerFisicasFilter() {
+        return listaPerFisicasFilter;
+    }
+
+    public void setListaPerFisicasFilter(List<PerFisica> listaPerFisicasFilter) {
+        this.listaPerFisicasFilter = listaPerFisicasFilter;
+    }
+
+    public PerJuridica getSelectPerJuridica() {
+        return selectPerJuridica;
+    }
+
+    public void setSelectPerJuridica(PerJuridica selectPerJuridica) {
+        this.selectPerJuridica = selectPerJuridica;
+    }
+
+    public List<PerJuridica> getComboPerJuridicas() {
+        return comboPerJuridicas;
+    }
+
+    public void setComboPerJuridicas(List<PerJuridica> comboPerJuridicas) {
+        this.comboPerJuridicas = comboPerJuridicas;
+    }
+
+    public List<PerJuridica> getListaPerJuridica() {
+        return listaPerJuridica;
+    }
+
+    public void setListaPerJuridica(List<PerJuridica> listaPerJuridica) {
+        this.listaPerJuridica = listaPerJuridica;
+    }
+    
     public Establecimiento getCurrent() {
         return current;
     }
@@ -365,5 +659,29 @@ public class MbEstablecimiento implements Serializable{
         }
     }        
 
+    public void perJuridicaChangeListener(ValueChangeEvent event) {      
+        selectPerJuridica = (PerJuridica)event.getNewValue();      
+        comboPerJuridicas = perJuridicaFacade.getNombres(selectPerJuridica);      
+    }
+    
+    public void tipoEstablecimientoChangeListener(ValueChangeEvent event) {      
+        selectTipoEstablecimiento = (TipoEstablecimiento)event.getNewValue();      
+        comboTipoEstablecimientos = tipoEstablecimientoFacade.getNombres(selectTipoEstablecimiento);      
+    }
+    
+    public void actividadChangeListener(ValueChangeEvent event) {      
+        selectActividad = (Actividad)event.getNewValue();      
+        comboActividad = actividadFacade.getNombres(selectActividad);      
+    }
+    
+    public void domicilioChangeListener(ValueChangeEvent event) {      
+        selectDomicilio = (Domicilio)event.getNewValue();      
+        comboDomicilio = domicilioFacade.getNombres(selectDomicilio);      
+    }
+    
+    public void estadoChangeListener(ValueChangeEvent event) {      
+        selectEstado = (Estado)event.getNewValue();      
+        comboEstado = estadoFacade.getNombres(selectEstado);      
+    }
  
 }

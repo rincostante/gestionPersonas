@@ -17,25 +17,8 @@
                     <h:outputText value="#{mbActividad.selected.nombre}" title="#{bundle.CreateActividadTitle_nombre}"/>
 
 
-                    <h:outputLabel value="#{bundle.EspeciesAsociadas}&nbsp;" />
-                    <p:commandButton value="Ver especies" type="button" onclick="PF('Especies').show();" actionListener="#{mbActividad.selected.establecimientos}" />      
-                </h:panelGrid>   
-                <p:dialog style="font-size: 80%" 
-                          header="Listado de Especies asociadas a este Actividad" 
-                          widgetVar="Especies" 
-                          showEffect="fade" 
-                          hideEffect="fade" 
-                          height="100" 
-                          width="30%">
-                    <p:dataTable value="#{mbActividad.selected.especies}" var="g" id="esp" filteredValue="#{mbActividad.listEspFilter}">
-                        <p:column headerText="Especie" 
-                                  filterMatchMode="contains"
-                                  filterBy="#{g.nombrecientifico}"
-                                  sortBy="#{g.nombrecientifico}" >
-                            <p:outputLabel value="#{g.nombrecientifico}"/> 
-                        </p:column>                        
-                    </p:dataTable>
-                </p:dialog>
+                    </h:panelGrid>   
+
             </p:panel>
 
             <p:toolbar>

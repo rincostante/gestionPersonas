@@ -7,10 +7,8 @@
 package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -19,34 +17,22 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
-import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author rodriguezn
- */
 public class MbExpediente implements Serializable{
     
     private Expediente current;
-    private DataModel items = null;
     private List<Expediente> listado = null;
-    private List<Expediente> listaFilter;
+    private List<Expediente> listaFilter;    
     
-    private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
-    private MbLogin login;
-    private Usuario usLogeado;   
-    private boolean iniciado;
-    private boolean hola;
     @EJB
     private ExpedienteFacade expedienteFacade;
+
+    private boolean iniciado;    
 
     /**
      * Creates a new instance of MbExpediente
@@ -81,61 +67,20 @@ public class MbExpediente implements Serializable{
         this.listaFilter = listaFilter;
     }
 
-    public int getUpdate() {
-        return update;
-    }
-
-    public void setUpdate(int update) {
-        this.update = update;
-    }
-
-    public MbLogin getLogin() {
-        return login;
-    }
-
-    public void setLogin(MbLogin login) {
-        this.login = login;
-    }
-
-    public Usuario getUsLogeado() {
-        return usLogeado;
-    }
-
-    public void setUsLogeado(Usuario usLogeado) {
-        this.usLogeado = usLogeado;
-    }
-
-    public boolean isIniciado() {
-        return iniciado;
-    }
-
-    public void setIniciado(boolean iniciado) {
-        this.iniciado = iniciado;
-    }
-
-    public ExpedienteFacade getExpedienteFacade() {
-        return expedienteFacade;
-    }
-
-    public void setExpedienteFacade(ExpedienteFacade expedienteFacade) {
-        this.expedienteFacade = expedienteFacade;
-    }
-    
+    /****************************
+     * Métodos de inicialización
+     ****************************/
     /**
-     * METODOS DE INICIALIZACION
+     * Método que se ejecuta luego de instanciada la clase e inicializa los datos del usuario
      */
     @PostConstruct
     public void init(){
         iniciado = false;
-       /* ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
-        login = (MbLogin)ctx.getSessionMap().get("mbLogin");
-        usLogeado = login.getUsLogeado(); */
     }
-    
     /**
      * Método que borra de la memoria los MB innecesarios al cargar el listado 
      */
-    public void iniciar(){
+     public void iniciar(){
         if(!iniciado){
             String s;
             HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
@@ -150,42 +95,61 @@ public class MbExpediente implements Serializable{
                 }
             }
         }
-    } 
+    }   
     
+    /**
+     * @return acción para el listado de entidades a mostrar en el list
+     */
     public String prepareList() {
-        recreateModel();
-        return "list";
-    }
-    
-    public String prepareView() {
-        return "view";
-    }
-        
-    public String prepareCreate() {
-       return "new"; 
-    }
-    
-    public String prepareEdit() {
-        return "edit";
-    }
-    
-    public String prepareDestroy(){
-       return "view"; 
-    }
-    
-    public String prepareInicio(){
-        recreateModel();
-        return "/faces/index";
-    }
-    
-    public String prepareSelect(){
+        //recreateModel();
         return "list";
     }
     
     /**
-     * METODOS DE VALIDACION
+     * @return acción para el detalle de la entidad
      */
+    public String prepareView() {
+        return "view";
+    }
+    
+    /** (Probablemente haya que embeberlo con el listado para una misma vista)
+     * @return acción para el formulario de nuevo
+     */
+    public String prepareCreate() {
+        current = new Expediente();
+        return "new";
+    }   
+    
+    /**
+     * @return acción para la edición de la entidad
+     */
+    public String prepareEdit() {
+        return "edit";
+    }    
+    
+    /**
+     * Método que verifica que el Cargo que se quiere eliminar no esté siento utilizado por otra entidad
+     * @return 
+     */
+    public String prepareDestroy(){
+        boolean libre = getFacade().noTieneDependencias(current.getId());
 
+        if (libre){
+            // Elimina
+            performDestroy();
+            recreateModel();
+        }else{
+            //No Elimina 
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteNonDeletable"));
+        }
+        return "view";
+    }    
+    
+    
+    /****************************
+     * Métodos de validación
+     ****************************/    
+    
     /**
      * Método para validar que no exista ya una entidad con este nombre al momento de crearla
      * @param arg0: vista jsf que llama al validador
@@ -196,125 +160,108 @@ public class MbExpediente implements Serializable{
         validarExistente(arg2);
     }
     
-        /**
+    /**
      * Método para validar que no exista una entidad con este nombre, siempre que dicho nombre no sea el que tenía originalmente
      * @param arg0: vista jsf que llama al validador
      * @param arg1: objeto de la vista que hace el llamado
      * @param arg2: contenido del campo de texto a validar 
      * @throws ValidatorException 
-     
+     */
     public void validarUpdate(FacesContext arg0, UIComponent arg1, Object arg2){
-        if(!current.getNumero().equals((int)arg2)){
+        if(!current.getNombre().equals((String)arg2)){
             validarExistente(arg2);
         }
-    }
-    */
-    private void validarExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExiste(null,current)){ 
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateGeneroExistente")));
+    }    
+
+    
+    /**********************
+     * Métodos de operación
+     **********************/
+    /**
+    * @return 
+    */   
+    public String create() {     
+        try {
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteCreated"));
+            return "view";
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteCreatedErrorOccured"));
+            return null;
         }
     }
     
+
+    public String update() {
+        try {
+            getFacade().edit(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteUpdated"));
+            return "view";
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteUpdatedErrorOccured"));
+            return null;
+        }
+    }    
     
     /**
-     * METODOS PARA LA NAVEGACION
-     * @return 
+     * Restea la entidad
      */
+    private void recreateModel() {
+        listado.clear();
+    }    
     
+    /**
+     * @return La entidad gestionada
+     */
+
     public Expediente getSelected() {
         if (current == null) {
             current = new Expediente();
-            //selectedItemIndex = -1;
         }
         return current;
     } 
-
-    public DataModel getItems() {
-        if (items == null) {
-            //items = getPagination().createPageDataModel();
-            items = new ListDataModel(getFacade().findAll());
-        }
-        return items;
-    }    
-    
     
     /**
-     * METODOS PRIVADOS
+     * @param id equivalente al id de la entidad persistida
+     * @return la entidad correspondiente
      */
+    public Expediente getExpediente(java.lang.Long id) {
+        return expedienteFacade.find(id);
+    }  
     
+    
+    /*********************
+    ** Métodos privados **
+    **********************/
+    /**
+     * @return el Facade
+     */
     private ExpedienteFacade getFacade() {
         return expedienteFacade;
-    }
+    }    
+    
+    private void validarExistente(Object arg2) throws ValidatorException{
+        if(!getFacade().noExiste((String)arg2)){
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateExpedienteExistente")));
+        }
+    }    
     
     /**
-     * METODOS DE OPERACION
-     * @return 
+     * Opera el borrado de la entidad
      */
-    
-    public String create() {
-        return "view";
-    }
-    
-    public String update() {
-        return "view";
-    }
-    
-    private void recreateModel() {
-        items = null;
-    }
-    
     private void performDestroy() {
         try {
-            //getFacade().remove(current);
+            getFacade().remove(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeleted"));
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeletedErrorOccured"));
         }
-    }
+    }    
     
-    public void habilitar() {
-        update = 2;
-        update();        
-        recreateModel();
-    }  
     
-    public void deshabilitar() {
-       if (getFacade().noTieneDependencias(current.getId())){
-          update = 1;
-          update();        
-          recreateModel();
-       } 
-        else{
-            //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteNonDeletable"));            
-        }
-    } 
-    
-    /**
-     * METODOS DE SELECCION
-     */
-        /**
-     * @return la totalidad de las entidades persistidas formateadas
-     */
-    public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(expedienteFacade.findAll(), false);
-    }
-
-    /**
-     * @return de a una las entidades persistidas formateadas
-     */
-    public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(expedienteFacade.findAll(), true);
-    }
-
-    private Expediente getExpediente(java.lang.Long id) {
-        return expedienteFacade.find(id);
-    }
- 
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
-   
     @FacesConverter(forClass = Expediente.class)
     public static class ExpedienteControllerConverter implements Converter {
 
@@ -355,11 +302,9 @@ public class MbExpediente implements Serializable{
             if (object instanceof Expediente) {
                 Expediente o = (Expediente) object;
                 return getStringKey(o.getId());
-            } else {
+           } else {
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Expediente.class.getName());
             }
         }
-    }        
-
- 
+    }            
 }

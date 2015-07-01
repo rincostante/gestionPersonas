@@ -88,4 +88,8 @@ import javax.persistence.Query;
     public PerJuridica getExistente(String correoElectronico) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public List<PerJuridica> getNombres(PerJuridica selectPerJuridica) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

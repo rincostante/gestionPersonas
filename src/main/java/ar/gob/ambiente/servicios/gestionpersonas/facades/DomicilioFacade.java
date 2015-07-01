@@ -108,4 +108,12 @@ public class DomicilioFacade extends AbstractFacade<Domicilio> {
                 .setParameter("idParam", id);
         return q.getResultList().isEmpty();
     }  
+
+    public List<Domicilio> getNombres(Domicilio selectDomicilio) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean noExiste(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

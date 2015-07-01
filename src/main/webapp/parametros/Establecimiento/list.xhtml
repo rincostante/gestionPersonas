@@ -35,8 +35,14 @@
                     <p:columnToggler datasource="establecimientoList" trigger="toggler" />
                 </f:facet>
 
-                <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
-                    <p:outputLabel value="#{e.nombre}"/>
+                <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{e.tipo}" filterBy="#{e.tipo}">
+                    <p:outputLabel value="#{e.tipo}"/>
+                </p:column>
+                <p:column headerText="E-Mail" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
+                    <p:outputLabel value="#{e.correoElectronico}"/>
+                </p:column>
+                <p:column headerText="Telefono" filterMatchMode="contains" sortBy="#{e.telefono}" filterBy="#{e.telefono}">
+                    <p:outputLabel value="#{e.telefono}"/>
                 </p:column>
 
                 <p:column headerText="Acciones" style="width:140px">

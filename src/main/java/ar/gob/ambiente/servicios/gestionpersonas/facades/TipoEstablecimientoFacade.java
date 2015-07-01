@@ -108,4 +108,8 @@ public class TipoEstablecimientoFacade extends AbstractFacade<TipoEstablecimient
                 .setParameter("idParam", id);
         return q.getResultList().isEmpty();
     }  
+
+    public List<TipoEstablecimiento> getNombres(TipoEstablecimiento selectTipoEstablecimiento) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -73,5 +73,9 @@ public class Expediente implements Serializable {
     public String toString() {
         return "ar.gob.ambiente.servicios.personas.entidades.Expediente[ id=" + id + " ]";
     }
+
+    public Object getNombre() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

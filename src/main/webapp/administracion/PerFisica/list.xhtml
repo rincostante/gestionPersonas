@@ -35,8 +35,32 @@
                     <p:columnToggler datasource="perFisicaList" trigger="toggler" />
                 </f:facet>
 
+                <p:column headerText="Expediente" filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente}">
+                    <p:outputLabel value="#{e.expediente}"/>
+                </p:column>
+                <p:column headerText="Instrumento Solicitante" filterMatchMode="contains" sortBy="#{e.instrumentoSolicitante}" filterBy="#{e.instrumentoSolicitante}">
+                    <p:outputLabel value="#{e.instrumentoSolicitante}"/>
+                </p:column>
+                 <p:column headerText="Apellido" filterMatchMode="contains" sortBy="#{e.apellido}" filterBy="#{e.apellido}">
+                     <p:outputLabel value="#{e.apellido}"/>
+                </p:column>
                 <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
                     <p:outputLabel value="#{e.nombre}"/>
+                </p:column>
+                <p:column headerText="Dni" filterMatchMode="contains" sortBy="#{e.dni}" filterBy="#{e.dni}">
+                    <p:outputLabel value="#{e.dni}"/>
+                </p:column>
+                <p:column headerText="Cuil" filterMatchMode="contains" sortBy="#{e.cuil}" filterBy="#{e.cuil}">
+                    <p:outputLabel value="#{e.cuil}"/>
+                </p:column>
+                <p:column headerText="E-Mail" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
+                    <p:outputLabel value="#{e.correoElectronico}"/>
+                </p:column>
+                <p:column headerText="Telefono" filterMatchMode="contains" sortBy="#{e.cel}" filterBy="#{e.cel}">
+                    <p:outputLabel value="#{e.cel}"/>
+                </p:column>
+                <p:column headerText="Domicilio" filterMatchMode="contains" sortBy="#{e.domicilio}" filterBy="#{e.domicilio}">
+                    <p:outputLabel value="#{e.domicilio}"/>
                 </p:column>
 
                 <p:column headerText="Acciones" style="width:140px">

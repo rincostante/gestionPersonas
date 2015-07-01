@@ -1,16 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:h="http://xmlns.jcp.org/jsf/html">
+         
+    <ui:define name="content">
+        <h:form>
+
+            <p:panel id="pnNew"  header="#{bundle.TipoPersonaJuridicaNewTitle}" style="margin-bottom:10px;">
+                <p:growl id="messages" />
+                <h:panelGrid columns="2">
+                    
+                    <p:outputLabel value="#{bundle.CreateTipoPersonaJuridicaLabel_Nombre}" for="nombre"/>
+                    <p:inputText id="nombre" value="#{mbTipoPersonaJuridica.selected.nombre}" 
+                    requiredMessage="#{bundle.CreateTipoPersonaJuridicaRequiredMessage_nombre}" required="true"/>
+                    
+                    <p:outputLabel value="#{bundle.CreateTipoPersonaJuridicaLabel_PerJuridica}" for="perJuridica" />
+                    <p:selectOneMenu id="perJuridica" value="#{mbTipoPersonaJuridica.selected.perJuridica}" required="true" requiredMessage="#{bundle.CreateCentroPobladoPerJuridicaRequiredMessage}" valueChangeListener="#{mbTipoPersonaJuridica.perJuridicaChangeListener}" >
+                          <f:selectItem itemLabel="Seleccione Persona Juridica" itemValue="" noSelectionOption="true" />
+                          <f:selectItems value="#{mbTipoPersonaJuridica.listaPerJuridica}" var="perJuridica" itemLabel="#{perJuridica.nombre}" itemValue="#{perJuridica}" />
+                          <p:ajax event="change" update="perJuridica"/>
+                    </p:selectOneMenu> 
+                    
+                </h:panelGrid>
+            </p:panel>
+
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbTipoPersonaJuridica.create}" update="pnNew"/>
+                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: next">
+                        <p:ajax update="pnNew" resetValues="true" />
+                    </p:commandButton>
+                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbTipoPersonaJuridica.prepareList}" value="Volver" immediate="true"/>
+                </f:facet>
+            </p:toolbar>
+
+        </h:form>
+    </ui:define>    
+</ui:composition>

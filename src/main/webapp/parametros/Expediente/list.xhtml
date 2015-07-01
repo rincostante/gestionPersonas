@@ -35,8 +35,11 @@
                     <p:columnToggler datasource="expedienteList" trigger="toggler" />
                 </f:facet>
 
-                <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
-                    <p:outputLabel value="#{e.nombre}"/>
+                <p:column headerText="Numero" filterMatchMode="contains" sortBy="#{e.numero}" filterBy="#{e.numero}">
+                    <p:outputLabel value="#{e.numero}"/>
+                </p:column>
+                <p:column headerText="Año" filterMatchMode="contains" sortBy="#{e.anio}" filterBy="#{e.anio}">
+                    <p:outputLabel value="#{e.anio}"/>
                 </p:column>
 
                 <p:column headerText="Acciones" style="width:140px">
@@ -47,12 +50,7 @@
 
                     <p:commandButton icon="ui-icon-pencil" action="#{mbExpediente.prepareEdit}" title="Editar" >
                         <f:setPropertyActionListener value="#{e}" target="#{mbExpediente.current}" /> 
-                    </p:commandButton>
-
-                    <p:commandButton icon="ui-icon-close" action="#{mbExpediente.prepareDestroy}" title="Eliminar" update="expedienteList">
-                        <f:setPropertyActionListener value="#{e}" target="#{mbExpediente.current}" />
-                        <p:confirm header="Confirmar" message="¿Desea eliminar a este Expediente?" icon="ui-icon-alert" />
-                    </p:commandButton>                
+                    </p:commandButton>             
 
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

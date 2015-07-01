@@ -28,6 +28,8 @@ public class Domicilio implements Serializable {
     private String piso;
     private String dpto;
     private int idLocalidad;
+    private String localidad;
+    private String provincia;
     
     public Long getId() {
         return id;
@@ -77,6 +79,22 @@ public class Domicilio implements Serializable {
         this.idLocalidad = idLocalidad;
     }
 
+    public String getLocalidad() {
+        return localidad;
+    }
+
+    public void setLocalidad(String localidad) {
+        this.localidad = localidad;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -100,6 +118,10 @@ public class Domicilio implements Serializable {
     @Override
     public String toString() {
         return "ar.gob.ambiente.servicios.personas.entidades.Domicilio[ id=" + id + " ]";
+    }
+
+    public Object getNombre() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

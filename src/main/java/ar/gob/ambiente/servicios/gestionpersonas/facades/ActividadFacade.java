@@ -108,4 +108,12 @@ public class ActividadFacade extends AbstractFacade<Actividad> {
                 .setParameter("idParam", id);
         return q.getResultList().isEmpty();
     }  
+
+    public List<Actividad> getNombres(Actividad selectActividad) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean noExiste(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
