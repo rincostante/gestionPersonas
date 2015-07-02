@@ -48,12 +48,7 @@
                     <p:commandButton icon="ui-icon-pencil" action="#{mbPerfil.prepareEdit}" title="Editar" >
                         <f:setPropertyActionListener value="#{e}" target="#{mbPerfil.current}" /> 
                     </p:commandButton>
-
-                    <p:commandButton icon="ui-icon-close" action="#{mbPerfil.prepareDestroy}" title="Eliminar" update="perfilList">
-                        <f:setPropertyActionListener value="#{e}" target="#{mbPerfil.current}" />
-                        <p:confirm header="Confirmar" message="¿Desea eliminar a este Perfil?" icon="ui-icon-alert" />
-                    </p:commandButton>                
-
+                    
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />

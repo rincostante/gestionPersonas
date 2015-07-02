@@ -111,4 +111,8 @@ public class EstadoFacade extends AbstractFacade<Estado> {
     public List<Estado> getNombres(Estado selectEstado) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public boolean noExiste(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

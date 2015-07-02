@@ -47,12 +47,7 @@
 
                     <p:commandButton icon="ui-icon-pencil" action="#{mbTipoPersonaJuridica.prepareEdit}" title="Editar" >
                         <f:setPropertyActionListener value="#{e}" target="#{mbTipoPersonaJuridica.current}" /> 
-                    </p:commandButton>
-
-                    <p:commandButton icon="ui-icon-close" action="#{mbTipoPersonaJuridica.prepareDestroy}" title="Eliminar" update="tipoPersonaJuridicaList">
-                        <f:setPropertyActionListener value="#{e}" target="#{mbTipoPersonaJuridica.current}" />
-                        <p:confirm header="Confirmar" message="¿Desea eliminar a este TipoPersonaJuridica?" icon="ui-icon-alert" />
-                    </p:commandButton>                
+                    </p:commandButton>              
 
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

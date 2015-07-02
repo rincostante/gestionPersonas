@@ -107,5 +107,9 @@ public class EspecialidadFacade extends AbstractFacade<Especialidad> {
                 .setParameter("idParam", id);
         return q.getResultList().isEmpty();
     }  
+
+    public boolean noExiste(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 

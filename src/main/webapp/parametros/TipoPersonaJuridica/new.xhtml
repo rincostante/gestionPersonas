@@ -18,13 +18,6 @@
                     <p:inputText id="nombre" value="#{mbTipoPersonaJuridica.selected.nombre}" 
                     requiredMessage="#{bundle.CreateTipoPersonaJuridicaRequiredMessage_nombre}" required="true"/>
                     
-                    <p:outputLabel value="#{bundle.CreateTipoPersonaJuridicaLabel_PerJuridica}" for="perJuridica" />
-                    <p:selectOneMenu id="perJuridica" value="#{mbTipoPersonaJuridica.selected.perJuridica}" required="true" requiredMessage="#{bundle.CreateCentroPobladoPerJuridicaRequiredMessage}" valueChangeListener="#{mbTipoPersonaJuridica.perJuridicaChangeListener}" >
-                          <f:selectItem itemLabel="Seleccione Persona Juridica" itemValue="" noSelectionOption="true" />
-                          <f:selectItems value="#{mbTipoPersonaJuridica.listaPerJuridica}" var="perJuridica" itemLabel="#{perJuridica.nombre}" itemValue="#{perJuridica}" />
-                          <p:ajax event="change" update="perJuridica"/>
-                    </p:selectOneMenu> 
-                    
                 </h:panelGrid>
             </p:panel>
 

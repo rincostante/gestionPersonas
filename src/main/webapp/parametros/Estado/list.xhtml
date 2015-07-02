@@ -47,12 +47,7 @@
 
                     <p:commandButton icon="ui-icon-pencil" action="#{mbEstado.prepareEdit}" title="Editar" >
                         <f:setPropertyActionListener value="#{e}" target="#{mbEstado.current}" /> 
-                    </p:commandButton>
-
-                    <p:commandButton icon="ui-icon-close" action="#{mbEstado.prepareDestroy}" title="Eliminar" update="estadoList">
-                        <f:setPropertyActionListener value="#{e}" target="#{mbEstado.current}" />
-                        <p:confirm header="Confirmar" message="¿Desea eliminar a este Estado?" icon="ui-icon-alert" />
-                    </p:commandButton>                
+                    </p:commandButton>            
 
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
