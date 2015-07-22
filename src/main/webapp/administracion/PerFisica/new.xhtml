@@ -1,48 +1,82 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:p="http://primefaces.org/ui"
-     xmlns:h="http://xmlns.jcp.org/jsf/html">
-         
-    <ui:define name="content">
-        <h:form>
-
-            <p:panel id="pnNew"  header="#{bundle.PerFisicaNewTitle}" style="margin-bottom:10px;">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+        <ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml">
+        <ui:define name="title">
+        <h:outputText value="#{bundle.PerFisicaTitle}" />
+        </ui:define>
+        <ui:define name="content">
+            <h:form id="frmNew">
+                <p:panel id="pnNew" header="#{bundle.PerFisicaNewTitle}" style="margin-bottom:10px;">
                 <p:growl id="messages" />
                 <h:panelGrid columns="2">
-                    
-                    <p:outputLabel value="#{bundle.CreatePerFisicaLabel_expediente}" for="expediente"/>
-                    <p:inputText id="expediente" validator="#{mbPerFisica.validarInsert}" value="#{mbPerFisica.selected.expediente}" 
-                                 requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_expediente}" required="true"/>
-                    
+                
+                <p:outputLabel value="Expedientes " for="expedienteForm"/>
+                <p:commandButton id="expedienteForm" value="Crear Nuevos" onclick="PF('dlg1').show();" />
+                
+                
                     <p:outputLabel value="#{bundle.CreatePerFisicaLabel_instrumentoSolicitante}" for="instrumentoSolicitante"/>
-                    <p:inputText id="nombre" validator="#{mbPerFisica.validarInsert}" value="#{mbPerFisica.selected.instrumentoSolicitante}" 
+                    <p:inputText id="instrumentoSolicitante" value="#{mbPerFisica.selected.instrumentoSolicitante}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_instrumentoSolicitante}" required="true"/>
-                     
+
                     <p:outputLabel value="#{bundle.CreatePerFisicaLabel_apellido}" for="apellido"/>
-                    <p:inputText id="apellido" validator="#{mbPerFisica.validarInsert}" value="#{mbPerFisica.selected.apellido}" 
+                    <p:inputText id="apellido" value="#{mbPerFisica.selected.apellido}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_apellido}" required="true"/>
                     
                     <p:outputLabel value="#{bundle.CreatePerFisicaLabel_nombre}" for="nombre"/>
-                    <p:inputText id="nombre" validator="#{mbPerFisica.validarInsert}" value="#{mbPerFisica.selected.nombre}" 
-                                 requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_nombre}" required="true"/>
+                    <p:inputText id="nombre" value="#{mbPerFisica.selected.nombre}" 
+                                 requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_nombre}" required="true"/>  
+                        
+                        
+               </h:panelGrid>
+                
+                <p:dialog header="Nuevo Expediente" widgetVar="dlg1" minHeight="40" style="max-width: 25%; float: next; font-size: 80%" >
+                        <h:form id="frmNew">
+                            <p:panel id="inNew" style="margin-bottom:10px;">
+                                <p:growl id="messages" />
+                                <h:panelGrid columns="3">
+                                    <p:outputLabel value=""/>
+                                    
+                                    <p:outputLabel value="#{bundle.CreateExpedienteLabel_numero}" for="numero"/>
+                                    <p:inputText id="numero" value="#{mbPerFisica.expediente.numero}" 
+                                                 requiredMessage="#{bundle.CreateExpedienteRequiredMessage_numero}" required="true"/>
+                                    <p:message for="numero" />   
+                          
+                                    <p:outputLabel value="#{bundle.CreateExpedienteLabel_anio}" for="anio"/>
+                                    <p:inputText id="anio" value="#{mbPerFisica.expediente.anio}" requiredMessage="#{bundle.CreateExpedienteRequiredMessage_anio}" 
+                                                 required="true"/>
+                                    <p:message for="anio" />  
+                                    
+                                </h:panelGrid>
+                            </p:panel>
+                              <p:toolbar>
+                                    <f:facet name="left">
+                                        <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerFisica.createDomicilio}" update="inNew" />
+                                        <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: next">
+                                            <p:ajax update="inNew" resetValues="true" />
+                                        </p:commandButton>
+                                    </f:facet>
+                                </p:toolbar>
+                        </h:form>
+                </p:dialog>
                     
-                </h:panelGrid>
-            </p:panel>
-
-            <p:toolbar>
-                <f:facet name="left">
-                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerFisica.create}" update="pnNew"/>
-                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: next">
-                        <p:ajax update="pnNew" resetValues="true" />
-                    </p:commandButton>
-                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbPerFisica.prepareList}" value="Volver" immediate="true"/>
-                </f:facet>
-            </p:toolbar>
-
-        </h:form>
-    </ui:define>    
-</ui:composition>
+                </p:panel>             
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerFisica.create}" update="pnNew"/>
+                        <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
+                            <p:ajax update="pnNew" resetValues="true" />
+                        </p:commandButton>
+                    </f:facet>
+                    <f:facet name="right">
+                        <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbDomicilio.prepareList}" value="Volver" immediate="true"/>        
+                    </f:facet>
+                </p:toolbar>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

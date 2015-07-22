@@ -7,6 +7,8 @@
 package ar.gob.ambiente.servicios.gestionpersonas.facades;
 
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -43,7 +45,40 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
         Query q = em.createQuery(queryString)
                 .setParameter("dni", dni);
         return q.getResultList().isEmpty();
-    }        
+    }    
+    
+        /**
+     * Metodo que verifica si ya existe la entidad.
+     * @param nombre
+     * @param depto
+     * @return: devuelve True o False
+     */
+    public boolean noExisteDomicilio(String nombre, Domicilio domicilio){
+        em = getEntityManager();
+        String queryString = "SELECT act FROM Domicilio act "
+                + "WHERE act.nombre = :stringParam "
+                + "AND act.domicilio = :domicilio";
+        Query q = em.createQuery(queryString)
+                .setParameter("stringParam", nombre)
+                .setParameter("domicilio", domicilio);
+        return q.getResultList().isEmpty();
+    } 
+    
+        /**
+     * Metodo que verifica si ya existe la entidad.
+     * @param 
+     * @return: devuelve True o False
+     */
+    public boolean noExisteExpediente(String nombre, Expediente expediente){
+        em = getEntityManager();
+        String queryString = "SELECT act FROM Expediente act "
+                + "WHERE act.nombre = :stringParam "
+                + "AND act.expediente = :expediente";
+        Query q = em.createQuery(queryString)
+                .setParameter("stringParam", nombre)
+                .setParameter("expediente", expediente);
+        return q.getResultList().isEmpty();
+    }  
     
     /**
      * Método que verifica si la entidad tiene dependencia (Hijos) en estado HABILITADO

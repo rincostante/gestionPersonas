@@ -112,4 +112,8 @@ public class TipoEstablecimientoFacade extends AbstractFacade<TipoEstablecimient
     public List<TipoEstablecimiento> getNombres(TipoEstablecimiento selectTipoEstablecimiento) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public boolean noExiste(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

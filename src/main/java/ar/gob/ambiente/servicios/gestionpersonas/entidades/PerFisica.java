@@ -26,6 +26,7 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class PerFisica implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,7 +34,7 @@ public class PerFisica implements Serializable {
     
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="expediente_id")
-    private Expediente expediente;
+    private List<Expediente> expedientes;
     
     private String instrumentoSolicitante;
     private String apellido;
@@ -45,7 +46,7 @@ public class PerFisica implements Serializable {
     
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="domicilio_id")
-    private Domicilio domicilio;
+    private List<Domicilio> domicilios;
     
     @ManyToMany(mappedBy="representantes")
     private List<PerJuridica> perJuridica;
@@ -69,7 +70,10 @@ public class PerFisica implements Serializable {
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="adminentidad_id")
     private AdminEntidad admin; 
-
+   
+   /**
+    * Constructor
+    */
     public PerFisica() {
         perJuridica = new ArrayList();
     }
@@ -82,12 +86,12 @@ public class PerFisica implements Serializable {
         this.id = id;
     }
 
-    public Expediente getExpediente() {
-        return expediente;
+    public List<Expediente> getExpedientes() {
+        return expedientes;
     }
 
-    public void setExpediente(Expediente expediente) {
-        this.expediente = expediente;
+    public void setExpedientes(List<Expediente> expedientes) {
+        this.expedientes = expedientes;
     }
 
     public String getInstrumentoSolicitante() {
@@ -146,12 +150,12 @@ public class PerFisica implements Serializable {
         this.cel = cel;
     }
 
-    public Domicilio getDomicilio() {
-        return domicilio;
+    public List<Domicilio> getDomicilios() {
+        return domicilios;
     }
 
-    public void setDomicilio(Domicilio domicilio) {
-        this.domicilio = domicilio;
+    public void setDomicilios(List<Domicilio> domicilios) {
+        this.domicilios = domicilios;
     }
 
     public List<PerJuridica> getPerJuridicas() {
@@ -178,8 +182,6 @@ public class PerFisica implements Serializable {
         this.admin = admin;
     }
 
-    
-    
     @Override
     public int hashCode() {
         int hash = 0;

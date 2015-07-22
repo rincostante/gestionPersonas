@@ -1,89 +1,89 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:p="http://primefaces.org/ui"
-     xmlns:h="http://xmlns.jcp.org/jsf/html">
-         
-    <ui:define name="content">
-        <f:metadata>  
-            <f:event listener="#{mbPerFisica.iniciar}" type="preRenderView"></f:event>  
-        </f:metadata>  
-        <h:form>
-            <p:panel id="perFisicaForm" header="#{bundle.PerFisicaListTitle}" style="margin-bottom:10px;">
-                <h:panelGrid columns="6">
-                    <p:commandButton icon="ui-icon-newwin" value="Agregar Nuevo" action="#{mbPerFisica.prepareCreate}"/>
-                    <p:commandButton icon="ui-icon-refresh" value="Refrescar Listado" action="#{mbPerFisica.prepareList}" update="perFisicaList"/>
-                </h:panelGrid>
-            </p:panel>
-
-            <p:dataTable value="#{mbPerFisica.listado}" 
-                         filteredValue="#{mbPerFisica.listaFilter}"
-                         var="e" 
-                         id="perFisicaList" 
-                         rows="5"
-                         paginator="true"
-                         widgetVar="famTable"                             
-                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15">
-
-                <f:facet name="header"> 
-                    #{bundle.PerFisicaListTitle}  
-                    <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
-                    <p:columnToggler datasource="perFisicaList" trigger="toggler" />
-                </f:facet>
-
-                <p:column headerText="Expediente" filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente}">
-                    <p:outputLabel value="#{e.expediente}"/>
-                </p:column>
-                <p:column headerText="Instrumento Solicitante" filterMatchMode="contains" sortBy="#{e.instrumentoSolicitante}" filterBy="#{e.instrumentoSolicitante}">
-                    <p:outputLabel value="#{e.instrumentoSolicitante}"/>
-                </p:column>
-                 <p:column headerText="Apellido" filterMatchMode="contains" sortBy="#{e.apellido}" filterBy="#{e.apellido}">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml">
+        <ui:define name="content">
+            <f:metadata>   
+                <f:event listener="#{mbPerFisica.iniciar}" type="preRenderView"></f:event>  
+            </f:metadata>         
+            <br/> 
+            <h:form style="text-align: left">
+                <p:panel id="perFisicaForm" header="#{bundle.PerFisicaListTitle}" style="margin-bottom:10px;">
+                    <h:panelGroup>
+                        <h:panelGrid columns="4" id="pnBotones">
+                            <p:commandButton icon="ui-icon-newwin" value="Agregar Nuevo" action="#{mbPerFisica.prepareCreate}"/>
+                            <p:commandButton icon="ui-icon-refresh" value="Refrescar Listado" action="#{mbPerFisica.prepareList}" update="perFisicaList"/>
+                        </h:panelGrid>
+                    </h:panelGroup>
+                </p:panel>      
+                
+                <p:dataTable value="#{mbPerFisica.listPerFisica}" var="e" id="perFisicaList" rows="5" filteredValue="#{mbPerFisica.listPerFisica}"
+                             paginator="true" widgetVar="proTable" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15">
+                    <f:facet name="header">
+                        Listado de #{bundle.PerFisicaListTitle}
+                        <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
+                        <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbPerFisica.prepareList}" update="perFisicaList" style="margin-left: 10px"/>
+                        <p:columnToggler datasource="perFisicaList" trigger="toggler" />
+                    </f:facet>
+                 <p:column headerText="Apellido" style="font-size: 85%" filterMatchMode="contains" sortBy="#{e.apellido}" filterBy="#{e.apellido}">
                      <p:outputLabel value="#{e.apellido}"/>
                 </p:column>
-                <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
+                    
+                <p:column headerText="Nombre" style="font-size: 85%" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
                     <p:outputLabel value="#{e.nombre}"/>
                 </p:column>
-                <p:column headerText="Dni" filterMatchMode="contains" sortBy="#{e.dni}" filterBy="#{e.dni}">
+                    
+                <p:column headerText="Dni" style="font-size: 85%" filterMatchMode="contains" sortBy="#{e.dni}" filterBy="#{e.dni}">
                     <p:outputLabel value="#{e.dni}"/>
                 </p:column>
-                <p:column headerText="Cuil" filterMatchMode="contains" sortBy="#{e.cuil}" filterBy="#{e.cuil}">
-                    <p:outputLabel value="#{e.cuil}"/>
-                </p:column>
-                <p:column headerText="E-Mail" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
-                    <p:outputLabel value="#{e.correoElectronico}"/>
-                </p:column>
-                <p:column headerText="Telefono" filterMatchMode="contains" sortBy="#{e.cel}" filterBy="#{e.cel}">
+                    
+                <p:column headerText="Telefono" style="font-size: 85%" filterMatchMode="contains" sortBy="#{e.cel}" filterBy="#{e.cel}">
                     <p:outputLabel value="#{e.cel}"/>
-                </p:column>
-                <p:column headerText="Domicilio" filterMatchMode="contains" sortBy="#{e.domicilio}" filterBy="#{e.domicilio}">
-                    <p:outputLabel value="#{e.domicilio}"/>
-                </p:column>
+                </p:column> 
+                    
+                    <p:column filterBy="#{e.adminentidad.habilitado}" headerText="Estado" filterMatchMode="equals">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('proTable').filter()" style="font-size: 80%">
+                                <f:converter converterId="javax.faces.Boolean" />
+                                <f:selectItem itemLabel="Todos" itemValue="" />
+                                <f:selectItem itemLabel="Activos" itemValue="true" />
+                                <f:selectItem itemLabel="Inactivos" itemValue="false" />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{e.adminentidad.habilitado ? 'Habilitado': 'Deshabilitado'}" />
+                    </p:column>                    
 
-                <p:column headerText="Acciones" style="width:140px">
-                    <p:growl id="messages" showDetail="true" />                           
-                    <p:commandButton icon="ui-icon-zoomin" action="#{mbPerFisica.prepareView}" title="Ver Detalle">
-                        <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />  
-                    </p:commandButton>
+                    <p:column headerText="Acciones" style="width:140px">
+                        <p:growl id="messages" showDetail="true" />
+                        <p:commandButton icon="ui-icon-zoomin" action="#{mbPerFisica.prepareView}" title="Ver detalle">
+                            <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-pencil" action="#{mbPerFisica.prepareEdit}" title="Editar">
+                            <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
+                        </p:commandButton>
 
-                    <p:commandButton icon="ui-icon-pencil" action="#{mbPerFisica.prepareEdit}" title="Editar" >
-                        <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" /> 
-                    </p:commandButton>
-
-                    <p:commandButton icon="ui-icon-close" action="#{mbPerFisica.prepareDestroy}" title="Eliminar" update="perFisicaList">
-                        <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
-                        <p:confirm header="Confirmar" message="¿Desea eliminar a este PerFisica?" icon="ui-icon-alert" />
-                    </p:commandButton>                
-
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                    </p:confirmDialog>      
-                </p:column>                
-            </p:dataTable>
-        </h:form>
-    </ui:define>        
-</ui:composition>
+                        <p:commandButton icon="ui-icon-trash" action="#{mbPerFisica.prepareDestroy}" update="messages" title="Deshabilitar">
+                            <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
+                            <p:confirm header="Confirmar" message="¿Desea deshabilitar el PerFisica?" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-check" action="#{mbPerFisica.prepareHabilitar}" rendered="#{e.adminentidad.habilitado == 'false'}" 
+                                             title="Habilitar" update="perFisicaList">
+                            <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
+                                <p:confirm header="Confirmar" message="¿Desea habilitar el PerFisica?" icon="ui-icon-alert" />
+                        </p:commandButton>                          
+                        
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                           <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                           <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                       </p:confirmDialog>                       
+                    </p:column>                
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
