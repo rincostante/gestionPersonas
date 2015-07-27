@@ -40,8 +40,8 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
      */
     public boolean noExiste(long dni){
         em = getEntityManager();
-        String queryString = "SELECT dni FROM PerFisica pf "
-                + "WHERE pf.dni =:dni";
+        String queryString = "SELECT pf FROM PerFisica pf "
+                + "WHERE pf.dni = :dni";
         Query q = em.createQuery(queryString)
                 .setParameter("dni", dni);
         return q.getResultList().isEmpty();

@@ -26,6 +26,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -350,8 +351,12 @@ public class MbPerFisica implements Serializable{
         current = new PerFisica();
         
         //Inicializamos la creacion de exp y dom
-        listExpedientes = expedienteFacade.findAll();
-        listDomicilios = domicilioFacade.findAll();
+        listExpedientes = new ArrayList();
+        expediente = new Expediente();
+        listDomicilios = new ArrayList();
+        domicilio = new Domicilio();
+        //listExpedientes = expedienteFacade.findAll();
+        //listDomicilios = domicilioFacade.findAll();
 
         return "new";
     }
@@ -435,7 +440,7 @@ public class MbPerFisica implements Serializable{
             admEnt.setHabilitado(true);
             admEnt.setUsAlta(usLogeado);
             current.setAdmin(admEnt);
-            // agrego la expediente al list
+            // agrego el expediente al list
             
             listExpedientes.add(expediente);     
             
@@ -476,7 +481,7 @@ public class MbPerFisica implements Serializable{
     
     /**
      * Método que inserta una nueva instancia en la base de datos, previamente genera una entidad de administración
-     * con los datos necesarios y luego se la asigna al procedimiento
+     * con los datos necesarios y luego se la asigna al persona fisica
      * @return mensaje que notifica la inserción
      */
     public String create() {
@@ -487,31 +492,47 @@ public class MbPerFisica implements Serializable{
         admEnt.setHabilitado(true);
         admEnt.setUsAlta(usLogeado);
         current.setAdmin(admEnt);
+        
+        //asigno expedientes
+     /**   Expediente exp = new Expediente();
+        exp.setAnio(2014);
+        exp.setNumero(026);
+        listExpedientes.add(exp);
+        current.setExpedientes(listExpedientes);*/
+        
+        //asigno domicilio
+        Domicilio dom = new Domicilio();
+        dom.setCalle("Reconquista");
+        dom.setNumero("555");
+        dom.setPiso("1");
+        dom.setDpto("B");
+        dom.setIdLocalidad(1);
+        current.setDomicilios(domicilios);
 
-        current.setExpedientes(listExpedientes);
-        current.setDomicilios(listDomicilios);
+        //current.setExpedientes(listExpedientes);
+        //current.setDomicilios(listDomicilios);
         
         if(current.getNombre().isEmpty()){
             JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
             return null;
         }else{
             try {
-                if(getFacade().noExiste(current.getCuitCuil())){
+                if(getFacade().noExiste(current.getDni())){
 
                     // Inserción
                     getFacade().create(current);
 
-                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ProcedimientoCreated"));
+                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreated"));
                    // recreateModel();
                     return "view";
 
                 }else{
-                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreateProcedimientoExistente"));
+                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerFisicaExistente"));
                     return null;
                 }
             } 
             catch (Exception e) {
-                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ProcedimientoCreatedErrorOccured"));
+                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreatedErrorOccured"));
                 return null;
             }
         }
@@ -543,15 +564,15 @@ public class MbPerFisica implements Serializable{
 
                 // Actualizo
                 getFacade().edit(current);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ProcedimientoUpdated"));
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdated"));
 
                 return "view";
             }else{
-                JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ProcedimientoExistente"));
+                JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaExistente"));
                 return null; 
             }
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ProcedimientoUpdatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdatedErrorOccured"));
             return null;
         }
     } */
@@ -782,9 +803,9 @@ public class MbPerFisica implements Serializable{
             
             // Deshabilito la entidad
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ProcedimientoDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ProcedimientoDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeletedErrorOccured"));
         }
     }      
 
