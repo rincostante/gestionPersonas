@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -34,19 +37,28 @@ public class PerFisica implements Serializable {
     
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="expediente_id")
-    private List<Expediente> expedientes;
+    private Expediente expediente;
     
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull (message = "El campo no puede ser nulo")
+    @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String instrumentoSolicitante;
+    
     private String apellido;
+    
     private String nombre;
+    
     private Long dni;
+    
     private Long cuitCuil;
+    
     private String correoElectronico;
+    
     private String cel;
     
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="domicilio_id")
-    private List<Domicilio> domicilios;
+    private Domicilio domicilio;
     
     @ManyToMany(mappedBy="representantes")
     private List<PerJuridica> perJuridica;
@@ -86,12 +98,44 @@ public class PerFisica implements Serializable {
         this.id = id;
     }
 
-    public List<Expediente> getExpedientes() {
-        return expedientes;
+    public Expediente getExpediente() {
+        return expediente;
     }
 
-    public void setExpedientes(List<Expediente> expedientes) {
-        this.expedientes = expedientes;
+    public void setExpediente(Expediente expediente) {
+        this.expediente = expediente;
+    }
+
+    public List<PerJuridica> getPerJuridica() {
+        return perJuridica;
+    }
+
+    public void setPerJuridica(List<PerJuridica> perJuridica) {
+        this.perJuridica = perJuridica;
+    }
+
+    public Actividad getActividad() {
+        return actividad;
+    }
+
+    public void setActividad(Actividad actividad) {
+        this.actividad = actividad;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    public Especialidad getEspecialidad() {
+        return especialidad;
+    }
+
+    public void setEspecialidad(Especialidad especialidad) {
+        this.especialidad = especialidad;
     }
 
     public String getInstrumentoSolicitante() {
@@ -150,12 +194,12 @@ public class PerFisica implements Serializable {
         this.cel = cel;
     }
 
-    public List<Domicilio> getDomicilios() {
-        return domicilios;
+    public Domicilio getDomicilio() {
+        return domicilio;
     }
 
-    public void setDomicilios(List<Domicilio> domicilios) {
-        this.domicilios = domicilios;
+    public void setDomicilio(Domicilio domicilio) {
+        this.domicilio = domicilio;
     }
 
     public List<PerJuridica> getPerJuridicas() {

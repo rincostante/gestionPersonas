@@ -7,10 +7,15 @@
 package ar.gob.ambiente.servicios.gestionpersonas.entidades;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -23,13 +28,40 @@ public class Domicilio implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo calle no puede quedar nulo")
+    @Size(message = "El campo calle debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String calle;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo numero no puede quedar nulo")
+    @Size(message = "El campo numero debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String numero;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo piso no puede quedar nulo")
+    @Size(message = "El campo piso debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String piso;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo departamento no puede quedar nulo")
+    @Size(message = "El campo departamento debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String dpto;
+    
     private int idLocalidad;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo localidad no puede quedar nulo")
+    @Size(message = "El campo localidad debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String localidad;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo provincia no puede quedar nulo")
+    @Size(message = "El campo provincia debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String provincia;
+    
+    @ManyToOne(cascade=CascadeType.ALL)
+    private PerFisica perFisica;
     
     public Long getId() {
         return id;
@@ -95,6 +127,14 @@ public class Domicilio implements Serializable {
         this.provincia = provincia;
     }
 
+    public PerFisica getPerFisica() {
+        return perFisica;
+    }
+
+    public void setPerFisica(PerFisica perFisica) {
+        this.perFisica = perFisica;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

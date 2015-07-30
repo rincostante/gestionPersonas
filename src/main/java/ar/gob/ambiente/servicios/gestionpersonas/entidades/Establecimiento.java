@@ -8,6 +8,7 @@ package ar.gob.ambiente.servicios.gestionpersonas.entidades;
 
 import java.io.Serializable;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -43,7 +46,14 @@ public class Establecimiento implements Serializable {
     @OneToOne
     private Domicilio domicilio;
     
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo correo electronico no puede quedar nulo")
+    @Size(message = "El campo correo electronico debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String correoElectronico;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo telefono no puede quedar nulo")
+    @Size(message = "El campo telefono debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String telefono;
     
     @ManyToOne(fetch=FetchType.LAZY)

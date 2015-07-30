@@ -62,11 +62,11 @@ public class MbPerFisica implements Serializable{
     private List<Domicilio> domiciliosFilter;
     private List<Domicilio> listDomicilios;
     private List<PerFisica> listPerFisica;
-    private List<Domicilio> domVinc;
+    private Domicilio domVinc;
     
-    private List<Expediente> expedientes;
-    private List<Expediente> expedientesFilter;
-    private List<Expediente> listExpedientes;
+    //private List<Expediente> expedientes;
+    //private List<Expediente> expedientesFilter;
+    //private List<Expediente> listExpedientes;
     private List<Expediente> expVinc;
     
     @EJB
@@ -197,36 +197,12 @@ public class MbPerFisica implements Serializable{
         this.listPerFisica = listPerFisica;
     }
 
-    public List<Domicilio> getDomVinc() {
+    public Domicilio getDomVinc() {
         return domVinc;
     }
 
-    public void setDomVinc(List<Domicilio> domVinc) {
+    public void setDomVinc(Domicilio domVinc) {
         this.domVinc = domVinc;
-    }
-
-    public List<Expediente> getExpedientes() {
-        return expedientes;
-    }
-
-    public void setExpedientes(List<Expediente> expedientes) {
-        this.expedientes = expedientes;
-    }
-
-    public List<Expediente> getExpedientesFilter() {
-        return expedientesFilter;
-    }
-
-    public void setExpedientesFilter(List<Expediente> expedientesFilter) {
-        this.expedientesFilter = expedientesFilter;
-    }
-
-    public List<Expediente> getListExpedientes() {
-        return listExpedientes;
-    }
-
-    public void setListExpedientes(List<Expediente> listExpedientes) {
-        this.listExpedientes = listExpedientes;
     }
 
     public List<Expediente> getExpVinc() {
@@ -309,6 +285,69 @@ public class MbPerFisica implements Serializable{
         this.listaActividad = listaActividad;
     }
 
+    public PerFisicaFacade getPerFisicaFacade() {
+        return perFisicaFacade;
+    }
+
+    public void setPerFisicaFacade(PerFisicaFacade perFisicaFacade) {
+        this.perFisicaFacade = perFisicaFacade;
+    }
+
+    public PerJuridicaFacade getPerJuridicaFacade() {
+        return perJuridicaFacade;
+    }
+
+    public void setPerJuridicaFacade(PerJuridicaFacade perJuridicaFacade) {
+        this.perJuridicaFacade = perJuridicaFacade;
+    }
+
+    public ExpedienteFacade getExpedienteFacade() {
+        return expedienteFacade;
+    }
+
+    public void setExpedienteFacade(ExpedienteFacade expedienteFacade) {
+        this.expedienteFacade = expedienteFacade;
+    }
+
+    public EspecialidadFacade getEspecialidadFacade() {
+        return especialidadFacade;
+    }
+
+    public void setEspecialidadFacade(EspecialidadFacade especialidadFacade) {
+        this.especialidadFacade = especialidadFacade;
+    }
+
+    public EstadoFacade getEstadoFacade() {
+        return estadoFacade;
+    }
+
+    public void setEstadoFacade(EstadoFacade estadoFacade) {
+        this.estadoFacade = estadoFacade;
+    }
+
+    public DomicilioFacade getDomicilioFacade() {
+        return domicilioFacade;
+    }
+
+    public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
+        this.domicilioFacade = domicilioFacade;
+    }
+
+    public PerfilFacade getPerfilFacade() {
+        return perfilFacade;
+    }
+
+    public void setPerfilFacade(PerfilFacade perfilFacade) {
+        this.perfilFacade = perfilFacade;
+    }
+
+    public ActividadFacade getActividadFacade() {
+        return actividadFacade;
+    }
+
+    public void setActividadFacade(ActividadFacade actividadFacade) {
+        this.actividadFacade = actividadFacade;
+    }
  
     /********************************
      ** Métodos para el datamodel **
@@ -338,8 +377,8 @@ public class MbPerFisica implements Serializable{
      * @return acción para el detalle de la entidad
      */
     public String prepareView() {
-        domVinc = current.getDomicilios();
-        expVinc = current.getExpedientes();
+        domVinc = current.getDomicilio();
+        //expVinc = current.getExpediente();
         return "view";
     }
 
@@ -351,9 +390,9 @@ public class MbPerFisica implements Serializable{
         current = new PerFisica();
         
         //Inicializamos la creacion de exp y dom
-        listExpedientes = new ArrayList();
+        //listExpedientes = new ArrayList();
         expediente = new Expediente();
-        listDomicilios = new ArrayList();
+        //listDomicilios = new ArrayList();
         domicilio = new Domicilio();
         //listExpedientes = expedienteFacade.findAll();
         //listDomicilios = domicilioFacade.findAll();
@@ -365,8 +404,8 @@ public class MbPerFisica implements Serializable{
      * @return acción para la edición de la entidad
      */
     public String prepareEdit() {
-        domVinc = current.getDomicilios();
-        expVinc = current.getExpedientes();
+        domVinc = current.getDomicilio();
+        //expVinc = current.getExpediente();
         return "edit";
     }
            
@@ -413,8 +452,8 @@ public class MbPerFisica implements Serializable{
             // Actualizo
             getFacade().edit(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Persona Fisica Habilitada"));
-            domVinc = current.getDomicilios();
-            expVinc = current.getExpedientes();
+            domVinc = current.getDomicilio();
+            //expVinc = current.getExpediente();
             return "view";
         }catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersonaFisicaHabilitadaErrorOccured"));
@@ -442,7 +481,7 @@ public class MbPerFisica implements Serializable{
             current.setAdmin(admEnt);
             // agrego el expediente al list
             
-            listExpedientes.add(expediente);     
+            //listExpedientes.add(expediente);     
             
             // reseteo la expediente
             expediente = null;
@@ -467,9 +506,9 @@ public class MbPerFisica implements Serializable{
             current.setAdmin(admEnt);
             // agrego la domicilio al list
             
-            listDomicilios.add(domicilio);     
+            //listDomicilios.add(domicilio);     
             
-            // reseteo la domicilio
+            //reseteo la domicilio
             domicilio = null;
             domicilio = new Domicilio();
         } else{
@@ -494,20 +533,21 @@ public class MbPerFisica implements Serializable{
         current.setAdmin(admEnt);
         
         //asigno expedientes
-     /**   Expediente exp = new Expediente();
-        exp.setAnio(2014);
-        exp.setNumero(026);
-        listExpedientes.add(exp);
-        current.setExpedientes(listExpedientes);*/
+        //Expediente exp = new Expediente();
+        expediente.setAnio(2014);
+        expediente.setNumero(26); 
+        current.setExpediente(expediente);
         
         //asigno domicilio
-        Domicilio dom = new Domicilio();
-        dom.setCalle("Reconquista");
-        dom.setNumero("555");
-        dom.setPiso("1");
-        dom.setDpto("B");
-        dom.setIdLocalidad(1);
-        current.setDomicilios(domicilios);
+        //Domicilio dom = new Domicilio();
+        domicilio.setCalle("Reconquista");
+        domicilio.setNumero("555");
+        domicilio.setPiso("1");
+        domicilio.setDpto("B");
+        domicilio.setIdLocalidad(1);
+        domicilio.setLocalidad("Sauce");
+        domicilio.setProvincia("Corrientes");
+        current.setDomicilio(domicilio);
 
         //current.setExpedientes(listExpedientes);
         //current.setDomicilios(listDomicilios);
@@ -632,7 +672,7 @@ public class MbPerFisica implements Serializable{
      * Método para mostrar los Expedientes vinculados
      */
     public void verExpedientes(){
-        expedientes = current.getExpedientes();
+        expediente = current.getExpediente();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 950);
         RequestContext.getCurrentInstance().openDialog("", options, null);
@@ -641,7 +681,7 @@ public class MbPerFisica implements Serializable{
      * Método para mostrar las Domicilios vinculados
      */
     public void verDomicilios(){
-        domicilios = current.getDomicilios();
+        domicilio = current.getDomicilio();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 950);
         RequestContext.getCurrentInstance().openDialog("", options, null);
@@ -710,10 +750,10 @@ public class MbPerFisica implements Serializable{
     private void recreateModel() {
         listPerFisica.clear();
         listPerFisica = null;
-        if(listExpedientes != null){
-            listExpedientes.clear();
-            listExpedientes =null;
-        }
+      //  if(listExpedientes != null){
+      //      listExpedientes.clear();
+      //      listExpedientes =null;
+     //   }
         if(listDomicilios != null){
             listDomicilios.clear();
             listDomicilios =null;

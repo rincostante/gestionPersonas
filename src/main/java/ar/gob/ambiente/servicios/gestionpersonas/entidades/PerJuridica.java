@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -32,14 +35,29 @@ public class PerJuridica implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo razon social no puede quedar nulo")
+    @Size(message = "El campo razon social debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String razonSocial;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo cuit no puede quedar nulo")
+    @Size(message = "El campo cuit debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String cuit;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="tipoPersonaJuridica_id")
     private TipoPersonaJuridica tipoPersonaJuridica;
     
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo correo electronico no puede quedar nulo")
+    @Size(message = "El campo correo electronico debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String correoElectronico;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo telefono no puede quedar nulo")
+    @Size(message = "El campo telefono debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String telefono;
     
     @ManyToMany
