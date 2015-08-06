@@ -1,16 +1,122 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+     
+    <ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml">
+        <ui:define name="title">
+        <h:outputText value="#{bundle.PerFisicaTitle}" />
+        </ui:define>
+        <ui:define name="content">
+        <br/>
+        <h:form id="frmPerFisicaView">
+                <p:panel id="pnView" header="#{bundle.PerFisicaViewTitle}" style="margin-bottom:10px;">
+                    <p:messages id="messages" />
+   
+                    <p:panel id="pnNew1" header="#{bundle.ExpedienteTitle1}" style="margin-bottom:10px;">
+                    <h:panelGrid columns="2">
+                        
+                        <h:outputLabel  value="#{bundle.CreateExpedienteLabel_numero}"/>
+                        <h:outputLabel  value="#{mbPerFisica.expediente.numero}" title="#{bundle.CreateExpedienteLabel_numero}"/>
+                        
+                        <h:outputLabel  value="#{bundle.CreateExpedienteLabel_anio}"/>
+                        <h:outputLabel  value="#{mbPerFisica.expediente.anio}" title="#{bundle.CreateExpedienteLabel_anio}"/>
+                    
+                    </h:panelGrid>
+                    </p:panel>
+                        
+                    <p:panel id="pnNew2" header="#{bundle.PerFisicaDatosPersonalesTitle}" style="margin-bottom:10px;">
+                    <h:panelGrid columns="2">
+                        
+                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_instrumentoSolicitante}"/>
+                        <h:outputLabel  value=" #{mbPerFisica.selected.instrumentoSolicitante}" title="#{bundle.CreatePerFisicaTitle_instrumentoSolicitante}"/>
+                        
+                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_nombre}"/>
+                        <h:outputText   value=" #{mbPerFisica.selected.nombre}" title="#{bundle.CreatePerFisicaTitle_nombre}"/>
+                    
+                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_apellido}"/>
+                        <h:outputLabel  value=" #{mbPerFisica.selected.apellido}" title="#{bundle.CreatePerFisicaTitle_apellido}"/>
+                                        
+                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_dni}"/>
+                        <h:outputLabel  value=" #{mbPerFisica.selected.dni}" title="#{bundle.CreatePerFisicaTitle_dni}"/>
+                        
+                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_cuitCuil}"/>
+                        <h:outputLabel  value=" #{mbPerFisica.selected.cuitCuil}" title="#{bundle.CreatePerFisicaTitle_cuitCuil}"/>
+                                        
+                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_correoElectronico}"/>
+                        <h:outputLabel  value=" #{mbPerFisica.selected.correoElectronico}" title="#{bundle.CreatePerFisicaTitle_correoElectronic}"/>
+                                        
+                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_cel}"/>
+                        <h:outputLabel  value=" #{mbPerFisica.selected.cel}" title="#{bundle.CreatePerFisicaTitle_cel}"/>
+                                        
+                    </h:panelGrid>
+                    </p:panel>
+                        
+                    <p:panel id="pnNew3" header="#{bundle.DomicilioTitle1}" style="margin-bottom:10px;">
+                    <h:panelGrid columns="2">
+                    
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_calle}"/>
+                        <h:outputLabel  value="#{mbPerFisica.domicilio.calle}" title="#{bundle.CreateDomicilioLabel_calle}"/>
+                        
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_numero}"/>
+                        <h:outputLabel  value="#{mbPerFisica.domicilio.numero}" title="#{bundle.CreateDomicilioLabel_numero}"/>
+                                        
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_piso}"/>
+                        <h:outputLabel  value="#{mbPerFisica.domicilio.piso}" title="#{bundle.CreateDomicilioLabel_piso}"/>
+                                        
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_dpto}"/>
+                        <h:outputLabel  value="#{mbPerFisica.domicilio.dpto}" title="#{bundle.CreateDomicilioLabel_dpto}"/>
+                                        
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
+                        <h:outputLabel  value="#{mbPerFisica.domicilio.idLocalidad}" title="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
+                                        
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_localidad}"/>
+                        <h:outputLabel  value="#{mbPerFisica.domicilio.localidad}" title="#{bundle.CreateDomicilioLabel_localidad}"/>
+                                        
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_provincia}"/>
+                        <h:outputLabel  value="#{mbPerFisica.domicilio.provincia}" title="#{bundle.CreateDomicilioLabel_provincia}"/>
+                                        
+                    </h:panelGrid>
+                    </p:panel>
+                        
+                    <p:panel id="pnNew4" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
+                    <h:panelGrid columns="2">
+                    
+                        <h:outputLabel  value="#{bundle.UsuarioAlta}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.usAlta.nombre}" title="#{bundle.UsuarioAlta}"/>                        
+
+                        <h:outputLabel  value="#{bundle.FechaAlta}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.strFechaAlta}" title="#{bundle.FechaAlta}"/>                         
+
+                        <h:outputLabel  value="#{bundle.UsuarioModifica}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.usModif.nombre}" title="#{bundle.UsuarioModifica}"/>                        
+
+                        <h:outputLabel  value="#{bundle.FechaModifica}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.strFechaModif}" title="#{bundle.FechaModifica}"/>                          
+
+                        <h:outputLabel  value="#{bundle.UsuarioBaja}" rendered="#{not mbPerFisica.selected.admin.habilitado}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.usBaja.nombre}" rendered="#{not mbPerFisica.selected.admin.habilitado}"
+                                        title="#{bundle.UsuarioBaja}"/>                        
+
+                        <h:outputLabel  value="#{bundle.FechaBaja}" rendered="#{not mbPerFisica.selected.admin.habilitado}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.strFechaBaja}" rendered="#{not mbPerFisica.selected.admin.habilitado}"
+                                        title="#{bundle.FechaBaja}"/> 
+                        
+                    </h:panelGrid>
+                    </p:panel>    
+                                                   
+                                    
+                </p:panel>
+                <p:toolbar>
+                    <f:facet name="right">
+                        <p:commandButton icon="ui-icon-refresh" action="#{mbPerFisica.prepareList}" value="Volver" ajax="false"/>
+                    </f:facet>
+                </p:toolbar>
+            
+            </h:form>
+        </ui:define>
+    </ui:composition>
 </html>

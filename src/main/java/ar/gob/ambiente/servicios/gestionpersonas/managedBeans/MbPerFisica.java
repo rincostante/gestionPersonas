@@ -26,11 +26,9 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -39,8 +37,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -58,15 +54,15 @@ public class MbPerFisica implements Serializable{
     private Domicilio domicilio;
     private Expediente expediente;
     
-    private List<Domicilio> domicilios;
-    private List<Domicilio> domiciliosFilter;
+    //private List<Domicilio> domicilios;
+    //private List<Domicilio> domiciliosFilter;
     private List<Domicilio> listDomicilios;
     private List<PerFisica> listPerFisica;
     private Domicilio domVinc;
     
     //private List<Expediente> expedientes;
     //private List<Expediente> expedientesFilter;
-    //private List<Expediente> listExpedientes;
+    private List<Expediente> listExpedientes;
     private List<Expediente> expVinc;
     
     @EJB
@@ -91,7 +87,7 @@ public class MbPerFisica implements Serializable{
     private Usuario usLogeado;
     
     private boolean iniciado;
-    //private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
+    private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
     private List<Especialidad> listaEspecialidad;
     private List<PerJuridica> listaPerJuridica;
     private List<Estado> listaEstado;
@@ -140,6 +136,7 @@ public class MbPerFisica implements Serializable{
     
     /********************************
      ****** Getters y Setters *******
+     * @return 
      ********************************/
     public PerFisica getCurrent() {
         return current;
@@ -165,31 +162,10 @@ public class MbPerFisica implements Serializable{
         this.expediente = expediente;
     }
 
-    public List<Domicilio> getDomicilios() {
-        return domicilios;
-    }
-
-    public void setDomicilios(List<Domicilio> domicilios) {
-        this.domicilios = domicilios;
-    }
-
-    public List<Domicilio> getDomiciliosFilter() {
-        return domiciliosFilter;
-    }
-
-    public void setDomiciliosFilter(List<Domicilio> domiciliosFilter) {
-        this.domiciliosFilter = domiciliosFilter;
-    }
-
-    public List<Domicilio> getListDomicilios() {
-        return listDomicilios;
-    }
-
-    public void setListDomicilios(List<Domicilio> listDomicilios) {
-        this.listDomicilios = listDomicilios;
-    }
-
     public List<PerFisica> getListPerFisica() {
+        if(listPerFisica == null){
+            listPerFisica = getFacade().findAll();
+        }
         return listPerFisica;
     }
 
@@ -368,7 +344,6 @@ public class MbPerFisica implements Serializable{
      */
     public String prepareList() {
         iniciado = true;
-        
         recreateModel();
         return "list";
     }
@@ -479,10 +454,6 @@ public class MbPerFisica implements Serializable{
             admEnt.setHabilitado(true);
             admEnt.setUsAlta(usLogeado);
             current.setAdmin(admEnt);
-            // agrego el expediente al list
-            
-            //listExpedientes.add(expediente);     
-            
             // reseteo la expediente
             expediente = null;
             expediente = new Expediente();
@@ -496,7 +467,6 @@ public class MbPerFisica implements Serializable{
      * Método para guardar los domicilio creados en el listDomicilios que irán en la nueva persona fisica
      */
     public void createDomicilio(){
-        if(!compararDomicilio(domicilio)){
             // se agregan los datos del AdminEntidad
             Date date = new Date(System.currentTimeMillis());
             AdminEntidad admEnt = new AdminEntidad();
@@ -504,19 +474,10 @@ public class MbPerFisica implements Serializable{
             admEnt.setHabilitado(true);
             admEnt.setUsAlta(usLogeado);
             current.setAdmin(admEnt);
-            // agrego la domicilio al list
-            
-            //listDomicilios.add(domicilio);     
-            
             //reseteo la domicilio
             domicilio = null;
             domicilio = new Domicilio();
-        } else{
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioExistente"));
-        }
-
     }
-    
     
     /**
      * Método que inserta una nueva instancia en la base de datos, previamente genera una entidad de administración
@@ -534,25 +495,26 @@ public class MbPerFisica implements Serializable{
         
         //asigno expedientes
         //Expediente exp = new Expediente();
-        expediente.setAnio(2014);
-        expediente.setNumero(26); 
+    /*  expediente.setAnio(2014);
+        expediente.setNumero(26); */
         current.setExpediente(expediente);
         
         //asigno domicilio
         //Domicilio dom = new Domicilio();
-        domicilio.setCalle("Reconquista");
+      /*  domicilio.setCalle("Reconquista");
         domicilio.setNumero("555");
         domicilio.setPiso("1");
         domicilio.setDpto("B");
         domicilio.setIdLocalidad(1);
         domicilio.setLocalidad("Sauce");
-        domicilio.setProvincia("Corrientes");
+        domicilio.setProvincia("Corrientes");*/
         current.setDomicilio(domicilio);
 
         //current.setExpedientes(listExpedientes);
         //current.setDomicilios(listDomicilios);
-        
-        if(current.getNombre().isEmpty()){
+        getFacade().create(current);
+        return "view";
+       /* if(current.getNombre().isEmpty()){
             JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
             return null;
         }else{
@@ -576,46 +538,77 @@ public class MbPerFisica implements Serializable{
                 return null;
             }
         }
+        */
     }
 
     /**
      * Método que actualiza una nueva Instancia en la base de datos.
      * Previamente actualiza los datos de administración
      * @return mensaje que notifica la actualización
-     
-    public String update(int Expediente, int Domicilio) {    
+     */
+    public String update() {    
         boolean edito;
         PerFisica perFisica;
+        Date date = new Date(System.currentTimeMillis());
+        
+
+        // actualizamos según el valor de update
+        if(update == 1){
+            current.getAdmin().setFechaBaja(date);
+            current.getAdmin().setUsBaja(usLogeado);
+            current.getAdmin().setHabilitado(false);
+        }
+        if(update == 2){
+            current.getAdmin().setFechaModif(date);
+            current.getAdmin().setUsModif(usLogeado);
+            current.getAdmin().setHabilitado(true);
+            current.getAdmin().setFechaBaja(null);
+            current.getAdmin().setUsBaja(usLogeado);
+        }
+        if(update == 0){
+            current.getAdmin().setFechaModif(date);
+            current.getAdmin().setUsModif(usLogeado);
+        }
+        
+        // acualizo según la operación seleccionada
         try {
-            perFisica = getFacade().getExistente(current.getNombre(), current.getApp());
-            if(perFisica == null){
-                edito = true;  
-            }else{
-                edito = perFisica.getId().equals(current.getId());
-            }
-            if(edito){
-                // Actualización de datos de administración de la entidad
-                Date date = new Date(System.currentTimeMillis());
-                current.getAdmin().setFechaModif(date);
-                current.getAdmin().setUsModif(usLogeado);
-                current.getExpedientes().set(Expediente, expediente);
-                current.getDomicilios().set(Domicilio, domicilio);
+            if(update == 0){
+                perFisica = getFacade().getExistente(current.getActividad());
+                if(perFisica == null){
+                    edito = true;  
+                }else{
+                    edito = perFisica.getId().equals(current.getId());
+                }
+                if(edito){
+                    // Actualización de datos de administración de la entidad
+                    current.getAdmin().setFechaModif(date);
+                    current.getAdmin().setUsModif(usLogeado);
+                   // current.getInstancias().set(Instancia, instancia);
+
+                    // Actualizo
+                    getFacade().edit(current);
+                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdated"));
+
+                    return "view";
+                }else{
+                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaExistente"));
+                    return null; 
+                    }
                 
-
-                // Actualizo
+            }else if(update == 1){
                 getFacade().edit(current);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdated"));
-
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeshabilitado"));
                 return "view";
             }else{
-                JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaExistente"));
-                return null; 
+                getFacade().edit(current);
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaHabilitado"));
+                return "view";
             }
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdatedErrorOccured"));
             return null;
         }
-    } */
+    } 
     
     /**
      * @return mensaje que notifica el borrado
@@ -750,10 +743,10 @@ public class MbPerFisica implements Serializable{
     private void recreateModel() {
         listPerFisica.clear();
         listPerFisica = null;
-      //  if(listExpedientes != null){
-      //      listExpedientes.clear();
-      //      listExpedientes =null;
-     //   }
+        if(listExpedientes != null){
+            listExpedientes.clear();
+            listExpedientes =null;
+        }
         if(listDomicilios != null){
             listDomicilios.clear();
             listDomicilios =null;

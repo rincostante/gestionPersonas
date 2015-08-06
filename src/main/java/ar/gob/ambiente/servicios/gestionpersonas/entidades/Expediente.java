@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -26,10 +27,11 @@ public class Expediente implements Serializable {
     private Long id;
     private int numero;
     private int anio;
-    
+    /**
     @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="perfisica_id")
     private PerFisica perFisica;
-
+    */
     public Long getId() {
         return id;
     }
@@ -52,14 +54,6 @@ public class Expediente implements Serializable {
 
     public void setAnio(int anio) {
         this.anio = anio;
-    }
-
-    public PerFisica getPerFisica() {
-        return perFisica;
-    }
-
-    public void setPerFisica(PerFisica perFisica) {
-        this.perFisica = perFisica;
     }
 
     @Override

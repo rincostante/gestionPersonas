@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -59,10 +60,11 @@ public class Domicilio implements Serializable {
     @NotNull(message = "El campo provincia no puede quedar nulo")
     @Size(message = "El campo provincia debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String provincia;
-    
+    /*
     @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="perfisica_id")
     private PerFisica perFisica;
-    
+    */
     public Long getId() {
         return id;
     }
@@ -125,14 +127,6 @@ public class Domicilio implements Serializable {
 
     public void setProvincia(String provincia) {
         this.provincia = provincia;
-    }
-
-    public PerFisica getPerFisica() {
-        return perFisica;
-    }
-
-    public void setPerFisica(PerFisica perFisica) {
-        this.perFisica = perFisica;
     }
     
     @Override

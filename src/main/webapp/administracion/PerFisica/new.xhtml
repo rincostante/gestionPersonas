@@ -11,45 +11,98 @@
         </ui:define>
         <ui:define name="content">
             <h:form id="frmNew">
+                
                 <p:panel id="pnNew" header="#{bundle.PerFisicaNewTitle}" style="margin-bottom:10px;">
-                <p:growl id="messages" />
-                <h:panelGrid columns="2">
+                    <p:growl id="messages" />
                 
-
-                
-                
-                    <p:outputLabel value="#{bundle.CreatePerFisicaLabel_instrumentoSolicitante}" for="instrumentoSolicitante"/>
-                    <p:inputText id="instrumentoSolicitante" value="#{mbPerFisica.selected.instrumentoSolicitante}" 
+                    <p:panel id="pnNew1" header="#{bundle.ExpedienteTitle1}" style="margin-bottom:10px;">
+                        <h:panelGrid columns="4">
+                            <p:outputLabel value="#{bundle.CreateExpedienteLabel_numero}" for="numero"/>
+                            <p:inputText id="numero" value="#{mbPerFisica.expediente.numero}" 
+                                requiredMessage="#{bundle.CreateExpedienteRequiredMessage_numero}" required="true"/>
+              
+                            <p:outputLabel value="#{bundle.CreateExpedienteLabel_anio}" for="anio"/>
+                            <p:inputText id="anio" value="#{mbPerFisica.expediente.anio}" requiredMessage="#{bundle.CreateExpedienteRequiredMessage_anio}" 
+                                required="true"/>  
+                        </h:panelGrid>
+                    </p:panel>
+                    
+                    <p:panel id="pnNew2" header="#{bundle.PerFisicaDatosPersonalesTitle}" style="margin-bottom:10px;">
+                    <h:panelGrid columns="2">
+                        
+                        <p:outputLabel value="#{bundle.CreatePerFisicaLabel_instrumentoSolicitante}" for="instrumentoSolicitante"/>
+                        <p:inputText id="instrumentoSolicitante" value="#{mbPerFisica.selected.instrumentoSolicitante}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_instrumentoSolicitante}" required="true"/>
-
-                    <p:outputLabel value="#{bundle.CreatePerFisicaLabel_apellido}" for="apellido"/>
-                    <p:inputText id="apellido" value="#{mbPerFisica.selected.apellido}" 
+                    
+                        <p:outputLabel value="#{bundle.CreatePerFisicaLabel_apellido}" for="apellido"/>
+                        <p:inputText id="apellido" value="#{mbPerFisica.selected.apellido}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_apellido}" required="true"/>
                     
-                    <p:outputLabel value="#{bundle.CreatePerFisicaLabel_nombre}" for="nombre"/>
-                    <p:inputText id="nombre" value="#{mbPerFisica.selected.nombre}" 
+                        <p:outputLabel value="#{bundle.CreatePerFisicaLabel_nombre}" for="nombre"/>
+                        <p:inputText id="nombre" value="#{mbPerFisica.selected.nombre}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_nombre}" required="true"/>  
                     
-                    <p:outputLabel value="#{bundle.CreatePerFisicaLabel_dni}" for="dni"/>
-                    <p:inputText id="dni" value="#{mbPerFisica.selected.dni}" 
+                        <p:outputLabel value="#{bundle.CreatePerFisicaLabel_dni}" for="dni"/>
+                        <p:inputText id="dni" value="#{mbPerFisica.selected.dni}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_dni}" required="true"/>
                     
-                    <p:outputLabel value="#{bundle.CreatePerFisicaLabel_cuitCuil}" for="cuitCuil"/>
-                    <p:inputText id="cuitCuil" value="#{mbPerFisica.selected.cuitCuil}" 
+                        <p:outputLabel value="#{bundle.CreatePerFisicaLabel_cuitCuil}" for="cuitCuil"/>
+                        <p:inputText id="cuitCuil" value="#{mbPerFisica.selected.cuitCuil}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_cuitCuil}" required="true"/>
-                    
-                    <p:outputLabel value="#{bundle.CreatePerFisicaLabel_correoElectronico}" for="correoElectronico"/>
-                    <p:inputText id="correoElectronico" value="#{mbPerFisica.selected.correoElectronico}" 
+                        
+                        <p:outputLabel value="#{bundle.CreatePerFisicaLabel_correoElectronico}" for="correoElectronico"/>
+                        <p:inputText id="correoElectronico" value="#{mbPerFisica.selected.correoElectronico}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_correoElectronico}" required="true"/>
                     
-                    <p:outputLabel value="#{bundle.CreatePerFisicaLabel_cel}" for="cel"/>
-                    <p:inputText id="cel" value="#{mbPerFisica.selected.cel}" 
+                        <p:outputLabel value="#{bundle.CreatePerFisicaLabel_cel}" for="cel"/>
+                        <p:inputText id="cel" value="#{mbPerFisica.selected.cel}" 
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_cel}" required="true"/>
+
+                    </h:panelGrid>
+                    </p:panel>
                 
-               </h:panelGrid>
-                
+             <p:panel id="pnNew3" header="#{bundle.DomicilioTitle1}" style="margin-bottom:10px;">
+            
+                    <h:panelGrid columns="2">
+                        
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
+                    <p:inputText id="calle" value="#{mbPerFisica.domicilio.calle}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
+                   
                     
-                </p:panel>             
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}" for="numero_dom"/>
+                    <p:inputText id="numero_dom" value="#{mbPerFisica.domicilio.numero}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_numero}" required="true"/>
+                    
+                     
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}" for="piso"/>
+                    <p:inputText id="piso" value="#{mbPerFisica.domicilio.piso}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_piso}" required="true"/>
+                    
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}" for="dpto"/>
+                    <p:inputText id="dpto" value="#{mbPerFisica.domicilio.dpto}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_dpto}" required="true"/>                         
+                    
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_idLocalidad}" for="idLocalidad"/>
+                    <p:inputText id="idLocalidad" value="#{mbPerFisica.domicilio.idLocalidad}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_idLocalidad}" required="true"/>  
+                    
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_localidad}" for="localidad"/>
+                    <p:inputText id="localidad" value="#{mbPerFisica.domicilio.localidad}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_localidad}" required="true"/>  
+                    
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_provincia}" for="provincia"/>
+                    <p:inputText id="provincia" value="#{mbPerFisica.domicilio.provincia}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_provincia}" required="true"/> 
+                    </h:panelGrid>
+                    </p:panel>  
+                
+                </p:panel>                    
+                        
                 <p:toolbar>
                     <f:facet name="left">
                         <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerFisica.create}" update="pnNew"/>
