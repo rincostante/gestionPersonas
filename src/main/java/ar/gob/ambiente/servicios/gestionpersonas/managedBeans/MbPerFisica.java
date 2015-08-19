@@ -362,16 +362,14 @@ public class MbPerFisica implements Serializable{
      */
     public String prepareCreate() {
         //Se instancia current
-        current = new PerFisica();
-        
-        //Inicializamos la creacion de exp y dom
-        //listExpedientes = new ArrayList();
+        current = new PerFisica();      
+        //Inicializamos la creacion de expediente y domicilio
         expediente = new Expediente();
-        //listDomicilios = new ArrayList();
         domicilio = new Domicilio();
-        //listExpedientes = expedienteFacade.findAll();
-        //listDomicilios = domicilioFacade.findAll();
-
+        listaPerfil = perfilFacade.findAll();
+        listaActividad = actividadFacade.findAll();
+        listaEstado = estadoFacade.findAll();
+        listaEspecialidad = especialidadFacade.findAll();
         return "new";
     }
     
@@ -550,7 +548,6 @@ public class MbPerFisica implements Serializable{
         boolean edito;
         PerFisica perFisica;
         Date date = new Date(System.currentTimeMillis());
-        
 
         // actualizamos según el valor de update
         if(update == 1){

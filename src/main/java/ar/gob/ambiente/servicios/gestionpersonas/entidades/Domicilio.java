@@ -29,23 +29,21 @@ public class Domicilio implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column (nullable=false, length=50, unique=true)
+    @Column (nullable=false, length=50)
     @NotNull(message = "El campo calle no puede quedar nulo")
     @Size(message = "El campo calle debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String calle;
     
-    @Column (nullable=false, length=50, unique=true)
+    @Column (nullable=false, length=50)
     @NotNull(message = "El campo numero no puede quedar nulo")
     @Size(message = "El campo numero debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String numero;
     
-    @Column (nullable=false, length=50, unique=true)
-    @NotNull(message = "El campo piso no puede quedar nulo")
+    @Column (nullable=false, length=50)
     @Size(message = "El campo piso debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String piso;
     
-    @Column (nullable=false, length=50, unique=true)
-    @NotNull(message = "El campo departamento no puede quedar nulo")
+    @Column (nullable=false, length=50)
     @Size(message = "El campo departamento debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String dpto;
     

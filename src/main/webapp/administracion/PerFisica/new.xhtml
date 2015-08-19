@@ -15,7 +15,7 @@
                 <p:panel id="pnNew" header="#{bundle.PerFisicaNewTitle}" style="margin-bottom:10px;">
                     <p:growl id="messages" />
                 
-                    <p:panel id="pnNew1" header="#{bundle.ExpedienteTitle1}" style="margin-bottom:10px;">
+                    <p:panel id="pnNew1" header="#{bundle.ExpedienteViewTitle}" style="margin-bottom:10px;">
                         <h:panelGrid columns="4">
                             <p:outputLabel value="#{bundle.CreateExpedienteLabel_numero}" for="numero"/>
                             <p:inputText id="numero" value="#{mbPerFisica.expediente.numero}" 
@@ -60,9 +60,36 @@
 
                     </h:panelGrid>
                     </p:panel>
+                    
+             <p:panel id="pnNew3" header="#{bundle.PerfilViewTitle}" style="margin-bottom:10px;">
+                 <h:panelGrid columns="2">
+                     <p:outputLabel value="#{bundle.CreatePerfilLabel_nombre}" for="perfil"/>                             
+                      <p:selectOneMenu id="perfil" value="#{mbPerFisica.selected.perfil}" >
+                            <f:selectItem itemLabel="Seleccione Perfil" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerFisica.listaPerfil}" var="perfil" itemLabel="#{perfil.nombre}" itemValue="#{perfil}"/>
+                        </p:selectOneMenu>    
+                 </h:panelGrid>
+             </p:panel>
+                    
+             <p:panel id="pnNew4" header="#{bundle.ActividadViewTitle}" style="margin-bottom:10px;">
+                 <h:panelGrid columns="2">
+                  Agregar Combo   
+                 </h:panelGrid>
+             </p:panel>
+                    
+             <p:panel id="pnNew5" header="#{bundle.EstadoViewTitle}" style="margin-bottom:10px;">
+                 <h:panelGrid columns="2">
+                  Agregar Combo   
+                 </h:panelGrid>
+             </p:panel>
+                    
+             <p:panel id="pnNew6" header="#{bundle.EspecialidadViewTitle}" style="margin-bottom:10px;">
+                 <h:panelGrid columns="2">
+                  Agregar Combo  
+                 </h:panelGrid>
+             </p:panel>
                 
-             <p:panel id="pnNew3" header="#{bundle.DomicilioTitle1}" style="margin-bottom:10px;">
-            
+             <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">        
                     <h:panelGrid columns="2">
                         
                     <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
