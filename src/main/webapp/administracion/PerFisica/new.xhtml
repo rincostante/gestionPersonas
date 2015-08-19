@@ -63,29 +63,41 @@
                     
              <p:panel id="pnNew3" header="#{bundle.PerfilViewTitle}" style="margin-bottom:10px;">
                  <h:panelGrid columns="2">
-                     <p:outputLabel value="#{bundle.CreatePerfilLabel_nombre}" for="perfil"/>                             
+                      <p:outputLabel value="#{bundle.CreatePerfilLabel_nombre}" for="perfil"/>                             
                       <p:selectOneMenu id="perfil" value="#{mbPerFisica.selected.perfil}" >
                             <f:selectItem itemLabel="Seleccione Perfil" itemValue="" noSelectionOption="true" />                           
                             <f:selectItems value="#{mbPerFisica.listaPerfil}" var="perfil" itemLabel="#{perfil.nombre}" itemValue="#{perfil}"/>
-                        </p:selectOneMenu>    
+                      </p:selectOneMenu>    
                  </h:panelGrid>
              </p:panel>
                     
              <p:panel id="pnNew4" header="#{bundle.ActividadViewTitle}" style="margin-bottom:10px;">
                  <h:panelGrid columns="2">
-                  Agregar Combo   
+                      <p:outputLabel value="#{bundle.CreateActividadLabel_nombre}" for="actividad"/>
+                      <p:selectOneMenu id="actividad" value="#{mbPerFisica.selected.actividad}" >
+                            <f:selectItem itemLabel="Seleccione Actividad" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerFisica.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}"/>
+                      </p:selectOneMenu>   
                  </h:panelGrid>
              </p:panel>
                     
              <p:panel id="pnNew5" header="#{bundle.EstadoViewTitle}" style="margin-bottom:10px;">
                  <h:panelGrid columns="2">
-                  Agregar Combo   
+                      <p:outputLabel value="#{bundle.CreateEstadoLabel_nombre}" for="estado"/>
+                      <p:selectOneMenu id="estado" value="#{mbPerFisica.selected.estado}" >
+                            <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerFisica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                      </p:selectOneMenu>   
                  </h:panelGrid>
              </p:panel>
                     
              <p:panel id="pnNew6" header="#{bundle.EspecialidadViewTitle}" style="margin-bottom:10px;">
                  <h:panelGrid columns="2">
-                  Agregar Combo  
+                      <p:outputLabel value="#{bundle.CreateEspecialidadLabel_nombre}" for="especialidad"/>
+                      <p:selectOneMenu id="especialidad" value="#{mbPerFisica.selected.especialidad}" >
+                            <f:selectItem itemLabel="Seleccione Especialidad" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerFisica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad}"/>
+                      </p:selectOneMenu>
                  </h:panelGrid>
              </p:panel>
                 
