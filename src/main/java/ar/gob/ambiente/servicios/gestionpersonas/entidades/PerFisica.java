@@ -54,8 +54,14 @@ public class PerFisica implements Serializable {
     @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String nombre;
     
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull (message = "El campo dni no puede ser nulo")
+    @Size (message = "El campo debe tener entre 7 y 8 caracteres", min = 7, max = 8)
     private Long dni;
     
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull (message = "El campo cuil no puede ser nulo")
+    @Size (message = "El campo debe tener 11 caracteres", min = 11, max = 11)
     private Long cuitCuil;
     
     @Column (nullable=false, length=50, unique=false)

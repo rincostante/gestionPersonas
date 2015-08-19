@@ -46,12 +46,12 @@ public class Establecimiento implements Serializable {
     @OneToOne
     private Domicilio domicilio;
     
-    @Column (nullable=false, length=50, unique=true)
+    @Column (nullable=false, length=50, unique=false)
     @NotNull(message = "El campo correo electronico no puede quedar nulo")
     @Size(message = "El campo correo electronico debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String correoElectronico;
     
-    @Column (nullable=false, length=50, unique=true)
+    @Column (nullable=false, length=50, unique=false)
     @NotNull(message = "El campo telefono no puede quedar nulo")
     @Size(message = "El campo telefono debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String telefono;
