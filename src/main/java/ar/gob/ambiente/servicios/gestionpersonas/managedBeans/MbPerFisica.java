@@ -566,7 +566,6 @@ public class MbPerFisica implements Serializable{
             current.getAdmin().setFechaModif(date);
             current.getAdmin().setUsModif(usLogeado);
         }
-        
         // acualizo según la operación seleccionada
         try {
             if(update == 0){
@@ -579,13 +578,11 @@ public class MbPerFisica implements Serializable{
                 if(edito){
                     // Actualización de datos de administración de la entidad
                     current.getAdmin().setFechaModif(date);
-                    current.getAdmin().setUsModif(usLogeado);
-                   // current.getInstancias().set(Instancia, instancia);
+                    current.getAdmin().setUsModif(usLogeado); 
 
                     // Actualizo
                     getFacade().edit(current);
                     JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdated"));
-
                     return "view";
                 }else{
                     JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaExistente"));
