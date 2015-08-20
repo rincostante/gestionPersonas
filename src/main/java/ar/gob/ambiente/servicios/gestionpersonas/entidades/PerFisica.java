@@ -39,37 +39,37 @@ public class PerFisica implements Serializable {
     @JoinColumn(name="expediente_id")
     private Expediente expediente;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo no puede ser nulo")
     @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String instrumentoSolicitante;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo apellido no puede ser nulo")
     @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String apellido;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo nombre no puede ser nulo")
     @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String nombre;
     
-    @Column (nullable=false, length=50, unique=true)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo dni no puede ser nulo")
     @Size (message = "El campo debe tener entre 7 y 8 caracteres", min = 7, max = 8)
-    private Long dni;
+    private int dni;
     
-    @Column (nullable=false, length=50, unique=true)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo cuil no puede ser nulo")
     @Size (message = "El campo debe tener 11 caracteres", min = 11, max = 11)
-    private Long cuitCuil;
+    private int cuitCuil;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo correo electronico no puede ser nulo")
     @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String correoElectronico;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo celular no puede ser nulo")
     @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String cel;
@@ -180,19 +180,19 @@ public class PerFisica implements Serializable {
         this.nombre = nombre;
     }
 
-    public Long getDni() {
+    public int getDni() {
         return dni;
     }
 
-    public void setDni(Long dni) {
+    public void setDni(int dni) {
         this.dni = dni;
     }
 
-    public Long getCuitCuil() {
+    public int getCuitCuil() {
         return cuitCuil;
     }
 
-    public void setCuitCuil(Long cuitCuil) {
+    public void setCuitCuil(int cuitCuil) {
         this.cuitCuil = cuitCuil;
     }
 

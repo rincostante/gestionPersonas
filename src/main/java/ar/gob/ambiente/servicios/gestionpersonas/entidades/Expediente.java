@@ -29,12 +29,12 @@ public class Expediente implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo numero no puede ser nulo")
     @Size (message = "El campo debe tener entre 1 y 6 caracteres", min = 1, max = 6)
     private int numero;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull (message = "El campo año no puede ser nulo")
     @Size (message = "El campo debe tener entre 1 y 6 caracteres", min = 1, max = 4)
     private int anio;

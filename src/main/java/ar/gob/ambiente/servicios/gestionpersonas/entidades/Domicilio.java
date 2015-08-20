@@ -29,40 +29,37 @@ public class Domicilio implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull(message = "El campo calle no puede quedar nulo")
     @Size(message = "El campo calle debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String calle;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull(message = "El campo numero no puede quedar nulo")
     @Size(message = "El campo numero debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String numero;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @Size(message = "El campo piso debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String piso;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @Size(message = "El campo departamento debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String dpto;
     
     private int idLocalidad;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull(message = "El campo localidad no puede quedar nulo")
     @Size(message = "El campo localidad debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String localidad;
     
-    @Column (nullable=false, length=50, unique=false)
+    @Column (nullable=false, length=50)
     @NotNull(message = "El campo provincia no puede quedar nulo")
     @Size(message = "El campo provincia debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String provincia;
-    /*
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="perfisica_id")
-    private PerFisica perFisica;
-    */
+    
+    
     public Long getId() {
         return id;
     }
