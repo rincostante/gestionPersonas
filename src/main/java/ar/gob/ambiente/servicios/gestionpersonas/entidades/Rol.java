@@ -69,7 +69,7 @@ public class Rol implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.Rol[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Rol[ id=" + id + " ]";
     }
     
 }

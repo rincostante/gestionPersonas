@@ -77,7 +77,7 @@ public class Expediente implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.Expediente[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Expediente[ id=" + id + " ]";
     }
 
     public Object getNombre() {

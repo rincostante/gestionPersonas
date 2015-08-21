@@ -93,7 +93,7 @@ public class Especialidad implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.Especialidad[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Especialidad[ id=" + id + " ]";
     }
     
 }

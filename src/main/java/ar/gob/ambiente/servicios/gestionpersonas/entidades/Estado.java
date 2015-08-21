@@ -106,7 +106,7 @@ public class Estado implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.Estado[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Estado[ id=" + id + " ]";
     }
     
 }

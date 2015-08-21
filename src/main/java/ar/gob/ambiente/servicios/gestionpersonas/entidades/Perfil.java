@@ -81,7 +81,7 @@ public class Perfil implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.Perfil[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Perfil[ id=" + id + " ]";
     }
     
 }

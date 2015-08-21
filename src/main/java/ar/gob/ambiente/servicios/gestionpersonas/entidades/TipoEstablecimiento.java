@@ -87,7 +87,7 @@ public class TipoEstablecimiento implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.TipoEstablecimiento[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.TipoEstablecimiento[ id=" + id + " ]";
     }
     
 }

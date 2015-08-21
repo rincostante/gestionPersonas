@@ -117,7 +117,7 @@ public class Domicilio implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.Domicilio[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Domicilio[ id=" + id + " ]";
     }
 
     public Object getNombre() {

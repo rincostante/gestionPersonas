@@ -186,7 +186,7 @@ public class PerJuridica implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.PerJuridica[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.PerJuridica[ id=" + id + " ]";
     }
     
 }
