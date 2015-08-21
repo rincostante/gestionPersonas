@@ -37,41 +37,14 @@ public class PerFisica implements Serializable {
     
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="expediente_id")
-    private Expediente expediente;
-    
-    @Column (nullable=false, length=50)
-    @NotNull (message = "El campo no puede ser nulo")
-    @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
+    private Expediente expediente; 
+
     private String instrumentoSolicitante;
-    
-    @Column (nullable=false, length=50)
-    @NotNull (message = "El campo apellido no puede ser nulo")
-    @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
-    private String apellido;
-    
-    @Column (nullable=false, length=50)
-    @NotNull (message = "El campo nombre no puede ser nulo")
-    @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
-    private String nombre;
-    
-    @Column (nullable=false, length=50)
-    @NotNull (message = "El campo dni no puede ser nulo")
-    @Size (message = "El campo debe tener entre 7 y 8 caracteres", min = 7, max = 8)
-    private int dni;
-    
-    @Column (nullable=false, length=50)
-    @NotNull (message = "El campo cuil no puede ser nulo")
-    @Size (message = "El campo debe tener 11 caracteres", min = 11, max = 11)
-    private int cuitCuil;
-    
-    @Column (nullable=false, length=50)
-    @NotNull (message = "El campo correo electronico no puede ser nulo")
-    @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
+    private String apellido;  
+    private String nombre;  
+    private long dni; 
+    private long cuitCuil; 
     private String correoElectronico;
-    
-    @Column (nullable=false, length=50)
-    @NotNull (message = "El campo celular no puede ser nulo")
-    @Size (message = "El campo debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String cel;
     
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
@@ -180,19 +153,19 @@ public class PerFisica implements Serializable {
         this.nombre = nombre;
     }
 
-    public int getDni() {
+    public long getDni() {
         return dni;
     }
 
-    public void setDni(int dni) {
+    public void setDni(long dni) {
         this.dni = dni;
     }
 
-    public int getCuitCuil() {
+    public long getCuitCuil() {
         return cuitCuil;
     }
 
-    public void setCuitCuil(int cuitCuil) {
+    public void setCuitCuil(long cuitCuil) {
         this.cuitCuil = cuitCuil;
     }
 
@@ -266,7 +239,7 @@ public class PerFisica implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.PerFisica[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.PerFisica[ id=" + id + " ]";
     }
     
 }

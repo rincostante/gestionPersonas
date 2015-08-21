@@ -87,7 +87,7 @@ public class TipoPersonaJuridica implements Serializable {
 
     @Override
     public String toString() {
-        return "ar.gob.ambiente.servicios.personas.entidades.TipoPersonaJuridica[ id=" + id + " ]";
+        return "ar.gob.ambiente.servicios.gestionPersonas.entidades.TipoPersonaJuridica[ id=" + id + " ]";
     }
     
 }

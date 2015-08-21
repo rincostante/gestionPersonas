@@ -490,22 +490,9 @@ public class MbPerFisica implements Serializable{
         admEnt.setHabilitado(true);
         admEnt.setUsAlta(usLogeado);
         current.setAdmin(admEnt);
-        
-        //asigno expedientes
-        //Expediente exp = new Expediente();
-    /*  expediente.setAnio(2014);
-        expediente.setNumero(26); */
+        //Asigno expediente
         current.setExpediente(expediente);
-        
-        //asigno domicilio
-        //Domicilio dom = new Domicilio();
-      /*  domicilio.setCalle("Reconquista");
-        domicilio.setNumero("555");
-        domicilio.setPiso("1");
-        domicilio.setDpto("B");
-        domicilio.setIdLocalidad(1);
-        domicilio.setLocalidad("Sauce");
-        domicilio.setProvincia("Corrientes");*/
+        //Asigno domicilio
         current.setDomicilio(domicilio);
 
         //current.setExpedientes(listExpedientes);
