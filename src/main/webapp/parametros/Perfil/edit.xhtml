@@ -13,10 +13,10 @@
             <p:panel id="pnNew"  header="#{bundle.PerfilEditTitle}" style="margin-bottom:10px;">
                 <p:growl id="messages" />
                 <h:panelGrid columns="2">
-                    <p:outputLabel value="#{bundle.CreatePerfilLabel_nombre}" for="nombre"/>
+                    <p:outputLabel value="#{bundle.LabelNombre}" for="nombre"/>
                     <p:inputText id="nombre"
                                  value="#{mbPerfil.selected.nombre}" 
-                                 requiredMessage="#{bundle.CreatePerfilRequiredMessage_nombre}" required="true"/>
+                                 requiredMessage="#{bundle.LabelNombre}" required="true"/>
                 </h:panelGrid>
             </p:panel>
 
