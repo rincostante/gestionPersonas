@@ -89,5 +89,9 @@ public class TipoEstablecimiento implements Serializable {
     public String toString() {
         return "ar.gob.ambiente.servicios.gestionPersonas.entidades.TipoEstablecimiento[ id=" + id + " ]";
     }
+
+    public List<TipoEstablecimiento> findAll() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

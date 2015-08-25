@@ -54,14 +54,10 @@ public class MbPerFisica implements Serializable{
     private Domicilio domicilio;
     private Expediente expediente;
     
-    //private List<Domicilio> domicilios;
-    //private List<Domicilio> domiciliosFilter;
     private List<Domicilio> listDomicilios;
     private List<PerFisica> listPerFisica;
     private Domicilio domVinc;
     
-    //private List<Expediente> expedientes;
-    //private List<Expediente> expedientesFilter;
     private List<Expediente> listExpedientes;
     private List<Expediente> expVinc;
     

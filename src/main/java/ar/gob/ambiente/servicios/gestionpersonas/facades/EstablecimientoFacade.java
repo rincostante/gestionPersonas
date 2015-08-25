@@ -6,6 +6,8 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.facades;
 
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -107,6 +109,18 @@ public class EstablecimientoFacade extends AbstractFacade<Establecimiento> {
                 .setParameter("idParam", id);
         return q.getResultList().isEmpty();
     }  
+
+    public boolean noExisteDomicilio(Object object, Domicilio domicilio) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean noExiste(long l) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Establecimiento getExistente(Actividad actividad) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 
 

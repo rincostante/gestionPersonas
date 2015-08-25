@@ -1,16 +1,129 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+        <ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml">
+        <ui:define name="title">
+        <h:outputText value="#{bundle.PerJuridicaTitle}" />
+        </ui:define>
+        <ui:define name="content">
+            <h:form id="frmNew">
+                
+                <p:panel id="pnNew" header="#{bundle.PerJuridicaNewTitle}" style="margin-bottom:10px;">
+                    <p:growl id="messages" />
+                
+                    <p:panel id="pnNew1" header="#{bundle.ExpedienteViewTitle}" style="margin-bottom:10px;">
+                        <h:panelGrid columns="4">
+                            <p:outputLabel value="#{bundle.CreateExpedienteLabel_numero}" for="numero"/>
+                            <p:inputText id="numero" value="#{mbPerJuridica.expediente.numero}" 
+                                requiredMessage="#{bundle.CreateExpedienteRequiredMessage_numero}" required="true"/>
+              
+                            <p:outputLabel value="#{bundle.CreateExpedienteLabel_anio}" for="anio"/>
+                            <p:inputText id="anio" value="#{mbPerJuridica.expediente.anio}" requiredMessage="#{bundle.CreateExpedienteRequiredMessage_anio}" 
+                                required="true"/>  
+                        </h:panelGrid>
+                    </p:panel>
+                    
+                    <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
+                        <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" 
+                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_razonSocial}" required="true"/>
+                    
+                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}" for="cuit"/>
+                        <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" 
+                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_cuit}" required="true"/>
+                        
+                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_correoElectronico}" for="correoElectronico"/>
+                        <p:inputText id="correoElectronico" value="#{mbPerJuridica.selected.correoElectronico}" 
+                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_correoElectronico}" required="true"/>
+                    
+                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_telefono}" for="telefono"/>
+                        <p:inputText id="telefono" value="#{mbPerJuridica.selected.telefono}" 
+                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_telefono}" required="true"/>
+                    </h:panelGrid>
+                    </p:panel>
+                    
+             <p:panel id="pnNew5" header="#{bundle.EstadoViewTitle}" style="margin-bottom:10px;">
+                 <h:panelGrid columns="2">
+                     <p:outputLabel value="#{bundle.LabelNombre}" for="estado"/>
+                      <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" >
+                            <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                      </p:selectOneMenu>   
+                 </h:panelGrid>
+             </p:panel>
+                    
+             <p:panel id="pnNew6" header="#{bundle.EspecialidadViewTitle}" style="margin-bottom:10px;">
+                 <h:panelGrid columns="2">
+                     <p:outputLabel value="#{bundle.LabelNombre}" for="especialidad"/>
+                      <p:selectOneMenu id="especialidad" value="#{mbPerJuridica.selected.especialidad}" >
+                            <f:selectItem itemLabel="Seleccione Especialidad" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerJuridica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad}"/>
+                      </p:selectOneMenu>
+                 </h:panelGrid>
+             </p:panel>
+             
+                    HACER ESTABLECIMIENTO
+                    Deberia quedar
+                    mbPerJuridica.establecimiento.domicilio
+                    
+             <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">        
+                    <h:panelGrid columns="2">
+                        
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
+                    <p:inputText id="calle" value="#{mbPerJuridica.domicilio.calle}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
+                   
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}" for="numero_dom"/>
+                    <p:inputText id="numero_dom" value="#{mbPerJuridica.domicilio.numero}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_numero}" required="true"/>
+                    
+                     
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}" for="piso"/>
+                    <p:inputText id="piso" value="#{mbPerJuridica.domicilio.piso}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_piso}" required="true"/>
+                    
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}" for="dpto"/>
+                    <p:inputText id="dpto" value="#{mbPerJuridica.domicilio.dpto}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_dpto}" required="true"/>                         
+                    
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_idLocalidad}" for="idLocalidad"/>
+                    <p:inputText id="idLocalidad" value="#{mbPerJuridica.domicilio.idLocalidad}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_idLocalidad}" required="true"/>  
+                    
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_localidad}" for="localidad"/>
+                    <p:inputText id="localidad" value="#{mbPerJuridica.domicilio.localidad}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_localidad}" required="true"/>  
+                    
+                    
+                    <p:outputLabel value="#{bundle.CreateDomicilioLabel_provincia}" for="provincia"/>
+                    <p:inputText id="provincia" value="#{mbPerJuridica.domicilio.provincia}" 
+                                 requiredMessage="#{bundle.CreateDomicilioRequiredMessage_provincia}" required="true"/> 
+                    </h:panelGrid>
+                    </p:panel>  
+                
+                </p:panel>                    
+                        
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.create}" update="pnNew"/>
+                        <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
+                            <p:ajax update="pnNew" resetValues="true" />
+                        </p:commandButton>
+                    </f:facet>
+                    <f:facet name="right">
+                        <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbPerJuridica.prepareList}" value="Volver" immediate="true"/>        
+                    </f:facet>
+                </p:toolbar>
+            </h:form>
+        </ui:define>
+    </ui:composition>
 </html>

@@ -6,6 +6,7 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.facades;
 
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -90,6 +91,10 @@ import javax.persistence.Query;
     }
 
     public List<PerJuridica> getNombres(PerJuridica selectPerJuridica) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean noExisteExpediente(Object object, Expediente expediente) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

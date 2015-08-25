@@ -31,8 +31,8 @@
                         <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_instrumentoSolicitante}"/>
                         <h:outputLabel  value=" #{mbPerFisica.selected.instrumentoSolicitante}" title="#{bundle.CreatePerFisicaTitle_instrumentoSolicitante}"/>
                         
-                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_nombre}"/>
-                        <h:outputText   value=" #{mbPerFisica.selected.nombre}" title="#{bundle.CreatePerFisicaTitle_nombre}"/>
+                        <h:outputLabel  value="#{bundle.LabelNombre}"/>
+                        <h:outputText   value=" #{mbPerFisica.selected.nombre}" title="#{bundle.LabelNombre}"/>
                     
                         <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_apellido}"/>
                         <h:outputLabel  value=" #{mbPerFisica.selected.apellido}" title="#{bundle.CreatePerFisicaTitle_apellido}"/>
@@ -53,33 +53,33 @@
                         
              <p:panel id="pnNew3" header="#{bundle.PerfilViewTitle}" style="margin-bottom:10px;">
                  <h:panelGrid columns="2">
-                     <h:outputLabel value="#{bundle.CreatePerfilLabel_nombre} "/>
+                     <h:outputLabel value="#{bundle.LabelNombre} "/>
                      <h:outputText  value="#{mbPerFisica.selected.perfil.nombre}" 
-                                    title="#{bundle.CreatePerfilLabel_nombre}"/>
+                                    title="#{bundle.LabelNombre}"/>
                   </h:panelGrid>
              </p:panel>
                     
              <p:panel id="pnNew4" header="#{bundle.ActividadViewTitle}" style="margin-bottom:10px;">
                  <h:panelGrid columns="2">
-                     <h:outputLabel value="#{bundle.CreateActividadLabel_nombre} "/>
+                     <h:outputLabel value="#{bundle.LabelNombre} "/>
                      <h:outputText  value="#{mbPerFisica.selected.actividad.nombre}" 
-                                    title="#{bundle.CreateActividadLabel_nombre}"/>
+                                    title="#{bundle.LabelNombre}"/>
                  </h:panelGrid>
              </p:panel>
                     
              <p:panel id="pnNew5" header="#{bundle.EstadoViewTitle}" style="margin-bottom:10px;">
                  <h:panelGrid columns="2">
-                     <h:outputLabel value="#{bundle.CreateEstadoLabel_nombre} "/>
+                     <h:outputLabel value="#{bundle.LabelNombre} "/>
                      <h:outputText  value="#{mbPerFisica.selected.estado.nombre}" 
-                                    title="#{bundle.CreateEstadoLabel_nombre}"/>
+                                    title="#{bundle.LabelNombre}"/>
                  </h:panelGrid>
              </p:panel>
                     
              <p:panel id="pnNew6" header="#{bundle.EspecialidadViewTitle}" style="margin-bottom:10px;">
                  <h:panelGrid columns="2">
-                     <h:outputLabel value="#{bundle.CreateEspecialidadLabel_nombre} "/>
+                     <h:outputLabel value="#{bundle.LabelNombre} "/>
                      <h:outputText  value="#{mbPerFisica.selected.especialidad.nombre}" 
-                                    title="#{bundle.CreateEspecialidadLabel_nombre}"/>
+                                    title="#{bundle.LabelNombre}"/>
                  </h:panelGrid>
              </p:panel>
                     
@@ -110,25 +110,25 @@
                         
              <p:panel id="pnNew8" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
              <h:panelGrid columns="2">                   
-                        <h:outputLabel  value="#{bundle.UsuarioAlta}"/>
-                        <h:outputText   value="#{mbPerFisica.selected.admin.usAlta.nombre}" title="#{bundle.UsuarioAlta}"/>                        
+                 <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
 
-                        <h:outputLabel  value="#{bundle.FechaAlta}"/>
-                        <h:outputText   value="#{mbPerFisica.selected.admin.strFechaAlta}" title="#{bundle.FechaAlta}"/>                         
+                        <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
 
-                        <h:outputLabel  value="#{bundle.UsuarioModifica}"/>
-                        <h:outputText   value="#{mbPerFisica.selected.admin.usModif.nombre}" title="#{bundle.UsuarioModifica}"/>                        
+                        <h:outputLabel  value="#{bundle.LabelUsuarioModif}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
 
-                        <h:outputLabel  value="#{bundle.FechaModifica}"/>
-                        <h:outputText   value="#{mbPerFisica.selected.admin.strFechaModif}" title="#{bundle.FechaModifica}"/>                          
+                        <h:outputLabel  value="#{bundle.LabelFechaModif}"/>
+                        <h:outputText   value="#{mbPerFisica.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
 
-                        <h:outputLabel  value="#{bundle.UsuarioBaja}" rendered="#{not mbPerFisica.selected.admin.habilitado}"/>
+                        <h:outputLabel  value="#{bundle.LabelUsuario}" rendered="#{not mbPerFisica.selected.admin.habilitado}"/>
                         <h:outputText   value="#{mbPerFisica.selected.admin.usBaja.nombre}" rendered="#{not mbPerFisica.selected.admin.habilitado}"
-                                        title="#{bundle.UsuarioBaja}"/>                        
+                                        title="#{bundle.LabelUsuario}"/>                        
 
-                        <h:outputLabel  value="#{bundle.FechaBaja}" rendered="#{not mbPerFisica.selected.admin.habilitado}"/>
+                        <h:outputLabel  value="#{bundle.LabelFechaBaja}" rendered="#{not mbPerFisica.selected.admin.habilitado}"/>
                         <h:outputText   value="#{mbPerFisica.selected.admin.strFechaBaja}" rendered="#{not mbPerFisica.selected.admin.habilitado}"
-                                        title="#{bundle.FechaBaja}"/>             
+                                        title="#{bundle.LabelFechaBaja}"/>             
              </h:panelGrid>
              </p:panel>    
                                                                             
