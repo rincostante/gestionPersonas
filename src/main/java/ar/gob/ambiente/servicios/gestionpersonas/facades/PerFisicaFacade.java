@@ -7,7 +7,6 @@
 package ar.gob.ambiente.servicios.gestionpersonas.facades;
 
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import java.util.List;
@@ -46,23 +45,6 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
                 .setParameter("dni", dni);
         return q.getResultList().isEmpty();
     }    
-    
-        /**
-     * Metodo que verifica si ya existe la entidad.
-     * @param nombre
-     * @param depto
-     * @return: devuelve True o False
-     */
-    public boolean noExisteDomicilio(String nombre, Domicilio domicilio){
-        em = getEntityManager();
-        String queryString = "SELECT act FROM Domicilio act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.domicilio = :domicilio";
-        Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("domicilio", domicilio);
-        return q.getResultList().isEmpty();
-    } 
     
         /**
      * Metodo que verifica si ya existe la entidad.

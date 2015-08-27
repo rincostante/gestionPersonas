@@ -19,8 +19,8 @@
                 </h:panelGrid>
             </p:panel>
 
-            <p:dataTable value="#{mbPerJuridica.listado}" 
-                         filteredValue="#{mbPerJuridica.listaFilter}"
+            <p:dataTable value="#{mbPerJuridica.listaPerJuridica}" 
+                         filteredValue="#{mbPerJuridica.listPerJuridica}"
                          var="e" 
                          id="perJuridicaList" 
                          rows="5"
@@ -49,9 +49,6 @@
                 </p:column>
                 <p:column headerText="Telefono" filterMatchMode="contains" sortBy="#{e.telefono}" filterBy="#{e.telefono}">
                     <p:outputLabel value="#{e.telefono}"/>
-                </p:column>
-                <p:column headerText="Expediente" filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente}">
-                    <p:outputLabel value="#{e.expediente}"/>
                 </p:column>
 
                 <p:column headerText="Acciones" style="width:140px">

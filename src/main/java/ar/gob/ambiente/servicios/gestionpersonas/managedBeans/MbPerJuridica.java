@@ -14,6 +14,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
@@ -23,6 +24,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Enumeration;
@@ -54,6 +56,7 @@ public class MbPerJuridica implements Serializable{
     
     private List<PerJuridica> listPerJuridica;
     private List<Expediente> listExpedientes;
+    private List<Establecimiento> listEstablecimiento;
     private List<Expediente> expVinc;
     
     @EJB
@@ -70,6 +73,8 @@ public class MbPerJuridica implements Serializable{
     private PerfilFacade perfilFacade;
     @EJB
     private ActividadFacade actividadFacade;
+    @EJB
+    private TipoPersonaJuridicaFacade tipoFacade;
     
     private PerJuridica perJuridicaSelected;
     private MbLogin login;
@@ -82,6 +87,7 @@ public class MbPerJuridica implements Serializable{
     private List<Estado> listaEstado;
     private List<Perfil> listaPerfil;
     private List<Actividad> listaActividad;
+    private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
     
     /**
      * Creates a new instance of MbPerJuridica
@@ -121,8 +127,8 @@ public class MbPerJuridica implements Serializable{
                 }
             }
         }
-    }     
-    
+    }
+
     /********************************
      ****** Getters y Setters *******
      * @return 
@@ -165,6 +171,14 @@ public class MbPerJuridica implements Serializable{
 
     public void setListExpedientes(List<Expediente> listExpedientes) {
         this.listExpedientes = listExpedientes;
+    }
+
+    public List<Establecimiento> getListEstablecimiento() {
+        return listEstablecimiento;
+    }
+
+    public void setListEstablecimiento(List<Establecimiento> listEstablecimiento) {
+        this.listEstablecimiento = listEstablecimiento;
     }
 
     public List<Expediente> getExpVinc() {
@@ -311,6 +325,22 @@ public class MbPerJuridica implements Serializable{
         this.listaActividad = listaActividad;
     }
 
+    public TipoPersonaJuridicaFacade getTipoFacade() {
+        return tipoFacade;
+    }
+
+    public void setTipoFacade(TipoPersonaJuridicaFacade tipoFacade) {
+        this.tipoFacade = tipoFacade;
+    }
+
+    public List<TipoPersonaJuridica> getListaTipoPersonaJuridica() {
+        return listaTipoPersonaJuridica;
+    }
+
+    public void setListaTipoPersonaJuridica(List<TipoPersonaJuridica> listaTipoPersonaJuridica) {
+        this.listaTipoPersonaJuridica = listaTipoPersonaJuridica;
+    }
+    
     public PerJuridica getSelected() {
         if (current == null) {
             current = new PerJuridica();
@@ -345,10 +375,11 @@ public class MbPerJuridica implements Serializable{
     public String prepareCreate() {
         //Se instancia current
         current = new PerJuridica();      
-        //Inicializamos la creacion de expediente
+        //Inicializamos la creacion de expediente y establecimiento
         expediente = new Expediente();
+        establecimiento = new Establecimiento();
+        
         listaPerfil = perfilFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
         listaEspecialidad = especialidadFacade.findAll();
         return "new";
@@ -454,6 +485,16 @@ public class MbPerJuridica implements Serializable{
         current.setAdmin(admEnt);
         //Asigno expediente
         current.setExpediente(expediente);
+        
+        //Asigno Establecimiento
+        Establecimiento establecimiento = new Establecimiento();
+        establecimiento.setTipo(null);
+        establecimiento.setActividad(null);
+        establecimiento.setDomicilio(null);
+        establecimiento.setCorreoElectronico("correo");
+        establecimiento.setTelefono("0303456");
+        establecimiento.setEstado(null);
+        listEstablecimiento.add(establecimiento);
 
         //current.setExpedientes(listExpedientes);
         getFacade().create(current);

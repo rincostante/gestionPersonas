@@ -437,43 +437,6 @@ public class MbPerFisica implements Serializable{
     ** Métodos de operación **
     **************************/
     /**
-     * Método para guardar los expediente creados en el listExpedientes que irán en la nueva persona fisica
-     */
-    public void createExpediente(){
-        //if(!compararExpediente(expediente)){
-            // se agregan los datos del AdminEntidad
-            Date date = new Date(System.currentTimeMillis());
-            AdminEntidad admEnt = new AdminEntidad();
-            admEnt.setFechaAlta(date);
-            admEnt.setHabilitado(true);
-            admEnt.setUsAlta(usLogeado);
-            current.setAdmin(admEnt);
-            // reseteo la expediente
-            expediente = null;
-            expediente = new Expediente();
-      //  } else{
-       //     JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteExistente"));
-      //  }
-
-    }
-    
-        /**
-     * Método para guardar los domicilio creados en el listDomicilios que irán en la nueva persona fisica
-     */
-    public void createDomicilio(){
-            // se agregan los datos del AdminEntidad
-            Date date = new Date(System.currentTimeMillis());
-            AdminEntidad admEnt = new AdminEntidad();
-            admEnt.setFechaAlta(date);
-            admEnt.setHabilitado(true);
-            admEnt.setUsAlta(usLogeado);
-            current.setAdmin(admEnt);
-            //reseteo la domicilio
-            domicilio = null;
-            domicilio = new Domicilio();
-    }
-    
-    /**
      * Método que inserta una nueva instancia en la base de datos, previamente genera una entidad de administración
      * con los datos necesarios y luego se la asigna al persona fisica
      * @return mensaje que notifica la inserción
@@ -586,33 +549,7 @@ public class MbPerFisica implements Serializable{
             return null;
         }
     } 
-    
-    /**
-     * @return mensaje que notifica el borrado
-     */    
-    public String destroyExpediente() {
-    //current = expedienteSelected;
-        performDestroyExpediente();
-        recreateModel();
-        return "view";
-    } 
-    /**
-     * @return mensaje que notifica el borrado
-     */    
-    public String destroyDomicilio() {
-    //current = domicilioSelected;
-        performDestroyDomicilio();
-        recreateModel();
-        return "view";
-    }
-    /**
-     * @return mensaje que notifica el borrado
-     */    
-    public String destroy() {
-        performDestroy();
-        recreateModel();
-        return "view";
-    }
+
     
     /*************************
      ** Métodos de selección **
@@ -698,12 +635,6 @@ public class MbPerFisica implements Serializable{
 
     private void validarExpedienteExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExisteExpediente(null, expediente)){ 
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateInstanciaExistente")));
-        }
-    } 
-    
-    private void validarDomicilioExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExisteDomicilio(null, domicilio)){
             throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateInstanciaExistente")));
         }
     } 
@@ -821,7 +752,7 @@ public class MbPerFisica implements Serializable{
 
      /**
      * @return mensaje que notifica la actualizacion de estado
-          
+      */    
    public void habilitar() {
         update = 2;
         update();        
@@ -830,7 +761,7 @@ public class MbPerFisica implements Serializable{
 
     /**
      * @return mensaje que notifica la actualizacion de estado
-        
+     */   
     public void deshabilitar() {
        if (getFacade().noTieneDependencias(current.getId())){
           update = 1;
@@ -842,7 +773,7 @@ public class MbPerFisica implements Serializable{
             JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaNonDeletable"));            
         }
     } 
-    */
+    
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
