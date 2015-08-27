@@ -28,62 +28,47 @@
                         
              <p:panel id="pnNew2" header="#{bundle.PerFisicaDatosPersonalesTitle}" style="margin-bottom:10px;">
                     <h:panelGrid columns="2">            
-                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_instrumentoSolicitante}"/>
-                        <h:outputLabel  value=" #{mbPerFisica.selected.instrumentoSolicitante}" title="#{bundle.CreatePerFisicaTitle_instrumentoSolicitante}"/>
                         
-                        <h:outputLabel  value="#{bundle.LabelNombre}"/>
-                        <h:outputText   value=" #{mbPerFisica.selected.nombre}" title="#{bundle.LabelNombre}"/>
+                     <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_instrumentoSolicitante}"/>
+                     <h:outputLabel  value=" #{mbPerFisica.selected.instrumentoSolicitante}" title="#{bundle.CreatePerFisicaTitle_instrumentoSolicitante}"/>
+                        
+                     <h:outputLabel  value="#{bundle.LabelNombre}"/>
+                     <h:outputText   value=" #{mbPerFisica.selected.nombre}" title="#{bundle.LabelNombre}"/>
                     
-                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_apellido}"/>
-                        <h:outputLabel  value=" #{mbPerFisica.selected.apellido}" title="#{bundle.CreatePerFisicaTitle_apellido}"/>
+                     <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_apellido}"/>
+                     <h:outputLabel  value=" #{mbPerFisica.selected.apellido}" title="#{bundle.CreatePerFisicaTitle_apellido}"/>
                                         
-                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_dni}"/>
-                        <h:outputLabel  value=" #{mbPerFisica.selected.dni}" title="#{bundle.CreatePerFisicaTitle_dni}"/>
+                     <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_dni}"/>
+                     <h:outputLabel  value=" #{mbPerFisica.selected.dni}" title="#{bundle.CreatePerFisicaTitle_dni}"/>
                         
-                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_cuitCuil}"/>
-                        <h:outputLabel  value=" #{mbPerFisica.selected.cuitCuil}" title="#{bundle.CreatePerFisicaTitle_cuitCuil}"/>
+                     <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_cuitCuil}"/>
+                     <h:outputLabel  value=" #{mbPerFisica.selected.cuitCuil}" title="#{bundle.CreatePerFisicaTitle_cuitCuil}"/>
                                         
-                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_correoElectronico}"/>
-                        <h:outputLabel  value=" #{mbPerFisica.selected.correoElectronico}" title="#{bundle.CreatePerFisicaTitle_correoElectronic}"/>
+                     <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_correoElectronico}"/>
+                     <h:outputLabel  value=" #{mbPerFisica.selected.correoElectronico}" title="#{bundle.CreatePerFisicaTitle_correoElectronic}"/>
                                         
-                        <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_cel}"/>
-                        <h:outputLabel  value=" #{mbPerFisica.selected.cel}" title="#{bundle.CreatePerFisicaTitle_cel}"/>                       
-                    </h:panelGrid>
-             </p:panel>
-                        
-             <p:panel id="pnNew3" header="#{bundle.PerfilViewTitle}" style="margin-bottom:10px;">
-                 <h:panelGrid columns="2">
-                     <h:outputLabel value="#{bundle.LabelNombre} "/>
+                     <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_cel}"/>
+                     <h:outputLabel  value=" #{mbPerFisica.selected.cel}" title="#{bundle.CreatePerFisicaTitle_cel}"/>                       
+                    
+                     <h:outputLabel value="#{bundle.PerfilViewTitle} "/>
                      <h:outputText  value="#{mbPerFisica.selected.perfil.nombre}" 
-                                    title="#{bundle.LabelNombre}"/>
-                  </h:panelGrid>
-             </p:panel>
-                    
-             <p:panel id="pnNew4" header="#{bundle.ActividadViewTitle}" style="margin-bottom:10px;">
-                 <h:panelGrid columns="2">
-                     <h:outputLabel value="#{bundle.LabelNombre} "/>
+                                    title="#{bundle.PerfilViewTitle}"/>
+
+                     <h:outputLabel value="#{bundle.ActividadViewTitle} "/>
                      <h:outputText  value="#{mbPerFisica.selected.actividad.nombre}" 
-                                    title="#{bundle.LabelNombre}"/>
-                 </h:panelGrid>
-             </p:panel>
-                    
-             <p:panel id="pnNew5" header="#{bundle.EstadoViewTitle}" style="margin-bottom:10px;">
-                 <h:panelGrid columns="2">
-                     <h:outputLabel value="#{bundle.LabelNombre} "/>
+                                    title="#{bundle.ActividadViewTitle}"/>
+
+                     <h:outputLabel value="#{bundle.EstadoViewTitle} "/>
                      <h:outputText  value="#{mbPerFisica.selected.estado.nombre}" 
-                                    title="#{bundle.LabelNombre}"/>
-                 </h:panelGrid>
-             </p:panel>
-                    
-             <p:panel id="pnNew6" header="#{bundle.EspecialidadViewTitle}" style="margin-bottom:10px;">
-                 <h:panelGrid columns="2">
-                     <h:outputLabel value="#{bundle.LabelNombre} "/>
+                                    title="#{bundle.EstadoViewTitle}"/>
+
+                     <h:outputLabel value="#{bundle.EspecialidadViewTitle} "/>
                      <h:outputText  value="#{mbPerFisica.selected.especialidad.nombre}" 
-                                    title="#{bundle.LabelNombre}"/>
+                                    title="#{bundle.EspecialidadViewTitle}"/>
                  </h:panelGrid>
              </p:panel>
                     
-             <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">
+             <p:panel id="pnNew3" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">
              <h:panelGrid columns="2">   
                         <h:outputLabel  value="#{bundle.CreateDomicilioLabel_calle}"/>
                         <h:outputLabel  value="#{mbPerFisica.selected.domicilio.calle}" title="#{bundle.CreateDomicilioLabel_calle}"/>
@@ -108,7 +93,7 @@
              </h:panelGrid>
              </p:panel>
                         
-             <p:panel id="pnNew8" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
+             <p:panel id="pnNew4" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
              <h:panelGrid columns="2">                   
                  <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
                         <h:outputText   value="#{mbPerFisica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        

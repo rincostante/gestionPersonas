@@ -94,7 +94,6 @@ public class MbPerJuridica implements Serializable{
      */
     public MbPerJuridica() {
     }
-    
     /****************************
      * Métodos de inicialización
      ****************************/
