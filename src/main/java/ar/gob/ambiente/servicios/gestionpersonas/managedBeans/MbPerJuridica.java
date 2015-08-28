@@ -800,7 +800,6 @@ public class MbPerJuridica implements Serializable{
             return controller.getPerJuridica(getKey(value));
         }
 
-        
         java.lang.Long getKey(String value) {
             java.lang.Long key;
             key = Long.valueOf(value);
