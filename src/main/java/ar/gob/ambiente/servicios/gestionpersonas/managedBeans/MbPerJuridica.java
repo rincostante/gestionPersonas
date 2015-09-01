@@ -398,53 +398,44 @@ public class MbPerJuridica implements Serializable{
         return "/faces/index";
     }
     
-    /**
-     * Método que verifica que el Cargo que se quiere eliminar no esté siento utilizado por otra entidad
-     * @return 
-     */
-    public String prepareDestroy(){
-        boolean libre = getFacade().noTieneDependencias(current.getId());
-
-        if (libre){
-            // Elimina
-            performDestroyExpediente();
-            performDestroy();
+       /**
+     * @return mensaje que notifica la actualizacion de estado
+     */    
+    public String habilitar() {
+        current.getAdmin().setHabilitado(true);
+        update();        
+        recreateModel();
+        return "view";
+    } 
+    
+    public String deshabilitar() {
+        if (getFacade().noTieneDependencias(current.getId())){
+            current.getAdmin().setHabilitado(false);
+            update();        
             recreateModel();
-        }else{
-            //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaNonDeletable"));
+        }
+        else{
+            //No Deshabilita 
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DeshabilitarError"));            
         }
         return "view";
-    }     
+    } 
     
     /**
      * 
-     * @return 
      */
-    public String prepareHabilitar(){
-       // current = perJuridicaSelected;
-        try{
-            // Actualización de datos de administración de la entidad
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaModif(date);
-            current.getAdmin().setUsModif(usLogeado);
-            current.getAdmin().setHabilitado(true);
-            current.getAdmin().setUsBaja(null);
-            current.getAdmin().setFechaBaja(null);
-            
-            // Actualizo
-            getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Persona Fisica Habilitada"));
-            //expVinc = current.getExpediente();
-            return "view";
-        }catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersonaFisicaHabilitadaErrorOccured"));
-            return null; 
-        }
-        }
+    public void prepareHabilitar(){
+        update = 2;
+        update();        
+    }
     
-    
-
+    /**
+     * 
+     */
+    public void prepareDesHabilitar(){
+        update = 1;
+        update();        
+    } 
 
     /*************************
     ** Métodos de operación **
@@ -591,25 +582,6 @@ public class MbPerJuridica implements Serializable{
         }
     } 
     
-    /**
-     * @return mensaje que notifica el borrado
-     */    
-    public String destroyExpediente() {
-    //current = expedienteSelected;
-        performDestroyExpediente();
-        recreateModel();
-        return "view";
-    } 
-
-    /**
-     * @return mensaje que notifica el borrado
-     */    
-    public String destroy() {
-        performDestroy();
-        recreateModel();
-        return "view";
-    }
-    
     /*************************
      ** Métodos de selección **
      **************************/ 
@@ -672,7 +644,6 @@ public class MbPerJuridica implements Serializable{
     }    
  
    
-    
     /*********************
     ** Métodos privados **
     **********************/
@@ -722,69 +693,8 @@ public class MbPerJuridica implements Serializable{
         }*/
         return retorno;
     } 
-    
-    /**
-     * Opera el borrado del expediente
-     */
-    private void performDestroyExpediente() {
-        try {
-            // Actualización de datos de administración de la instancia
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaBaja(date);
-            current.getAdmin().setUsBaja(usLogeado);
-            current.getAdmin().setHabilitado(false);
-            
-            // elimino la instancia
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeletedErrorOccured"));
-        }
-    }
-    
-    /**
-     * Opera el borrado de la entidad
-     */
-    private void performDestroy() {
-        try {
-            // Actualización de datos de administración de la entidad
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaBaja(date);
-            current.getAdmin().setUsBaja(usLogeado);
-            current.getAdmin().setHabilitado(false);
-            
-            // Deshabilito la entidad
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerJuridicaDeletedErrorOccured"));
-        }
-    }      
+         
 
-     /**
-     * @return mensaje que notifica la actualizacion de estado
-          
-   public void habilitar() {
-        update = 2;
-        update();        
-        recreateModel();
-    } 
-
-    /**
-     * @return mensaje que notifica la actualizacion de estado
-        
-    public void deshabilitar() {
-       if (getFacade().noTieneDependencias(current.getId())){
-          update = 1;
-          update();        
-          recreateModel();
-       } 
-        else{
-            //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaNonDeletable"));            
-        }
-    } 
-    */
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/

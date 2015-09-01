@@ -71,7 +71,8 @@
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
                         </p:commandButton>
 
-                        <p:commandButton icon="ui-icon-trash" action="#{mbPerFisica.prepareDestroy}" update="messages" title="Deshabilitar">
+                        <p:commandButton icon="ui-icon-trash" action="#{mbPerFisica.prepareDesHabilitar}" rendered="#{e.admin.habilitado == 'true'}" 
+                                             update="messages" title="Deshabilitar">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
                             <p:confirm header="Confirmar" message="¿Desea deshabilitar el PerFisica?" />
                         </p:commandButton>

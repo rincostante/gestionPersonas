@@ -387,55 +387,44 @@ public class MbPerFisica implements Serializable{
         return "/faces/index";
     }
     
-    /**
-     * Método que verifica que el Cargo que se quiere eliminar no esté siento utilizado por otra entidad
-     * @return 
-     */
-    public String prepareDestroy(){
-        boolean libre = getFacade().noTieneDependencias(current.getId());
-
-        if (libre){
-            // Elimina
-            performDestroyDomicilio();
-            performDestroyExpediente();
-            performDestroy();
+   /**
+     * @return mensaje que notifica la actualizacion de estado
+     */    
+    public String habilitar() {
+        current.getAdmin().setHabilitado(true);
+        update();        
+        recreateModel();
+        return "view";
+    } 
+    
+    public String deshabilitar() {
+        if (getFacade().noTieneDependencias(current.getId())){
+            current.getAdmin().setHabilitado(false);
+            update();        
             recreateModel();
-        }else{
-            //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaNonDeletable"));
+        }
+        else{
+            //No Deshabilita 
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DeshabilitarError"));            
         }
         return "view";
-    }     
+    } 
     
     /**
      * 
-     * @return 
      */
-    public String prepareHabilitar(){
-       // current = perFisicaSelected;
-        try{
-            // Actualización de datos de administración de la entidad
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaModif(date);
-            current.getAdmin().setUsModif(usLogeado);
-            current.getAdmin().setHabilitado(true);
-            current.getAdmin().setUsBaja(null);
-            current.getAdmin().setFechaBaja(null);
-            
-            // Actualizo
-            getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Persona Fisica Habilitada"));
-            domVinc = current.getDomicilio();
-            //expVinc = current.getExpediente();
-            return "view";
-        }catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersonaFisicaHabilitadaErrorOccured"));
-            return null; 
-        }
-        }
+    public void prepareHabilitar(){
+        update = 2;
+        update();        
+    }
     
-    
-
+    /**
+     * 
+     */
+    public void prepareDesHabilitar(){
+        update = 1;
+        update();        
+    }   
 
     /*************************
     ** Métodos de operación **
@@ -541,11 +530,11 @@ public class MbPerFisica implements Serializable{
                 
             }else if(update == 1){
                 getFacade().edit(current);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeshabilitado"));
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Deshabilitado"));
                 return "view";
             }else{
                 getFacade().edit(current);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaHabilitado"));
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Habilitado"));
                 return "view";
             }
         } catch (Exception e) {
@@ -654,15 +643,7 @@ public class MbPerFisica implements Serializable{
      */
     private void recreateModel() {
         listPerFisica.clear();
-        listPerFisica = null;
-        if(listExpedientes != null){
-            listExpedientes.clear();
-            listExpedientes =null;
-        }
-        if(listDomicilios != null){
-            listDomicilios.clear();
-            listDomicilios =null;
-        }   
+        listPerFisica = null;  
     } 
     
         /**
@@ -696,45 +677,7 @@ public class MbPerFisica implements Serializable{
         }*/
         return retorno;
     }
-    
-    /**
-     * Opera el borrado del domicilio
-     */
-    private void performDestroyDomicilio() {
-        try {
-            // Actualización de datos de administración de la instancia
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaBaja(date);
-            current.getAdmin().setUsBaja(usLogeado);
-            current.getAdmin().setHabilitado(false);
-            
-            // elimino la instancia
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioDeletedErrorOccured"));
-        }
-    }  
-    
-    /**
-     * Opera el borrado del domicilio
-     */
-    private void performDestroyExpediente() {
-        try {
-            // Actualización de datos de administración de la instancia
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaBaja(date);
-            current.getAdmin().setUsBaja(usLogeado);
-            current.getAdmin().setHabilitado(false);
-            
-            // elimino la instancia
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeletedErrorOccured"));
-        }
-    }
-    
+
     /**
      * Opera el borrado de la entidad
      */
@@ -747,36 +690,12 @@ public class MbPerFisica implements Serializable{
             current.getAdmin().setHabilitado(false);
             
             // Deshabilito la entidad
-            getFacade().remove(current);
+            //getFacade().remove(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeleted"));
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeletedErrorOccured"));
         }
     }      
-
-     /**
-     * @return mensaje que notifica la actualizacion de estado
-      */    
-   public void habilitar() {
-        update = 2;
-        update();        
-        recreateModel();
-    } 
-
-    /**
-     * @return mensaje que notifica la actualizacion de estado
-     */   
-    public void deshabilitar() {
-       if (getFacade().noTieneDependencias(current.getId())){
-          update = 1;
-          update();        
-          recreateModel();
-       } 
-        else{
-            //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaNonDeletable"));            
-        }
-    } 
     
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
