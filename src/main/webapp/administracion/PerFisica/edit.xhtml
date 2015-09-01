@@ -56,9 +56,9 @@
                                  requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_cel}" required="true"/>
 
                         <p:outputLabel value="#{bundle.PerfilViewTitle}" for="perfil"/>                             
-                        <p:selectOneMenu id="perfil" value="#{mbPerFisica.selected.perfil.nombre}" >
+                        <p:selectOneMenu id="perfil" value="#{mbPerFisica.selected.perfil}" >
                                 <f:selectItem itemLabel="Seleccione Perfil" itemValue="" noSelectionOption="true" />                           
-                                <f:selectItems value="#{mbPerFisica.listaPerfil}" var="perfil" itemLabel="#{selected.perfil.nombre}" itemValue="#{perfil}"/>
+                                <f:selectItems value="#{mbPerFisica.listaPerfil}" var="perfil" itemLabel="#{perfil.nombre}" itemValue="#{perfil}"/>
                         </p:selectOneMenu>  
                  
                         <p:outputLabel value="#{bundle.ActividadViewTitle}" for="actividad"/>
@@ -77,7 +77,7 @@
                         <p:outputLabel value="#{bundle.EspecialidadViewTitle}" for="especialidad"/>
                         <p:selectOneMenu id="especialidad" value="#{mbPerFisica.selected.especialidad}" >
                                 <f:selectItem itemLabel="Seleccione Especialidad" itemValue="" noSelectionOption="true" />                           
-                                <f:selectItems value="#{mbPerFisica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad.nombre}"/>
+                                <f:selectItems value="#{mbPerFisica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad}"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
                 </p:panel>
