@@ -381,6 +381,7 @@ public class MbPerJuridica implements Serializable{
         listaPerfil = perfilFacade.findAll();
         listaEstado = estadoFacade.findAll();
         listaEspecialidad = especialidadFacade.findAll();
+        listaTipoPersonaJuridica = tipoFacade.findAll();
         return "new";
     }
     

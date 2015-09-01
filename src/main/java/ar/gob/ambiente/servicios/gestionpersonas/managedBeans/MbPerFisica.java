@@ -375,6 +375,10 @@ public class MbPerFisica implements Serializable{
     public String prepareEdit() {
         domVinc = current.getDomicilio();
         //expVinc = current.getExpediente();
+        listaPerfil = perfilFacade.findAll();
+        listaActividad = actividadFacade.findAll();
+        listaEstado = estadoFacade.findAll();
+        listaEspecialidad = especialidadFacade.findAll();
         return "edit";
     }
            

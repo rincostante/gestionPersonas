@@ -62,21 +62,22 @@
                         </p:selectOneMenu>  
                  
                         <p:outputLabel value="#{bundle.ActividadViewTitle}" for="actividad"/>
-                        <p:selectOneMenu id="actividad" value="#{mbPerFisica.selected.actividad.nombre}" >
+                        <p:selectOneMenu id="actividad" value="#{mbPerFisica.selected.actividad}" >
+                                requiredMessage="El campo Actividad es obligatorio" required="true"> 
                                 <f:selectItem itemLabel="Seleccione Actividad" itemValue="" noSelectionOption="true" />                           
                                 <f:selectItems value="#{mbPerFisica.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}"/>
                         </p:selectOneMenu>
                  
                         <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
-                        <p:selectOneMenu id="estado" value="#{mbPerFisica.selected.estado.nombre}" >
+                        <p:selectOneMenu id="estado" value="#{mbPerFisica.selected.estado}" >
                                 <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
                                 <f:selectItems value="#{mbPerFisica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
                         </p:selectOneMenu>  
                  
                         <p:outputLabel value="#{bundle.EspecialidadViewTitle}" for="especialidad"/>
-                        <p:selectOneMenu id="especialidad" value="#{mbPerFisica.selected.especialidad.nombre}" >
+                        <p:selectOneMenu id="especialidad" value="#{mbPerFisica.selected.especialidad}" >
                                 <f:selectItem itemLabel="Seleccione Especialidad" itemValue="" noSelectionOption="true" />                           
-                                <f:selectItems value="#{mbPerFisica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad}"/>
+                                <f:selectItems value="#{mbPerFisica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad.nombre}"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
                 </p:panel>
