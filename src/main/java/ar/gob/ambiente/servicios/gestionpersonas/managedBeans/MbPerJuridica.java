@@ -478,7 +478,7 @@ public class MbPerJuridica implements Serializable{
         current.setExpediente(expediente);
         
         //Asigno Establecimiento
-        Establecimiento establecimiento = new Establecimiento();
+      /*  Establecimiento establecimiento = new Establecimiento();
         establecimiento.setTipo(null);
         establecimiento.setActividad(null);
         establecimiento.setDomicilio(null);
@@ -487,7 +487,7 @@ public class MbPerJuridica implements Serializable{
         establecimiento.setEstado(null);
         listEstablecimiento.add(establecimiento);
 
-        //current.setExpedientes(listExpedientes);
+        //current.setExpedientes(listExpedientes); */
         getFacade().create(current);
         return "view";
        /* if(current.getNombre().isEmpty()){
