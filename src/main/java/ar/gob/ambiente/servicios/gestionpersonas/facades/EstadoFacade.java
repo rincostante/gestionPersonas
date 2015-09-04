@@ -37,8 +37,8 @@ public class EstadoFacade extends AbstractFacade<Estado> {
      */
     public boolean existe(String aBuscar){
         em = getEntityManager();       
-        String queryString = "SELECT act.nombre FROM Estado estado "
-                + "WHERE act.nombre = :stringParam ";
+        String queryString = "SELECT estado.nombre FROM Estado estado "
+                + "WHERE estado.nombre = :stringParam ";
         Query q = em.createQuery(queryString)
                 .setParameter("stringParam", aBuscar);
         return q.getResultList().isEmpty();
@@ -108,9 +108,9 @@ public class EstadoFacade extends AbstractFacade<Estado> {
         return q.getResultList().isEmpty();
     }  
 
-    public List<Estado> getNombres(Estado selectEstado) {
+ /*   public List<Estado> getNombres(Estado selectEstado) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }*/
 
     public boolean noExiste(String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
