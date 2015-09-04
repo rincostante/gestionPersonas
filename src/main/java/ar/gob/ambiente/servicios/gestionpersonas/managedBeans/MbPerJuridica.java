@@ -54,9 +54,8 @@ public class MbPerJuridica implements Serializable{
     private Expediente expediente;
     private Establecimiento establecimiento;
     
-    private List<PerJuridica> listPerJuridica;
-    private List<Expediente> listExpedientes;
-    private List<Establecimiento> listEstablecimiento;
+    private List<Expediente> listaExpedientes;
+    private List<Establecimiento> listaEstablecimiento;
     private List<Expediente> expVinc;
     
     @EJB
@@ -156,28 +155,20 @@ public class MbPerJuridica implements Serializable{
         this.establecimiento = establecimiento;
     }
 
-    public List<PerJuridica> getListPerJuridica() {
-        return listPerJuridica;
+    public List<Expediente> getListaExpedientes() {
+        return listaExpedientes;
     }
 
-    public void setListPerJuridica(List<PerJuridica> listPerJuridica) {
-        this.listPerJuridica = listPerJuridica;
+    public void setListaExpedientes(List<Expediente> listaExpedientes) {
+        this.listaExpedientes = listaExpedientes;
     }
 
-    public List<Expediente> getListExpedientes() {
-        return listExpedientes;
+    public List<Establecimiento> getListaEstablecimiento() {
+        return listaEstablecimiento;
     }
 
-    public void setListExpedientes(List<Expediente> listExpedientes) {
-        this.listExpedientes = listExpedientes;
-    }
-
-    public List<Establecimiento> getListEstablecimiento() {
-        return listEstablecimiento;
-    }
-
-    public void setListEstablecimiento(List<Establecimiento> listEstablecimiento) {
-        this.listEstablecimiento = listEstablecimiento;
+    public void setListaEstablecimiento(List<Establecimiento> listaEstablecimiento) {
+        this.listaEstablecimiento = listaEstablecimiento;
     }
 
     public List<Expediente> getExpVinc() {
@@ -293,6 +284,9 @@ public class MbPerJuridica implements Serializable{
     }
 
     public List<PerJuridica> getListaPerJuridica() {
+            if(listaPerJuridica == null){
+            listaPerJuridica = getFacade().findAll();
+        }
         return listaPerJuridica;
     }
 
@@ -460,6 +454,26 @@ public class MbPerJuridica implements Serializable{
       //  }
 
     }
+    
+        public void agregarEstablecimientos(){
+       
+ //           listEstablecimiento = establecimientoFacade.findAll();
+            Map<String,Object> options = new HashMap<>();
+            options.put("contentWidth", 1200);
+            RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimiento", options, null); 
+    }   
+    
+            
+    public void editarEstablecimientos(){
+            establecimiento = current.getEstablecimiento();
+           // listEstablecimiento = establecimientoFacade.findAll();
+
+            //listaEstados = estadoFacade.getEstadosXapp(app);
+            Map<String,Object> options = new HashMap<>();
+            options.put("contentWidth", 1200);
+            RequestContext.getCurrentInstance().openDialog("dlgEditEstablecimientos", options, null);
+    }
+
     
     /**
      * Método que inserta una nueva instancia en la base de datos, previamente genera una entidad de administración
@@ -670,11 +684,11 @@ public class MbPerJuridica implements Serializable{
      * Restea la entidad
      */
     private void recreateModel() {
-        listPerJuridica.clear();
-        listPerJuridica = null;
-        if(listExpedientes != null){
-            listExpedientes.clear();
-            listExpedientes =null;
+        listaPerJuridica.clear();
+        listaPerJuridica = null;
+        if(listaExpedientes != null){
+            listaExpedientes.clear();
+            listaExpedientes =null;
         }   
     } 
 

@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 
 package ar.gob.ambiente.servicios.gestionpersonas.entidades;
 
@@ -18,9 +18,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 /**
- *
- * @author rodriguezn
- */
+*
+* @author rodriguezn
+*/
 @Entity
 public class Establecimiento implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -40,7 +40,8 @@ public class Establecimiento implements Serializable {
     @JoinColumn(name="actividad_id")
     private Actividad actividad;
     
-    @OneToOne
+    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name="domicilio_id")
     private Domicilio domicilio;
     
     private String correoElectronico;
@@ -97,6 +98,7 @@ public class Establecimiento implements Serializable {
         this.domicilio = domicilio;
     }
 
+
     public String getCorreoElectronico() {
         return correoElectronico;
     }
@@ -119,7 +121,7 @@ public class Establecimiento implements Serializable {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
-    }
+   }
 
     public AdminEntidad getAdmin() {
         return admin;
@@ -154,8 +156,5 @@ public class Establecimiento implements Serializable {
         return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Establecimiento[ id=" + id + " ]";
     }
 
-    public Object getNombre() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }
