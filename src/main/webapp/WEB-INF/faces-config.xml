@@ -5,18 +5,22 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     
     <application>
+        <action-listener>org.primefaces.application.DialogActionListener</action-listener>
+        <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+        <view-handler>org.primefaces.application.DialogViewHandler</view-handler>        
         <resource-bundle>
             <base-name>/Bundle</base-name>
             <var>bundle</var>
         </resource-bundle>
-    </application>
-
-    <navigation-rule>
-        <navigation-case>
-            <from-outcome>inicio</from-outcome>
+        
+        <navigation-rule>
+            <navigation-case>
+                <from-outcome>inicio</from-outcome>
             <to-view-id>http://localhost:8080/gestionPersonas/faces/index.xhtml</to-view-id>
-        </navigation-case>
-    </navigation-rule>
+            </navigation-case>
+        </navigation-rule>    
+    </application>
+    
     <managed-bean>
         <managed-bean-name>mbLogin</managed-bean-name>
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin</managed-bean-class>

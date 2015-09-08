@@ -14,6 +14,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
@@ -24,6 +25,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
 import java.io.Serializable;
 import java.util.Date;
@@ -74,6 +76,8 @@ public class MbPerJuridica implements Serializable{
     private ActividadFacade actividadFacade;
     @EJB
     private TipoPersonaJuridicaFacade tipoFacade;
+    @EJB
+    private TipoEstablecimientoFacade tipoEstablecimientoFacade;
     
     private PerJuridica perJuridicaSelected;
     private MbLogin login;
@@ -87,6 +91,8 @@ public class MbPerJuridica implements Serializable{
     private List<Perfil> listaPerfil;
     private List<Actividad> listaActividad;
     private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
+    private List<TipoEstablecimiento> listaTipoEstablecimiento;
+    private String razonSocial;
     
     /**
      * Creates a new instance of MbPerJuridica
@@ -131,6 +137,16 @@ public class MbPerJuridica implements Serializable{
      ****** Getters y Setters *******
      * @return 
      ********************************/
+   
+    public List<TipoEstablecimiento> getListaTipoEstablecimiento() {
+        return listaTipoEstablecimiento;
+    }
+
+    public void setListaTipoEstablecimiento(List<TipoEstablecimiento> listaTipoEstablecimiento) {
+        this.listaTipoEstablecimiento = listaTipoEstablecimiento;
+    }
+
+   
     public PerJuridica getCurrent() {
         return current;
     }
@@ -455,14 +471,18 @@ public class MbPerJuridica implements Serializable{
 
     }
     
-        public void agregarEstablecimientos(){
-       
- //           listEstablecimiento = establecimientoFacade.findAll();
+  public void agregarEstablecimientos(){
+
+            listaEstado = estadoFacade.findAll();
+            listaActividad = actividadFacade.findAll();
+            listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
             Map<String,Object> options = new HashMap<>();
             options.put("contentWidth", 1200);
-            RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimiento", options, null); 
-    }   
-    
+            RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimientos", options, null); 
+              
+        }
+
+
             
     public void editarEstablecimientos(){
             establecimiento = current.getEstablecimiento();
@@ -500,7 +520,6 @@ public class MbPerJuridica implements Serializable{
         establecimiento.setTelefono("0303456");
         establecimiento.setEstado(null);
         listEstablecimiento.add(establecimiento);
-
         //current.setExpedientes(listExpedientes); */
         getFacade().create(current);
         return "view";
@@ -510,14 +529,11 @@ public class MbPerJuridica implements Serializable{
         }else{
             try {
                 if(getFacade().noExiste(current.getDni())){
-
                     // Inserción
                     getFacade().create(current);
-
                     JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaCreated"));
                    // recreateModel();
                     return "view";
-
                 }else{
                     JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerJuridicaExistente"));
                     return null;
@@ -757,5 +773,3 @@ public class MbPerJuridica implements Serializable{
         }
     }        
 }
-
-

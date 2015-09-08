@@ -62,18 +62,15 @@
                             <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
                             <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
                         </p:selectOneMenu>
-                                     
+                                           
+                        
+                        <p:outputLabel value="Establecimientos "/>
+                        <p:commandButton value="Agregar" action="#{mbPerJuridica.agregarEstablecimientos}" process="@this" />
+                        
                      </h:panelGrid>
-             </p:panel>
+                </p:panel>
                     
-             <p:panel id="pnNew3" header="#{bundle.EstablecimientoViewTitle}" style="margin-bottom:10px;">
-                     <h:panelGrid columns="2"> 
-                        <p:commandButton icon="ui-icon-ellipsis-vert" value="Agregar Establecimiento" style="float: right">
-                            <p:ajax update="pnNew"/>
-                        </p:commandButton>
-                     </h:panelGrid>
-             </p:panel> 
-                    
+                 
              </p:panel>            
                 <p:toolbar>
                     <f:facet name="left">
