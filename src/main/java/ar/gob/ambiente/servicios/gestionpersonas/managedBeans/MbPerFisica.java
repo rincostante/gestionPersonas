@@ -449,22 +449,19 @@ public class MbPerFisica implements Serializable{
 
         //current.setExpedientes(listExpedientes);
         //current.setDomicilios(listDomicilios);
-        getFacade().create(current);
-        return "view";
-       /* if(current.getNombre().isEmpty()){
+        //getFacade().create(current);
+        //return "view";
+        if(current.getNombre().isEmpty()){
             JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
             return null;
         }else{
             try {
                 if(getFacade().noExiste(current.getDni())){
-
                     // Inserción
                     getFacade().create(current);
-
                     JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreated"));
                    // recreateModel();
                     return "view";
-
                 }else{
                     JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerFisicaExistente"));
                     return null;
@@ -474,8 +471,7 @@ public class MbPerFisica implements Serializable{
                 JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreatedErrorOccured"));
                 return null;
             }
-        }
-        */
+        }  
     }
 
     /**

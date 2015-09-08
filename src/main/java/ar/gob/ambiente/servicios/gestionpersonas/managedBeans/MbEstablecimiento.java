@@ -22,11 +22,9 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -42,7 +40,6 @@ import java.util.Map;
 import javax.faces.context.ExternalContext;
 import javax.faces.event.ValueChangeEvent;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.RowEditEvent;
 
 /**
 *
