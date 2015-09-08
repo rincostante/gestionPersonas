@@ -36,9 +36,9 @@ import javax.persistence.Query;
      * @param cuit
      * @return 
      */
-    public boolean noExiste(long cuit){
+    public boolean noExiste(String cuit){
         em = getEntityManager();
-        String queryString = "SELECT cuit FROM PerJuridica pj "
+        String queryString = "SELECT pj.cuit FROM PerJuridica pj "
                 + "WHERE pj.cuit = :cuit";
         Query q = em.createQuery(queryString)
                 .setParameter("cuit", cuit);

@@ -13,9 +13,6 @@
             <p:panel id="prmNew" >
                 <p:growl id="messages"/>
                 <h:panelGrid columns="2">
-                    
-                    <p:outputLabel value="Id Persona Jurídica: " for="perJuridica"/>
-                    <p:inputText id="perJuridica" value="#{mbPerJuridica.establecimiento.perJuridica}" required="false"/>
                             
                     <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>                             
                     <p:selectOneMenu id="tipoEstablecimiento" value="#{mbPerJuridica.establecimiento.tipo}" >
@@ -43,7 +40,7 @@
 
                 </h:panelGrid>
 
-                <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimiento()}" update="prmNew" />
+                <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimiento}" update="prmNew" />
                     <p:commandButton icon="ui-icon-cancel" value="Limpiar" >
                         <p:ajax update="prmNew" resetValues="true" />
                     </p:commandButton>

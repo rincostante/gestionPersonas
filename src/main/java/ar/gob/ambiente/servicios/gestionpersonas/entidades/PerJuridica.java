@@ -21,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -51,14 +52,18 @@ public class PerJuridica implements Serializable {
     ) 
     private List<PerFisica> representantes;
     
-    @OneToMany(mappedBy="perJuridica")
+    /**
+     * Campo de tipo Array que contiene el conjunto de los establecimientos que contiene esta Persona Jurídica
+     */     
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name="perjuridica_id")
     private List<Establecimiento> establecimientos;
     
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="expediente_id")
     private Expediente expediente;
     
-    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="estado_id")
     private Estado estado;
     
@@ -131,6 +136,7 @@ public class PerJuridica implements Serializable {
         this.representantes = representantes;
     }
 
+    @XmlTransient
     public List<Establecimiento> getEstablecimientos() {
         return establecimientos;
     }

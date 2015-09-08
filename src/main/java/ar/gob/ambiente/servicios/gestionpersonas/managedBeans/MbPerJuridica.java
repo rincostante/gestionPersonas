@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -493,7 +494,70 @@ public class MbPerJuridica implements Serializable{
             options.put("contentWidth", 1200);
             RequestContext.getCurrentInstance().openDialog("dlgEditEstablecimientos", options, null);
     }
+/*-----------------------------------------------------------------------------------------------------------*/    
+     /**
+     * Método para validar si una instacia ya existe en el list que las guarda en memoria
+     */
+    private boolean compararEstablecimiento(Establecimiento esta){
+        boolean retorno = false;
+        Iterator estaIt;
+        
+        // Si estoy creando un procedimiento nuevo, uso el iterator del listInstancias
+        // Si no, lo uso del current.getInstancias
+        if(current.getId() != null){
+            estaIt = current.getEstablecimientos().iterator();
+        }else{
+            estaIt = listaEstablecimiento.iterator(); 
+        }
+        
+        while(estaIt.hasNext()){
+            Establecimiento establecimiento = (Establecimiento)estaIt.next();
+            if(establecimiento.getActividad().equals(esta.getActividad())
+                    && establecimiento.getDomicilio().equals(esta.getDomicilio())
+                    && establecimiento.getEstado().equals(esta.getEstado())){
+                retorno = true;
+            }
+        }
+        return retorno;
+    }    
+    /**
+     * Método para guardar los Establecimientos creados en el listaEstablecimiento que irán en la nueva perJuridica
+     */
+    public void createEstablecimiento(){
+        if(!compararEstablecimiento(establecimiento)){ 
 
+            // Si estoy creanto un procedimiento nuevo, agrego la instancia al list
+            // Si no se la agrego a la propiedad instancias del procedimiento
+             
+            if(current.getId() != null){
+
+                current.getEstablecimientos().add(establecimiento);
+                // se agregan los datos del AdminEntidad
+                Date date = new Date(System.currentTimeMillis());
+                AdminEntidad admEnt = new AdminEntidad();
+                admEnt.setFechaAlta(date);
+                admEnt.setHabilitado(true);
+                admEnt.setUsAlta(usLogeado);
+                current.setAdmin(admEnt);
+            }else{
+                // se agregan los datos del AdminEntidad
+                Date date = new Date(System.currentTimeMillis());
+                AdminEntidad admEnt = new AdminEntidad();
+                admEnt.setFechaAlta(date);
+                admEnt.setHabilitado(true);
+                admEnt.setUsAlta(usLogeado);
+                establecimiento.setAdmin(admEnt);
+                listaEstablecimiento.add(establecimiento);    
+            }
+            // reseteo la instancia
+            establecimiento = null;
+            establecimiento = new Establecimiento();
+        } else{
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoExistente"));
+        }
+    }
+   
+/*-----------------------------------------------------------------------------------------------------------*/
     
     /**
      * Método que inserta una nueva instancia en la base de datos, previamente genera una entidad de administración
@@ -510,25 +574,15 @@ public class MbPerJuridica implements Serializable{
         current.setAdmin(admEnt);
         //Asigno expediente
         current.setExpediente(expediente);
-        
         //Asigno Establecimiento
-      /*  Establecimiento establecimiento = new Establecimiento();
-        establecimiento.setTipo(null);
-        establecimiento.setActividad(null);
-        establecimiento.setDomicilio(null);
-        establecimiento.setCorreoElectronico("correo");
-        establecimiento.setTelefono("0303456");
-        establecimiento.setEstado(null);
-        listEstablecimiento.add(establecimiento);
-        //current.setExpedientes(listExpedientes); */
-        getFacade().create(current);
-        return "view";
-       /* if(current.getNombre().isEmpty()){
-            JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
+        current.setEstablecimientos(listaEstablecimiento);
+  
+        if(current.getRazonSocial().isEmpty()){
+            JsfUtil.addSuccessMessage("La persona Jurídica que está guardando debe tener una Razón Social.");
             return null;
         }else{
             try {
-                if(getFacade().noExiste(current.getDni())){
+                if(getFacade().noExiste(current.getCuit())){
                     // Inserción
                     getFacade().create(current);
                     JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaCreated"));
@@ -544,7 +598,7 @@ public class MbPerJuridica implements Serializable{
                 return null;
             }
         }
-        */
+       
     }
 
     /**
@@ -691,7 +745,7 @@ public class MbPerJuridica implements Serializable{
     } 
             
     private void validarExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExiste((long)arg2)){
+        if(!getFacade().noExiste((String)arg2)){
             throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerJuridicaExistente")));
         }
     }  
@@ -705,6 +759,10 @@ public class MbPerJuridica implements Serializable{
         if(listaExpedientes != null){
             listaExpedientes.clear();
             listaExpedientes =null;
+        }
+        if(listaEstablecimiento !=null){
+            listaEstablecimiento.clear();
+            listaEstablecimiento =null;
         }   
     } 
 

@@ -62,7 +62,7 @@ public class PerFisica implements Serializable {
     @JoinColumn(name="actividad_id")
     private Actividad actividad;
     
-    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="estado_id")
     private Estado estado;
     
