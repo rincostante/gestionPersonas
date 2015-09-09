@@ -16,25 +16,30 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
 *
 * @author rodriguezn
 */
+@XmlRootElement(name = "establecimiento")
 @Entity
+@Table(name = "establecimiento")
 public class Establecimiento implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToOne
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="perJuridica_id")
     private PerJuridica perJuridica;
     
-    @ManyToOne /*(fetch=FetchType.LAZY)*/
+    @ManyToOne (fetch=FetchType.LAZY)
     @JoinColumn(name="tipoEstablecimiento_id")
     private TipoEstablecimiento tipo;
-  
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="actividad_id")
@@ -123,6 +128,7 @@ public class Establecimiento implements Serializable {
         this.estado = estado;
    }
 
+    @XmlTransient  
     public AdminEntidad getAdmin() {
         return admin;
     }

@@ -85,11 +85,29 @@ import javax.persistence.Query;
         result = q.getResultList();
         return result;
     }      
+    /**
+     * Método que obtiene una Procedimiento existente según los datos recibidos como parámetro
+     * @param razonSocial
+     * @param cuit
+     * @return 
+     */
+    public PerJuridica getExistente(String razonSocial, String cuit){
+        List<PerJuridica> lPerj;
+        String queryString = "SELECT perj FROM Perjuridica perj "
+                + "WHERE perj.razonSocial = :razonSocial "
+                + "AND perj.cuit = :cuit";
+        Query q = em.createQuery(queryString)
+                .setParameter("razonSocial", razonSocial)
+                .setParameter("cuit", cuit);
+        lPerj = q.getResultList();
+        if(!lPerj.isEmpty()){
+            return lPerj.get(0);
+        }else{
+            return null;
+        }
+    } 
 
-    public PerJuridica getExistente(String correoElectronico) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     public List<PerJuridica> getNombres(PerJuridica selectPerJuridica) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

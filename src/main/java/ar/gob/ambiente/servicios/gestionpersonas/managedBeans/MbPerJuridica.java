@@ -8,10 +8,12 @@ package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.AdminEntidad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Especialidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
@@ -28,6 +30,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -45,7 +48,10 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import javax.faces.context.ExternalContext;
+import javax.faces.event.ValueChangeEvent;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.RowEditEvent;
 
 /**
 *
@@ -57,10 +63,15 @@ public class MbPerJuridica implements Serializable{
     private Expediente expediente;
     private Establecimiento establecimiento;
     
+    
     private List<Expediente> listaExpedientes;
-    private List<Establecimiento> listaEstablecimiento;
     private List<Expediente> expVinc;
     
+    private List<Establecimiento> establecimientos;
+    private List<Establecimiento> establecimientosFilter;
+    private List<Establecimiento> listEstablecimientos;
+    
+
     @EJB
     private PerJuridicaFacade perJuridicaFacade;
     @EJB
@@ -93,7 +104,10 @@ public class MbPerJuridica implements Serializable{
     private List<Actividad> listaActividad;
     private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
     private List<TipoEstablecimiento> listaTipoEstablecimiento;
-    private String razonSocial;
+   // private String razonSocial;
+    private List<PerFisica> representantes;
+    private Domicilio domicilio;
+
     
     /**
      * Creates a new instance of MbPerJuridica
@@ -139,6 +153,24 @@ public class MbPerJuridica implements Serializable{
      * @return 
      ********************************/
    
+    public List<PerFisica> getRepresentantes() {
+        return representantes;
+    }
+
+    public void setRepresentantes(List<PerFisica> representantes) {
+        this.representantes = representantes;
+    }
+
+   
+    public List<Establecimiento> getEstablecimientos() {
+        return establecimientos;
+    }
+
+    public void setEstablecimientos(List<Establecimiento> establecimientos) {
+        this.establecimientos = establecimientos;
+    }
+
+   
     public List<TipoEstablecimiento> getListaTipoEstablecimiento() {
         return listaTipoEstablecimiento;
     }
@@ -180,12 +212,20 @@ public class MbPerJuridica implements Serializable{
         this.listaExpedientes = listaExpedientes;
     }
 
-    public List<Establecimiento> getListaEstablecimiento() {
-        return listaEstablecimiento;
+    public List<Establecimiento> getEstablecimientosFilter() {
+        return establecimientosFilter;
     }
 
-    public void setListaEstablecimiento(List<Establecimiento> listaEstablecimiento) {
-        this.listaEstablecimiento = listaEstablecimiento;
+    public void setEstablecimientosFilter(List<Establecimiento> establecimientosFilter) {
+        this.establecimientosFilter = establecimientosFilter;
+    }
+
+    public List<Establecimiento> getListEstablecimientos() {
+        return listEstablecimientos;
+    }
+
+    public void setListEstablecimientos(List<Establecimiento> listEstablecimientos) {
+        this.listEstablecimientos = listEstablecimientos;
     }
 
     public List<Expediente> getExpVinc() {
@@ -375,7 +415,7 @@ public class MbPerJuridica implements Serializable{
      * @return acción para el detalle de la entidad
      */
     public String prepareView() {
-        //expVinc = current.getExpediente();
+        listEstablecimientos = current.getEstablecimientos();
         return "view";
     }
 
@@ -388,11 +428,14 @@ public class MbPerJuridica implements Serializable{
         //Inicializamos la creacion de expediente y establecimiento
         expediente = new Expediente();
         establecimiento = new Establecimiento();
-        
-        listaPerfil = perfilFacade.findAll();
+        listEstablecimientos = new ArrayList();
+
         listaEstado = estadoFacade.findAll();
         listaEspecialidad = especialidadFacade.findAll();
         listaTipoPersonaJuridica = tipoFacade.findAll();
+        representantes = perFisicaFacade.findAll();
+        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
+     //   domicilio = new Domicilio();
         return "new";
     }
     
@@ -400,7 +443,15 @@ public class MbPerJuridica implements Serializable{
      * @return acción para la edición de la entidad
      */
     public String prepareEdit() {
-        //expVinc = current.getExpediente();
+        //inicializamos el objeto establecimiento para asignar nuevos a la persona Jurídica que se está editando
+        establecimiento = new Establecimiento();
+        
+        //pueblo los combos
+        listaEstado = estadoFacade.findAll();
+        listaEspecialidad = especialidadFacade.findAll();
+        listaTipoPersonaJuridica = tipoFacade.findAll();
+        representantes = perFisicaFacade.findAll();
+        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
         return "edit";
     }
            
@@ -474,9 +525,10 @@ public class MbPerJuridica implements Serializable{
     
   public void agregarEstablecimientos(){
 
-            listaEstado = estadoFacade.findAll();
+   /*         listaEstado = estadoFacade.findAll();
             listaActividad = actividadFacade.findAll();
             listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
+      */
             Map<String,Object> options = new HashMap<>();
             options.put("contentWidth", 1200);
             RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimientos", options, null); 
@@ -486,7 +538,7 @@ public class MbPerJuridica implements Serializable{
 
             
     public void editarEstablecimientos(){
-            establecimiento = current.getEstablecimiento();
+           // establecimiento = current.getEstablecimientos();
            // listEstablecimiento = establecimientoFacade.findAll();
 
             //listaEstados = estadoFacade.getEstadosXapp(app);
@@ -507,27 +559,29 @@ public class MbPerJuridica implements Serializable{
         if(current.getId() != null){
             estaIt = current.getEstablecimientos().iterator();
         }else{
-            estaIt = listaEstablecimiento.iterator(); 
+            estaIt = listEstablecimientos.iterator(); 
         }
         
         while(estaIt.hasNext()){
             Establecimiento establecimiento = (Establecimiento)estaIt.next();
             if(establecimiento.getActividad().equals(esta.getActividad())
-                    && establecimiento.getDomicilio().equals(esta.getDomicilio())
+  //                  && establecimiento.getDomicilio().equals(esta.getDomicilio())
                     && establecimiento.getEstado().equals(esta.getEstado())){
                 retorno = true;
             }
         }
+        
         return retorno;
-    }    
+    }   
+    
     /**
      * Método para guardar los Establecimientos creados en el listaEstablecimiento que irán en la nueva perJuridica
      */
     public void createEstablecimiento(){
         if(!compararEstablecimiento(establecimiento)){ 
 
-            // Si estoy creanto un procedimiento nuevo, agrego la instancia al list
-            // Si no se la agrego a la propiedad instancias del procedimiento
+            // Si estoy creando una persona jurídica nueva, agrego el establecimiento al list
+            // Si no se la agrego a la propiedad establecimientos de la persona jurídica
              
             if(current.getId() != null){
 
@@ -547,9 +601,9 @@ public class MbPerJuridica implements Serializable{
                 admEnt.setHabilitado(true);
                 admEnt.setUsAlta(usLogeado);
                 establecimiento.setAdmin(admEnt);
-                listaEstablecimiento.add(establecimiento);    
+                listEstablecimientos.add(establecimiento);    
             }
-            // reseteo la instancia
+            // reseteo el establecimiento
             establecimiento = null;
             establecimiento = new Establecimiento();
         } else{
@@ -572,11 +626,14 @@ public class MbPerJuridica implements Serializable{
         admEnt.setHabilitado(true);
         admEnt.setUsAlta(usLogeado);
         current.setAdmin(admEnt);
+        
         //Asigno expediente
         current.setExpediente(expediente);
+        
         //Asigno Establecimiento
-        current.setEstablecimientos(listaEstablecimiento);
-  
+        current.setEstablecimientos(listEstablecimientos);
+        
+        
         if(current.getRazonSocial().isEmpty()){
             JsfUtil.addSuccessMessage("La persona Jurídica que está guardando debe tener una Razón Social.");
             return null;
@@ -598,7 +655,6 @@ public class MbPerJuridica implements Serializable{
                 return null;
             }
         }
-       
     }
 
     /**
@@ -608,7 +664,7 @@ public class MbPerJuridica implements Serializable{
      */
     public String update() {    
         boolean edito;
-        PerJuridica perJuridica;
+        PerJuridica pej;
         Date date = new Date(System.currentTimeMillis());
 
         // actualizamos según el valor de update
@@ -631,11 +687,11 @@ public class MbPerJuridica implements Serializable{
         // acualizo según la operación seleccionada
         try {
             if(update == 0){
-                perJuridica = getFacade().getExistente(current.getActividad());
-                if(perJuridica == null){
+                pej = getFacade().getExistente(current.getRazonSocial(), current.getCuit());
+                if(pej == null){
                     edito = true;  
                 }else{
-                    edito = perJuridica.getId().equals(current.getId());
+                    edito = pej.getId().equals(current.getId());
                 }
                 if(edito){
                     // Actualización de datos de administración de la entidad
@@ -644,10 +700,10 @@ public class MbPerJuridica implements Serializable{
 
                     // Actualizo
                     getFacade().edit(current);
-                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaUpdated"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Persona Jurídica", "Ha sido actualizada"));
                     return "view";
                 }else{
-                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaExistente"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Persona Jurídica", "Ya Existe"));
                     return null; 
                     }
                 
@@ -661,7 +717,7 @@ public class MbPerJuridica implements Serializable{
                 return "view";
             }
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerJuridicaUpdatedErrorOccured"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Persona Jurídica", "Existe un error en la edición"));
             return null;
         }
     } 
@@ -698,7 +754,17 @@ public class MbPerJuridica implements Serializable{
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 950);
         RequestContext.getCurrentInstance().openDialog("", options, null);
-    }       
+    }    
+    
+        /**
+     * Método para mostrar los establecimientos vinculados
+     */
+    public void verEstablecimientos(){
+        establecimientos = current.getEstablecimientos();
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 950);
+        RequestContext.getCurrentInstance().openDialog("", options, null);
+    } 
 
     /****************************
      * Métodos de validación
@@ -722,7 +788,7 @@ public class MbPerJuridica implements Serializable{
      * @throws ValidatorException 
      */
     public void validarUpdate(FacesContext arg0, UIComponent arg1, Object arg2){
-        if(!current.getNombre().equals((String)arg2)){
+        if(!current.getRazonSocial().equals((String)arg2)){
             validarExistente(arg2);
         }
     }    
@@ -737,7 +803,31 @@ public class MbPerJuridica implements Serializable{
     private PerJuridicaFacade getFacade() {
         return perJuridicaFacade;
     }
+    /* Método para editar desde la tabla con sólo pararse en el campo a editar
+    */
+    
+    public void onRowEdit(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Establecimiento editado", ((Establecimiento) event.getObject()).getTelefono());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+     
+    public void onRowCancel(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Edit Cancelled", ((Establecimiento) event.getObject()).getTelefono());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+     
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+         
+        if(newValue != null && !newValue.equals(oldValue)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
 
+  
+    
     private void validarExpedienteExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExisteExpediente(null, expediente)){ 
             throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateInstanciaExistente")));
@@ -760,9 +850,9 @@ public class MbPerJuridica implements Serializable{
             listaExpedientes.clear();
             listaExpedientes =null;
         }
-        if(listaEstablecimiento !=null){
-            listaEstablecimiento.clear();
-            listaEstablecimiento =null;
+        if(listEstablecimientos !=null){
+            listEstablecimientos.clear();
+            listEstablecimientos =null;
         }   
     } 
 
@@ -781,7 +871,19 @@ public class MbPerJuridica implements Serializable{
         }*/
         return retorno;
     } 
-         
+       /**
+     * Método para eliminar establecimientos
+     * @param event
+     */
+    public void estabDelete(RowEditEvent event){
+        try{
+            current.getEstablecimientos().remove((Establecimiento)event.getObject());
+            //getInstFacade().remove((Instancia)event.getObject());
+            JsfUtil.addSuccessMessage("Establecimiento eliminado.");
+        }catch(Exception e){
+            JsfUtil.addErrorMessage("Hubo un error eliminando el Establecimiento. " + e.getMessage());
+        }
+    }         
 
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
@@ -789,6 +891,13 @@ public class MbPerJuridica implements Serializable{
     @FacesConverter(forClass = PerJuridica.class)
     public static class PerJuridicaControllerConverter implements Converter {
 
+         /**
+         *
+         * @param facesContext
+         * @param component
+         * @param value
+         * @return
+         */
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
@@ -817,6 +926,13 @@ public class MbPerJuridica implements Serializable{
             return sb.toString();
         }
 
+        /**
+         *
+         * @param facesContext
+         * @param component
+         * @param object
+         * @return
+         */
         @Override
         public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
             if (object == null) {
