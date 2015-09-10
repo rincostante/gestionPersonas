@@ -24,22 +24,21 @@
                         <h:outputLabel  value="#{bundle.CreateExpedienteLabel_anio}"/>
                         <h:outputLabel  value="#{mbPerJuridica.selected.expediente.anio}" title="#{bundle.CreateExpedienteLabel_anio}"/>      
                     </h:panelGrid>
-             </p:panel>
+            </p:panel>
+                    
+            <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
+                <h:panelGrid columns="2">                                   
+                      <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>
+                      <h:outputLabel  value=" #{mbPerJuridica.selected.razonSocial}" title="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>                 
                         
-                    <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
-                    <h:panelGrid columns="2">            
-                        
-                        <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>
-                        <h:outputLabel  value=" #{mbPerJuridica.selected.razonSocial}" title="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>                 
-                        
-                        <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
-                        <h:outputLabel  value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
+                      <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
+                      <h:outputLabel  value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
                                         
                      <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_correoElectronico}"/>
-                     <h:outputLabel  value=" #{mbPerJuridica.selected.correoElectronico}" title="#{bundle.CreatePerJuridicaTitle_correoElectronic}"/>
+                     <h:outputLabel  value=" #{mbPerJuridica.selected.correoElectronico}"/>
                                         
                      <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_telefono}"/>
-                     <h:outputLabel  value=" #{mbPerJuridica.selected.telefono}" title="#{bundle.CreatePerJuridicaLabel_telefono}"/>                       
+                     <h:outputLabel  value=" #{mbPerJuridica.selected.telefono}"/>                       
 
                      <h:outputLabel value="#{bundle.EstadoViewTitle} "/>
                      <h:outputText  value="#{mbPerJuridica.selected.estado.nombre}" 
@@ -48,34 +47,62 @@
                      <h:outputLabel value="#{bundle.EspecialidadViewTitle} "/>
                      <h:outputText  value="#{mbPerJuridica.selected.especialidad.nombre}" 
                                     title="#{bundle.EspecialidadViewTitle}"/>
-                 </h:panelGrid>
+                </h:panelGrid>
              </p:panel>
+   
                     
-             <p:panel id="pnNew3" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">
-             <h:panelGrid columns="2">   
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_calle}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.domicilio.calle}" title="#{bundle.CreateDomicilioLabel_calle}"/>
-                        
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_numero}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.domicilio.numero}" title="#{bundle.CreateDomicilioLabel_numero}"/>
-                                        
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_piso}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.domicilio.piso}" title="#{bundle.CreateDomicilioLabel_piso}"/>
-                                        
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_dpto}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.domicilio.dpto}" title="#{bundle.CreateDomicilioLabel_dpto}"/>
-                                        
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.domicilio.idLocalidad}" title="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
-                                        
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_localidad}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.domicilio.localidad}" title="#{bundle.CreateDomicilioLabel_localidad}"/>
-                                        
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_provincia}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.domicilio.provincia}" title="#{bundle.CreateDomicilioLabel_provincia}"/>                 
-             </h:panelGrid>
-             </p:panel>
-                        
+             <p:panel id="pnNew3" header="#{bundle.EstablecimientoTitle}" style="margin-bottom: 10px">
+                            <p:growl id="msgs" showDetail="true" />
+                            <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="esta"  style="font-weight: normal; font-size: 80%">
+                                <p:tab title="#{esta.correoElectronico}">
+                                        <h:panelGrid columns="2" cellpadding="5">
+                                            <h:outputLabel  value="#{bundle.TipoEstablecimientoViewTitle}"/>
+                                            <h:outputText   value="#{esta.tipo}"/>
+
+                                            <h:outputLabel  value="#{bundle.ActividadViewTitle}"/>
+                                            <h:outputText   value="#{esta.actividad.nombre}"/>   
+
+                                            <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_correoElectronico}"/>
+                                            <h:outputText   value="#{esta.correoElectronico}"/> 
+
+                                            <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_Telefono}"/>
+                                            <h:outputText   value="#{esta.telefono}"/>     
+
+                                            <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_Estado}"/>
+                                            <h:outputText   value="#{esta.estado.nombre}"/>
+
+                                            <h:outputLabel  value="#{bundle.CreateDomicilioLabel_calle}"/>
+                                            <h:outputText   value="#{esta.domicilio.calle}"/>
+                                            
+                                            <h:outputLabel  value="#{bundle.CreateDomicilioLabel_numero}"/>
+                                            <h:outputText   value="#{esta.domicilio.numero}"/>
+                                            
+                                            <h:outputLabel  value="#{bundle.CreateDomicilioLabel_piso}"/>
+                                            <h:outputText   value="#{esta.domicilio.piso}"/>
+                                            
+                                            <h:outputLabel  value="#{bundle.CreateDomicilioLabel_dpto}"/>
+                                            <h:outputText   value="#{esta.domicilio.dpto}"/>
+                                            
+                                            <h:outputLabel  value="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
+                                            <h:outputText   value="#{esta.domicilio.idLocalidad}"/>
+                                            
+                                            <h:outputLabel  value="#{bundle.CreateDomicilioLabel_localidad}"/>
+                                            <h:outputText   value="#{esta.domicilio.localidad}"/>
+                                            
+                                            <h:outputLabel  value="#{bundle.CreateDomicilioLabel_provincia}"/>
+                                            <h:outputText   value="#{esta.domicilio.provincia}"/>
+
+                                            <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
+                                            <h:outputText   value="#{esta.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
+
+                                            <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
+                                            <h:outputText   value="#{esta.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
+
+                                        </h:panelGrid>    
+                                    </p:tab>
+                                </p:accordionPanel>
+                            </p:panel>
+                    
              <p:panel id="pnNew4" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
              <h:panelGrid columns="2">                   
                  <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
@@ -99,6 +126,7 @@
                                         title="#{bundle.LabelFechaBaja}"/>             
              </h:panelGrid>
              </p:panel>    
+                    
                                                                             
              </p:panel>
                 <p:toolbar>
