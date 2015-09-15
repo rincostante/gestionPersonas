@@ -93,7 +93,7 @@ import javax.persistence.Query;
      */
     public PerJuridica getExistente(String razonSocial, String cuit){
         List<PerJuridica> lPerj;
-        String queryString = "SELECT perj FROM Perjuridica perj "
+        String queryString = "SELECT perj FROM PerJuridica perj "
                 + "WHERE perj.razonSocial = :razonSocial "
                 + "AND perj.cuit = :cuit";
         Query q = em.createQuery(queryString)

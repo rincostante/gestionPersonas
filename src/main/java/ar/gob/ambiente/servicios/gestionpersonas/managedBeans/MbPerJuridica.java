@@ -743,7 +743,7 @@ public class MbPerJuridica implements Serializable{
                     edito = pej.getId().equals(current.getId());
                 }
                 if(edito){
-                    // Actualización de datos de administración de la entidad
+                    // Actualización de datos de administración de la entidad PerJuridica
                     current.getAdmin().setFechaModif(date);
                     current.getAdmin().setUsModif(usLogeado); 
 

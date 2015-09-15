@@ -8,35 +8,81 @@
      <ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml">
      <ui:define name="content">
      <h:form style="text-align: left">
-         <p:panel id="pnEdit" header="#{bundle.EstablecimientoEditTitle}" style="margin-bottom:10px;"> 
-                    <h:inputHidden id="id" value="#{mbPerJuridica.selected.id}" />
-                    <p:messages id="messages" />  
-                    <p:dialog id="dlg" resizable="false" /> 
+         <p:panel id="pnEdit" header="#{bundle.PerJuridicaViewTitle}" style="margin-bottom:10px;">
                     
-                    <h:panelGrid columns="2">
-                        <p:outputLabel value="#{bundle.PerJuridicaViewTitle}" for="razon social"/>
-                        <p:inputText id="nombre" value="#{mbPerJuridica.selected.razonSocial}" requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_razonSocial}" required="true"/>   
-                        
-                        <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
-                        <h:inputText id="cuit" value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
-                        
-                        <p:outputLabel value="#{bundle.EstablecimientosAsociados}" />
-                        <p:commandButton value="Agregar" action="#{mbPerJuridica.editarEstablecimientos()}" process="@this" />
-                    </h:panelGrid>
-             </p:panel>
-         
+            <h:inputHidden id="id" value="#{mbPerJuridica.selected.id}" />
+            <p:messages id="messages" />
+
+            <p:dialog id="dlg" resizable="false" />
+
+            <p:panel id="pnNew1" header="#{bundle.ExpedienteViewTitle}" style="margin-bottom:10px;">
+                <h:panelGrid columns="4">
+                    <p:outputLabel value="#{bundle.CreateExpedienteLabel_numero}" for="numero"/>
+                    <p:inputText id="numero" value="#{mbPerJuridica.selected.expediente.numero}" 
+                        requiredMessage="#{bundle.CreateExpedienteRequiredMessage_numero}" required="true"/>
+
+                    <p:outputLabel value="#{bundle.CreateExpedienteLabel_anio}" for="anio"/>
+                        <p:inputText id="anio" value="#{mbPerJuridica.selected.expediente.anio}" requiredMessage="#{bundle.CreateExpedienteRequiredMessage_anio}" 
+                            required="true"/>  
+                </h:panelGrid>
+            </p:panel>
+            
+            <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
+                <h:panelGrid columns="2">
+
+                    <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
+                    <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" 
+                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_razonSocial}" required="true"/>
+
+                    <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}" for="cuit"/>
+                    <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" 
+                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_cuit}" required="true"/>
+
+                    <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_correoElectronico}" for="correoElectronico"/>
+                    <p:inputText id="correoElectronico" value="#{mbPerJuridica.selected.correoElectronico}" 
+                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_correoElectronico}" required="true"/>
+
+                    <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_telefono}" for="telefono"/>
+                    <p:inputText id="telefono" value="#{mbPerJuridica.selected.telefono}" 
+                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_telefono}" required="true"/>
+
+                    <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
+                    <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" >
+                        <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                        <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                    </p:selectOneMenu>   
+
+                    <p:outputLabel value="#{bundle.EspecialidadViewTitle}" for="especialidad"/>
+                    <p:selectOneMenu id="especialidad" value="#{mbPerJuridica.selected.especialidad}" >
+                        <f:selectItem itemLabel="Seleccione Especialidad" itemValue="" noSelectionOption="true" />                           
+                        <f:selectItems value="#{mbPerJuridica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
+                    <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}" >
+                        <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
+                        <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Establecimientos "/>
+                    <p:commandButton value="Editar" action="#{mbPerJuridica.editarEstablecimientos}" process="@this" />
+
+                 </h:panelGrid>
+            </p:panel>
+
             <p:toolbar>
                 <f:facet name="left">
                     <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.update}" value="Guardar" style="margin-right:10px;" update="pnEdit"/>
                     <p:commandButton icon="ui-icon-cancel" value="Limpiar">
-                    <p:ajax update="pnEdit" resetValues="true" />
+                        <p:ajax update="pnEdit" resetValues="true" />
                     </p:commandButton>    
                 </f:facet>   
                 <f:facet name="right">
                     <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbPerJuridica.prepareList()}" value="Volver" immediate="true"/>        
                 </f:facet>
             </p:toolbar>
-            </h:form>
-        </ui:define>
-    </ui:composition>
+         </p:panel>
+    </h:form>
+</ui:define>
+</ui:composition>
 </html>
