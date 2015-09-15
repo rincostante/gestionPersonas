@@ -632,7 +632,7 @@ public class MbPerJuridica implements Serializable{
                 admEnt.setHabilitado(true);
                 admEnt.setUsAlta(usLogeado);
                 current.setAdmin(admEnt);
-                //current.setDomicilio(domicilio);
+                current.setDomicilio(domicilio);
                 
             }else{
                 // se agregan los datos del AdminEntidad
@@ -652,7 +652,7 @@ public class MbPerJuridica implements Serializable{
             // reseteo el establecimiento
             establecimiento = null;
             establecimiento = new Establecimiento();
-           
+            
             // volvemos a instanciar el Domicilio del Establecimiento
             Domicilio dom = new Domicilio();
             establecimiento.setDomicilio(dom);            
@@ -697,7 +697,7 @@ public class MbPerJuridica implements Serializable{
                 }else{
                     JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerJuridicaExistente"));
                     return null;
-               }
+                }
             } 
             catch (Exception e) {
                 JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerJuridicaCreatedErrorOccured"));
