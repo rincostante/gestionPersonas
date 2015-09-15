@@ -12,7 +12,8 @@
         <h:form id="frmProm" style="font-size: 80%">
             <p:panel id="prmNew" >
                 <p:growl id="messages"/>
-                <h:panelGrid columns="2">
+                <p:panel header="Datos del Establecimiento">
+                <h:panelGrid columns="6">
                             
                     <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>                             
                     <p:selectOneMenu id="tipoEstablecimiento" value="#{mbPerJuridica.establecimiento.tipo}" >
@@ -20,13 +21,13 @@
                           <f:selectItems value="#{mbPerJuridica.listaTipoEstablecimiento}" var="tipoEstablecimiento" itemLabel="#{tipoEstablecimiento.nombre}" itemValue="#{tipoEstablecimiento}"/>
                     </p:selectOneMenu> 
 
-                    <p:outputLabel value="#{bundle.ActividadViewTitle}" for="actividad"/>
+                    <p:outputLabel value="Actividad" for="actividad"/>
                     <p:selectOneMenu id="actividad" value="#{mbPerJuridica.establecimiento.actividad}" >
                           <f:selectItem itemLabel="Seleccione Actividad" itemValue="" noSelectionOption="true" />                           
                           <f:selectItems value="#{mbPerJuridica.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}"/>
                     </p:selectOneMenu>   
 
-                    <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
+                    <p:outputLabel value="Estado" for="estado"/>
                     <p:selectOneMenu id="estado" value="#{mbPerJuridica.establecimiento.estado}" >
                           <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
                           <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
@@ -37,8 +38,47 @@
 
                     <p:outputLabel value="Telefono" for="telefono"/>
                     <p:inputText id="telefono" value="#{mbPerJuridica.establecimiento.telefono}" required="false"/>
-
+                
                 </h:panelGrid>
+             </p:panel>  
+  <!-- Comienza la carga de los datos del domicilio-->
+  
+                
+                    <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">        
+                        <h:panelGrid columns="8">
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
+                        <p:inputText id="calle" value="#{mbPerJuridica.establecimiento.domicilio.calle}" required="false"/>
+
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}" for="numero_dom"/>
+                        <p:inputText id="numero_dom" value="#{mbPerJuridica.establecimiento.domicilio.numero}" required="false"/>
+
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}" for="piso"/>
+                        <p:inputText id="piso" value="#{mbPerJuridica.establecimiento.domicilio.piso}" required="false"/>
+
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}" for="dpto"/>
+                        <p:inputText id="dpto" value="#{mbPerJuridica.establecimiento.domicilio.dpto}" required="false"/>                         
+
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_idLocalidad}" for="idLocalidad"/>
+                        <p:inputText id="idLocalidad" value="#{mbPerJuridica.establecimiento.domicilio.idLocalidad}" required="false"/>  
+
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_localidad}" for="localidad"/>
+                        <p:inputText id="localidad" value="#{mbPerJuridica.establecimiento.domicilio.localidad}" required="false"/>  
+
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_provincia}" for="provincia"/>
+                        <p:inputText id="provincia" value="#{mbPerJuridica.establecimiento.domicilio.provincia}" required="false"/> 
+                        
+                    </h:panelGrid>
+                </p:panel>  
+  
+  <!-- termina la carga de los datos del domicilio-->                   
+
 
                 <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimiento}" update="prmNew" />
                     <p:commandButton icon="ui-icon-cancel" value="Limpiar" >
@@ -75,7 +115,7 @@
                     </p:column>
   
                 </p:dataTable>
- 
+
 <!-- hasta aquí es el listado de establecimientos asociados -->  
 
             </p:panel>

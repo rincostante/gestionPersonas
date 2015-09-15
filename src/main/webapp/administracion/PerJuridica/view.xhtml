@@ -54,7 +54,7 @@
              <p:panel id="pnNew3" header="#{bundle.EstablecimientoTitle}" style="margin-bottom: 10px">
                             <p:growl id="msgs" showDetail="true" />
                             <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="esta"  style="font-weight: normal; font-size: 80%">
-                                <p:tab title="#{esta.correoElectronico}">
+                                <p:tab title="#{esta.domicilio.calle} #{esta.domicilio.numero}">
                                         <h:panelGrid columns="2" cellpadding="5">
                                             <h:outputLabel  value="#{bundle.TipoEstablecimientoViewTitle}"/>
                                             <h:outputText   value="#{esta.tipo}"/>
@@ -102,7 +102,7 @@
                                     </p:tab>
                                 </p:accordionPanel>
                             </p:panel>
-                    
+    
              <p:panel id="pnNew4" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
              <h:panelGrid columns="2">                   
                  <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
@@ -125,9 +125,7 @@
                         <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
                                         title="#{bundle.LabelFechaBaja}"/>             
              </h:panelGrid>
-             </p:panel>    
-                    
-                                                                            
+             </p:panel>                                                                    
              </p:panel>
                 <p:toolbar>
                     <f:facet name="right">

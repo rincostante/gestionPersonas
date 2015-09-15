@@ -5,7 +5,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Ingrese aquí las Instancias para el Procedimiento</title>
+        <title>Ingrese aquí los Establecimientos para esta Persona Jurídica</title>
     </h:head>
     
     <h:body>
@@ -13,178 +13,110 @@
             <p:panel id="inNew" style="margin-bottom:10px">
                 <p:growl id="messages" />
                 <h:panelGrid columns="2">
-
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_nombre}" for="nombre"/>
-                    <p:inputText id="nombre" value="#{mbProcedimiento.instancia.nombre}" 
-                                 requiredMessage="#{bundle.CreateInstanciaRequiredMessage_nombre}" required="true"/>
-
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_ruta}" for="ruta"/>
-                    <p:inputText id="ruta" value="#{mbProcedimiento.instancia.ruta}" requiredMessage="#{bundle.CreateInstanciaRequiredMessage_ruta}" 
-                                 required="true"/>
-
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_codigo}" for="codigo"/>
-                    <p:inputText id="codigo" value="#{mbProcedimiento.instancia.codigo}" requiredMessage="#{bundle.CreateInstanciaRequiredMessage_codigo}" required="true"/>
-
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_estadoInicial}" for="estadoInicial"/>                             
-                    <p:selectOneMenu id="estadoInicial" value="#{mbProcedimiento.instancia.estadoInicial}" 
-                                     requiredMessage="#{bundle.CreateInstanciaProcedimientoRequiredMessage_estadoInicial}" required="false">                                         >
-                        <f:selectItem itemLabel="Seleccione el Estado Inicial" itemValue="" noSelectionOption="true" />                           
-                        <f:selectItems value="#{mbProcedimiento.listaEstados}" var="estado" itemLabel="#{estado.nombre} / App: #{estado.app}" itemValue="#{estadoInicial}"/>
-                    </p:selectOneMenu>  
-
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_estadoFinal}" for="estadoFinal"/>      
-                    <p:selectOneMenu id="estadoFinal" value="#{mbProcedimiento.instancia.estadoFinal}" 
-                                     requiredMessage="#{bundle.CreateInstanciaProcedimientoRequiredMessage_estadoFinal}" required="false">
-                        <f:selectItem itemLabel="Seleccione el Estado Final" itemValue="" noSelectionOption="true"/>
-                        <f:selectItems value="#{mbProcedimiento.listaEstados}" var="estado" itemLabel="#{estado.nombre} / App: #{estado.app}" itemValue="#{estadoFinal}"/>
+                            
+                    <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>                             
+                    <p:selectOneMenu id="tipoEstablecimiento" value="#{mbPerJuridica.establecimiento.tipo}" >
+                          <f:selectItem itemLabel="Tipo Establecimiento" itemValue="" noSelectionOption="true" />                           
+                          <f:selectItems value="#{mbPerJuridica.listaTipoEstablecimiento}" var="tipoEstablecimiento" itemLabel="#{tipoEstablecimiento.nombre}" itemValue="#{tipoEstablecimiento}"/>
                     </p:selectOneMenu> 
 
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_alerta}" for="alerta"/>
-                    <p:inputText id="alerta" value="#{mbProcedimiento.instancia.cantidadAlerta}" converter="#{Integer}"
-                                 requiredMessage="#{bundle.CreateInstanciaRequiredMessage_cantidadAlerta}" required="true"/>
+                    <p:outputLabel value="Actividad" for="actividad"/>
+                    <p:selectOneMenu id="actividad" value="#{mbPerJuridica.establecimiento.actividad}" >
+                          <f:selectItem itemLabel="Seleccione Actividad" itemValue="" noSelectionOption="true" />                           
+                          <f:selectItems value="#{mbPerJuridica.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}"/>
+                    </p:selectOneMenu>   
 
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_UdTAlerta}" for="unidadDeTiempoAlerta"/>                             
-                    <p:selectOneMenu id="unidadDeTiempoAlerta" value="#{mbProcedimiento.instancia.unidadDeTiempoAlerta}" 
-                                     requiredMessage="#{bundle.CreateInstanciaRequiredMessage_UdTAlerta}" required="true">
-                        <f:selectItem itemLabel="Seleccione la Unidad de Tiempo para el alerta" itemValue="" noSelectionOption="true" />                           
-                        <f:selectItems value="#{mbProcedimiento.listaUnidadDeTiempos}" var="unidadDeTiempo" itemLabel="#{unidadDeTiempo.nombre} / #{unidadDeTiempo.secuencia}" itemValue="#{unidadDeTiempoAlerta}"/>
-                    </p:selectOneMenu>                          
+                    <p:outputLabel value="Estado" for="estado"/>
+                    <p:selectOneMenu id="estado" value="#{mbPerJuridica.establecimiento.estado}" >
+                          <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                          <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                    </p:selectOneMenu>   
 
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_vto}" for="cantidadVencimiento"/>
-                    <p:inputText id="cantidadVencimiento" value="#{mbProcedimiento.instancia.cantidadVencimiento}" 
-                                 requiredMessage="#{bundle.CreateInstanciaRequiredMessage_vto}" required="true"/>
+                    <p:outputLabel value="#{bundle.CreateEstablecimientoLabel_correoElectronico}" for="correo"/>
+                    <p:inputText id="correo" value="#{mbPerJuridica.establecimiento.correoElectronico}" required="false"/>    
 
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_UdTVto}" for="unidadDeTiempoVto"/>                             
-                    <p:selectOneMenu id="unidadDeTiempoVto" value="#{mbProcedimiento.instancia.unidadDeTiempoVto}" 
-                                     requiredMessage="#{bundle.CreateInstanciaRequiredMessage_UdTVto}" required="true">
-                        <f:selectItem itemLabel="Seleccione la Unidad de Tiempo para el vencimiento" itemValue="" noSelectionOption="true" />                           
-                        <f:selectItems value="#{mbProcedimiento.listaUnidadDeTiempos}" var="unidadDeTiempo" itemLabel="#{unidadDeTiempo.nombre} / #{unidadDeTiempo.secuencia}" itemValue="#{unidadDeTiempoVto}"/>
-                    </p:selectOneMenu>                          
-
-                    <p:outputLabel value="#{bundle.CreateInstanciaLabel_observaciones}" for="observaciones"/>
-                    <p:inputText id="observaciones" value="#{mbProcedimiento.instancia.observaciones}" 
-                                 requiredMessage="#{bundle.CreateInstanciaRequiredMessage_observaciones}" required="false"/>
-
+                    <p:outputLabel value="Telefono" for="telefono"/>
+                    <p:inputText id="telefono" value="#{mbPerJuridica.establecimiento.telefono}" required="false"/>
+                
                 </h:panelGrid>
- 
-                <p:toolbar>
-                    <f:facet name="left">
-                        <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbProcedimiento.createInstancia}" update="inNew" />
-                        <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: next">
-                            <p:ajax update="inNew" resetValues="true" />
-                        </p:commandButton>
-                    </f:facet>
-                </p:toolbar>
+             </p:panel>  
+  <!-- Comienza la carga de los datos del domicilio-->
+  
                 
-<!-- a partir de aquí es el listado de instancias asociadas -->     
+                    <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">        
+                        <h:panelGrid columns="8">
 
-            <p:contextMenu for="instancias" widgetVar="cMenu">   
-                <p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('instancias').showCellEditor();return false"/>  
-                <p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>  
-            </p:contextMenu> 
-            
-            <p:dataTable id="instancias" var="ins" value="#{mbProcedimiento.selected.instancias}" editable="true" >
-                <f:facet name="header">
-                    Hacer click en el campo para editarlo
-                </f:facet>
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
+                        <p:inputText id="calle" value="#{mbPerJuridica.establecimiento.domicilio.calle}" required="false"/>
 
-                <p:ajax event="rowEdit" listener="#{mbProcedimiento.onRowEdit}" update=":frmNew:messages" />
-                <p:ajax event="rowEditCancel" listener="#{mbProcedimiento.instDelete}" update=":frmNew:messages" /> 
 
-                <p:column headerText="Instancias">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.nombre}" /></f:facet>
-                        <f:facet name="input"><p:inputText id="modelInput" value="#{ins.nombre}" style="width:96%"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}" for="numero_dom"/>
+                        <p:inputText id="numero_dom" value="#{mbPerJuridica.establecimiento.domicilio.numero}" required="false"/>
 
-                <p:column headerText="Ruta">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.ruta}" /></f:facet>
-                        <f:facet name="input"><p:inputText value="#{ins.ruta}" style="width:96%" label="Ruta"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
 
-                <p:column headerText="Código" width="8%">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.codigo}" /></f:facet>
-                        <f:facet name="input"><p:inputText value="#{ins.codigo}" style="width:96%" label="Codigo"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}" for="piso"/>
+                        <p:inputText id="piso" value="#{mbPerJuridica.establecimiento.domicilio.piso}" required="false"/>
 
-                <p:column headerText="Estado Inicial">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.estadoInicial.nombre}" /></f:facet>
-                        <f:facet name="input">
-                            <h:selectOneMenu value="#{ins.estadoInicial.nombre}" style="width:100%">
-                                <f:selectItems value="#{mbProcedimiento.listaEstados}" var="ini" itemLabel="#{ini.nombre}" itemValue="#{ini.nombre}" />
-                            </h:selectOneMenu>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
 
-                <p:column headerText="Estado Final">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.estadoFinal.nombre}" /></f:facet>
-                        <f:facet name="input">
-                            <h:selectOneMenu value="#{ins.estadoFinal.nombre}" style="width:100%">
-                                <f:selectItems value="#{mbProcedimiento.listaEstados}" var="fin" itemLabel="#{fin.nombre}" itemValue="#{fin.nombre}" />
-                            </h:selectOneMenu>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}" for="dpto"/>
+                        <p:inputText id="dpto" value="#{mbPerJuridica.establecimiento.domicilio.dpto}" required="false"/>                         
 
-                <p:column headerText="Alerta" width="5%">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.cantidadAlerta}" /></f:facet>
-                        <f:facet name="input"><p:inputText value="#{ins.cantidadAlerta}" style="width:96%" label="cantidadAlerta"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
 
-                <p:column headerText="Unidad de Tpo. Alerta" width="8%">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.unidadDeTiempoAlerta.nombre}" /></f:facet>
-                        <f:facet name="input">
-                            <h:selectOneMenu value="#{ins.unidadDeTiempoAlerta.nombre}" style="width:100%">
-                                <f:selectItems value="#{mbProcedimiento.listaUnidadDeTiempos}" var="ale" itemLabel="#{ale.nombre}" itemValue="#{ale.nombre}" />
-                            </h:selectOneMenu>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>       
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_idLocalidad}" for="idLocalidad"/>
+                        <p:inputText id="idLocalidad" value="#{mbPerJuridica.establecimiento.domicilio.idLocalidad}" required="false"/>  
 
-                 <p:column headerText="Vto" width="5%">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.cantidadVencimiento}" /></f:facet>
-                        <f:facet name="input"><p:inputText value="#{ins.cantidadVencimiento}" style="width:96%" label="cantidadVencimiento"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
 
-                <p:column headerText="Unidad de Tpo. Vto." width="8%">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.unidadDeTiempoVto.nombre}" /></f:facet>
-                        <f:facet name="input">
-                            <h:selectOneMenu value="#{ins.unidadDeTiempoVto.nombre}" style="width:100%">
-                                <f:selectItems value="#{mbProcedimiento.listaUnidadDeTiempos}" var="vto" itemLabel="#{vto.nombre}" itemValue="#{vto.nombre}" />
-                            </h:selectOneMenu>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column> 
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_localidad}" for="localidad"/>
+                        <p:inputText id="localidad" value="#{mbPerJuridica.establecimiento.domicilio.localidad}" required="false"/>  
 
-                <p:column headerText="Observaciones">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{ins.observaciones}" /></f:facet>
-                        <f:facet name="input"><p:inputText value="#{ins.observaciones}" style="width:96%" label="Observaciones"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
-                
-                <p:column style="width:32px">
-                    <p:rowEditor/>
-                </p:column>
-                
-            </p:dataTable>
 
-<!-- hasta aquí es el listado de instancias asociadas -->             
-            </p:panel>
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_provincia}" for="provincia"/>
+                        <p:inputText id="provincia" value="#{mbPerJuridica.establecimiento.domicilio.provincia}" required="false"/> 
+                        
+                    </h:panelGrid>
+                </p:panel>  
+  
+  <!-- termina la carga de los datos del domicilio-->                   
+
+
+                <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimiento}" update="prmNew" />
+                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" >
+                        <p:ajax update="prmNew" resetValues="true" />
+                    </p:commandButton>
+
+       
+ <!-- a partir de aquí es el listado de establecimientos asociadas -->  
+                          
+ <p:dataTable id="establecimientos" var="est" value="#{mbPerJuridica.listEstablecimientos}" >
+                    
+                    <p:column headerText="Tipo de Establecimiento" style="font-size: 90%">
+                        <h:outputLabel value="#{est.tipo.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Actividad" style="font-size: 90%">
+                        <h:outputLabel value="#{est.actividad.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Correo Electrónico" width="8%" style="font-size: 90%">
+                        <h:outputLabel value="#{est.correoElectronico}" />
+                    </p:column>                    
+                    
+                    <p:column headerText="Estado" style="font-size: 90%">
+                        <h:outputLabel value="#{est.estado.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Teléfono" style="font-size: 90%">
+                        <h:outputLabel value="#{est.telefono}" />
+                    </p:column>
+
+                    <p:column headerText="Domicilio" style="font-size: 90%">
+                        <h:outputLabel value="#{est.domicilio}" />
+                    </p:column>
+  
+                </p:dataTable>
+
+<!-- hasta aquí es el listado de establecimientos asociados -->  
+
         </h:form>
     </h:body>
 </html>

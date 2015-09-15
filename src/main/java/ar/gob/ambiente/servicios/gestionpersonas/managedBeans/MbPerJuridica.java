@@ -21,6 +21,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
@@ -48,7 +49,6 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import javax.faces.context.ExternalContext;
-import javax.faces.event.ValueChangeEvent;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
@@ -62,6 +62,9 @@ public class MbPerJuridica implements Serializable{
     private PerJuridica current;
     private Expediente expediente;
     private Establecimiento establecimiento;
+    private Domicilio domicilio;
+    private List<Domicilio> listDomicilios;    
+    private Domicilio domVinc;
     
     
     private List<Expediente> listaExpedientes;
@@ -70,7 +73,7 @@ public class MbPerJuridica implements Serializable{
     private List<Establecimiento> establecimientos;
     private List<Establecimiento> establecimientosFilter;
     private List<Establecimiento> listEstablecimientos;
-    
+        
 
     @EJB
     private PerJuridicaFacade perJuridicaFacade;
@@ -90,6 +93,8 @@ public class MbPerJuridica implements Serializable{
     private TipoPersonaJuridicaFacade tipoFacade;
     @EJB
     private TipoEstablecimientoFacade tipoEstablecimientoFacade;
+    @EJB
+    private DomicilioFacade domicilioFacade;
     
     private PerJuridica perJuridicaSelected;
     private MbLogin login;
@@ -106,7 +111,7 @@ public class MbPerJuridica implements Serializable{
     private List<TipoEstablecimiento> listaTipoEstablecimiento;
    // private String razonSocial;
     private List<PerFisica> representantes;
-    private Domicilio domicilio;
+    private List<Establecimiento> listEstablecimientosFilter;
 
     
     /**
@@ -152,6 +157,39 @@ public class MbPerJuridica implements Serializable{
      ****** Getters y Setters *******
      * @return 
      ********************************/
+   
+    public Domicilio getDomicilio() {
+        return domicilio;
+    }
+
+    public void setDomicilio(Domicilio domicilio) {
+        this.domicilio = domicilio;
+    }
+
+    public List<Domicilio> getListDomicilios() {
+        return listDomicilios;
+    }
+
+    public void setListDomicilios(List<Domicilio> listDomicilios) {
+        this.listDomicilios = listDomicilios;
+    }
+
+    public Domicilio getDomVinc() {
+        return domVinc;
+    }
+
+    public void setDomVinc(Domicilio domVinc) {
+        this.domVinc = domVinc;
+    }
+
+    public List<Establecimiento> getListEstablecimientosFilter() {
+        return listEstablecimientosFilter;
+    }
+
+    public void setListEstablecimientosFilter(List<Establecimiento> listEstablecimientosFilter) {
+        this.listEstablecimientosFilter = listEstablecimientosFilter;
+    }
+
    
     public List<PerFisica> getRepresentantes() {
         return representantes;
@@ -428,6 +466,7 @@ public class MbPerJuridica implements Serializable{
         //Inicializamos la creacion de expediente y establecimiento
         expediente = new Expediente();
         establecimiento = new Establecimiento();
+        domicilio = new Domicilio();
         listEstablecimientos = new ArrayList();
 
         listaEstado = estadoFacade.findAll();
@@ -435,7 +474,7 @@ public class MbPerJuridica implements Serializable{
         listaTipoPersonaJuridica = tipoFacade.findAll();
         representantes = perFisicaFacade.findAll();
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
-     //   domicilio = new Domicilio();
+        listaActividad = actividadFacade.findAll();
         return "new";
     }
     
@@ -445,6 +484,7 @@ public class MbPerJuridica implements Serializable{
     public String prepareEdit() {
         //inicializamos el objeto establecimiento para asignar nuevos a la persona Jurídica que se está editando
         establecimiento = new Establecimiento();
+        domicilio = new Domicilio();
         
         //pueblo los combos
         listaEstado = estadoFacade.findAll();
@@ -523,17 +563,15 @@ public class MbPerJuridica implements Serializable{
 
     }
     
-  public void agregarEstablecimientos(){
-
-   /*         listaEstado = estadoFacade.findAll();
-            listaActividad = actividadFacade.findAll();
-            listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
-      */
-            Map<String,Object> options = new HashMap<>();
-            options.put("contentWidth", 1200);
-            RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimientos", options, null); 
-              
-        }
+    public void agregarEstablecimientos(){
+        // instanciamos el Domicilio del Establecimiento
+        Domicilio dom = new Domicilio();
+        establecimiento.setDomicilio(dom);
+        
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 1200);
+        RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimientos", options, null);          
+    }
 
 
             
@@ -586,6 +624,7 @@ public class MbPerJuridica implements Serializable{
             if(current.getId() != null){
 
                 current.getEstablecimientos().add(establecimiento);
+                
                 // se agregan los datos del AdminEntidad
                 Date date = new Date(System.currentTimeMillis());
                 AdminEntidad admEnt = new AdminEntidad();
@@ -593,6 +632,8 @@ public class MbPerJuridica implements Serializable{
                 admEnt.setHabilitado(true);
                 admEnt.setUsAlta(usLogeado);
                 current.setAdmin(admEnt);
+                //current.setDomicilio(domicilio);
+                
             }else{
                 // se agregan los datos del AdminEntidad
                 Date date = new Date(System.currentTimeMillis());
@@ -600,12 +641,21 @@ public class MbPerJuridica implements Serializable{
                 admEnt.setFechaAlta(date);
                 admEnt.setHabilitado(true);
                 admEnt.setUsAlta(usLogeado);
+                
+                // asigno la admin
                 establecimiento.setAdmin(admEnt);
-                listEstablecimientos.add(establecimiento);    
+                
+                // agrego el establecimiento al listado
+                listEstablecimientos.add(establecimiento); 
             }
+            
             // reseteo el establecimiento
             establecimiento = null;
             establecimiento = new Establecimiento();
+           
+            // volvemos a instanciar el Domicilio del Establecimiento
+            Domicilio dom = new Domicilio();
+            establecimiento.setDomicilio(dom);            
         } else{
             JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoExistente"));
         }
@@ -630,9 +680,8 @@ public class MbPerJuridica implements Serializable{
         //Asigno expediente
         current.setExpediente(expediente);
         
-        //Asigno Establecimiento
+        //Asigno los Establecimientos
         current.setEstablecimientos(listEstablecimientos);
-        
         
         if(current.getRazonSocial().isEmpty()){
             JsfUtil.addSuccessMessage("La persona Jurídica que está guardando debe tener una Razón Social.");
@@ -648,7 +697,7 @@ public class MbPerJuridica implements Serializable{
                 }else{
                     JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerJuridicaExistente"));
                     return null;
-                }
+               }
             } 
             catch (Exception e) {
                 JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerJuridicaCreatedErrorOccured"));

@@ -1,16 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+     <ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml">
+     <ui:define name="content">
+     <h:form style="text-align: left">
+         <p:panel id="pnEdit" header="#{bundle.EstablecimientoEditTitle}" style="margin-bottom:10px;"> 
+                    <h:inputHidden id="id" value="#{mbPerJuridica.selected.id}" />
+                    <p:messages id="messages" />  
+                    <p:dialog id="dlg" resizable="false" /> 
+                    
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="#{bundle.PerJuridicaViewTitle}" for="razon social"/>
+                        <p:inputText id="nombre" value="#{mbPerJuridica.selected.razonSocial}" requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_razonSocial}" required="true"/>   
+                        
+                        <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
+                        <h:inputText id="cuit" value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
+                        
+                        <p:outputLabel value="#{bundle.EstablecimientosAsociados}" />
+                        <p:commandButton value="Agregar" action="#{mbPerJuridica.editarEstablecimientos()}" process="@this" />
+                    </h:panelGrid>
+             </p:panel>
+         
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.update}" value="Guardar" style="margin-right:10px;" update="pnEdit"/>
+                    <p:commandButton icon="ui-icon-cancel" value="Limpiar">
+                    <p:ajax update="pnEdit" resetValues="true" />
+                    </p:commandButton>    
+                </f:facet>   
+                <f:facet name="right">
+                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbPerJuridica.prepareList()}" value="Volver" immediate="true"/>        
+                </f:facet>
+            </p:toolbar>
+            </h:form>
+        </ui:define>
+    </ui:composition>
 </html>
