@@ -5,14 +5,15 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Ingrese aquí los Establecimientos para esta Persona Jurídica</title>
+        <title>Ingrese aquí los Establecimientos relacionados a esta Persona Jurídica</title>
     </h:head>
     
     <h:body>
-        <h:form id="frmNew" style="font-size: 80%">
-            <p:panel id="inNew" style="margin-bottom:10px">
-                <p:growl id="messages" />
-                <h:panelGrid columns="2">
+        <h:form id="frmProm" style="font-size: 80%">
+            <p:panel id="prmNew" >
+                <p:growl id="messages"/>
+                <p:panel header="Datos del Establecimiento">
+                <h:panelGrid columns="6">
                             
                     <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>                             
                     <p:selectOneMenu id="tipoEstablecimiento" value="#{mbPerJuridica.establecimiento.tipo}" >
@@ -87,36 +88,97 @@
        
  <!-- a partir de aquí es el listado de establecimientos asociadas -->  
                           
- <p:dataTable id="establecimientos" var="est" value="#{mbPerJuridica.listEstablecimientos}" >
-                    
-                    <p:column headerText="Tipo de Establecimiento" style="font-size: 90%">
-                        <h:outputLabel value="#{est.tipo.nombre}" />
+            <p:contextMenu for="establecimientos" widgetVar="cMenu">   
+                <p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('establecimientos').showCellEditor();return false"/>  
+                <p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>  
+            </p:contextMenu> 
+            
+            <p:dataTable id="establecimientos" var="est" value="#{mbPerJuridica.selected.establecimientos}" editable="true" >
+                <f:facet name="header">
+                    Hacer click en el campo para editarlo
+                </f:facet>
+
+                <p:ajax event="rowEdit" listener="#{mbPerJuridica.onRowEdit}" update=":frmProm:messages" />
+                <p:ajax event="rowEditCancel" listener="#{mbPerJuridica.estabDelete}" update=":frmProm:messages" /> 
+
+                <p:column headerText="Tipo de Establecimiento">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.tipo.nombre}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.tipo.nombre}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
                     </p:column>
 
-                    <p:column headerText="Actividad" style="font-size: 90%">
-                        <h:outputLabel value="#{est.actividad.nombre}" />
+                    <p:column headerText="Actividad">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.actividad.nombre}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.actividad.nombre}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
                     </p:column>
 
-                    <p:column headerText="Correo Electrónico" width="8%" style="font-size: 90%">
-                        <h:outputLabel value="#{est.correoElectronico}" />
+                    <p:column headerText="Correo Electrónico">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.correoElectronico}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.correoElectronico}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
                     </p:column>                    
                     
-                    <p:column headerText="Estado" style="font-size: 90%">
-                        <h:outputLabel value="#{est.estado.nombre}" />
+                    <p:column headerText="Estado" >
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.estado.nombre}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.estado.nombre}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
                     </p:column>
 
-                    <p:column headerText="Teléfono" style="font-size: 90%">
-                        <h:outputLabel value="#{est.telefono}" />
+                    <p:column headerText="Teléfono">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.telefono}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.telefono}" style="width:96%"/></f:facet> 
+                        </p:cellEditor>
                     </p:column>
 
-                    <p:column headerText="Domicilio" style="font-size: 90%">
-                        <h:outputLabel value="#{est.domicilio}" />
+                    <p:column headerText="Calle">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.calle}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.calle}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
                     </p:column>
-  
+                
+                    <p:column headerText="Número">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.numero}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.numero}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                
+                    <p:column headerText="Piso">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.piso}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.piso}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                
+                    <p:column headerText="Dpto.">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.dpto}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.dpto}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                     <p:column headerText="Localidad">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.localidad}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.localidad}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                
+                    <p:column style="width:32px">
+                        <p:rowEditor/>
+                    </p:column>
+                
                 </p:dataTable>
 
-<!-- hasta aquí es el listado de establecimientos asociados -->  
-
+<!-- hasta aquí es el listado de establecimientos asociados -->              
+            </p:panel>
         </h:form>
     </h:body>
 </html>

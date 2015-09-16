@@ -51,8 +51,9 @@
                     
              <p:panel id="pnNew3" header="#{bundle.EstablecimientoTitle}" style="margin-bottom: 10px">
                     <p:growl id="msgs" showDetail="true" />
-                    <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="esta"  style="font-weight: normal; font-size: 80%">
-                        <p:tab title="#{esta.domicilio.calle} #{esta.domicilio.numero}">
+                    <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="esta"  style="font-weight: normal; font-size: 80%"> 
+                        
+                        <p:tab title="#{esta.domicilio.calle} #{esta.domicilio.numero}"> 
                             <h:panelGrid columns="2" cellpadding="5">
                                 <h:outputLabel  value="#{bundle.TipoEstablecimientoViewTitle}"/>
                                 <h:outputText   value="#{esta.tipo}"/>
@@ -95,7 +96,7 @@
 
                                 <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
                                 <h:outputText   value="#{esta.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
-
+                                <p:commandButton value="Editar" id="pnNew3" actionListener="#{mbPerJuridica.editarEstablecimientos}" icon="ui-icon-disk" />
                             </h:panelGrid>    
                         </p:tab>
                     </p:accordionPanel>
