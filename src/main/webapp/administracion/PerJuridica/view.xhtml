@@ -120,9 +120,15 @@
 
                                 <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
                                 <h:outputText   value="#{esta.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
+                                
                                 <p:commandButton value="Editar" id="pnNew3" action="#{mbPerJuridica.editarEstablecimientos}" icon="ui-icon-disk" >
                                     <f:setPropertyActionListener value="#{esta}" target="#{mbPerJuridica.establecimiento}" />
                                 </p:commandButton>
+                                
+                                <p:commandButton icon="ui-icon-refresh" action="#{mbPerJuridica.prepareView}" title="Ver detalle">
+                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
+                                </p:commandButton>
+                                
                             </h:panelGrid>    
                         </p:tab>
                     </p:accordionPanel>

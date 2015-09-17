@@ -5,47 +5,52 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Ingrese aquí los Establecimientos relacionados a esta Persona Jurídica</title>
+        <title>Edite los datos del Establecimiento relacionado a esta Persona Jurídica</title>
     </h:head>
     
     <h:body>
         <h:form id="frmProm" style="font-size: 80%">
-            <p:panel id="prmNew" >
+            <p:panel id="prmNew">
                 <p:growl id="messages"/>
-                <p:panel header="Datos del Establecimiento">
-                <h:panelGrid columns="6">
-                            
-                    <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>                             
-                    <p:selectOneMenu id="tipoEstablecimiento" value="#{mbPerJuridica.establecimiento.tipo}" >
-                          <f:selectItem itemLabel="Tipo Establecimiento" itemValue="" noSelectionOption="true" />                           
-                          <f:selectItems value="#{mbPerJuridica.listaTipoEstablecimiento}" var="tipoEstablecimiento" itemLabel="#{tipoEstablecimiento.nombre}" itemValue="#{tipoEstablecimiento}"/>
-                    </p:selectOneMenu> 
-
-                    <p:outputLabel value="Actividad" for="actividad"/>
-                    <p:selectOneMenu id="actividad" value="#{mbPerJuridica.establecimiento.actividad}" >
-                          <f:selectItem itemLabel="Seleccione Actividad" itemValue="" noSelectionOption="true" />                           
-                          <f:selectItems value="#{mbPerJuridica.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}"/>
-                    </p:selectOneMenu>   
-
-                    <p:outputLabel value="Estado" for="estado"/>
-                    <p:selectOneMenu id="estado" value="#{mbPerJuridica.establecimiento.estado}" >
-                          <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
-                          <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
-                    </p:selectOneMenu>   
-
-                    <p:outputLabel value="#{bundle.CreateEstablecimientoLabel_correoElectronico}" for="correo"/>
-                    <p:inputText id="correo" value="#{mbPerJuridica.establecimiento.correoElectronico}" required="false"/>    
-
-                    <p:outputLabel value="Telefono" for="telefono"/>
-                    <p:inputText id="telefono" value="#{mbPerJuridica.establecimiento.telefono}" required="false"/>
                 
-                </h:panelGrid>
-             </p:panel>  
+
+                    
+                <p:panel id="pnNew1" header="Establecimiento" style="margin-bottom:10px;">
+                    <h:panelGrid columns="6">
+                        <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>
+                        <p:selectOneMenu id="tipoEstablecimiento" value="#{mbPerJuridica.establecimiento.tipo}" >
+                            <f:selectItem itemLabel="Seleccione el Tipo de Establecimiento" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerJuridica.listaTipoEstablecimiento}" var="tipoEstablecimiento" itemLabel="#{tipoEstablecimiento.nombre}" itemValue="#{tipoEstablecimiento}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Actividad" for="actividad"/>
+                        <p:selectOneMenu id="actividad" value="#{mbPerJuridica.establecimiento.actividad}" >
+                            <f:selectItem itemLabel="Seleccione la actividad" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerJuridica.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}"/>
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel value="Estado" for="estado"/>
+                        <p:selectOneMenu id="estado" value="#{mbPerJuridica.establecimiento.estado}" >
+                            <f:selectItem itemLabel="Seleccione el estado" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                        </p:selectOneMenu>  
+
+                        <p:outputLabel value="Correo" for="correo"/>
+                        <p:inputText id="correo" value="#{mbPerJuridica.establecimiento.correoElectronico}" required="false"/>    
+
+                        <p:outputLabel value="Telefono" for="telefono"/>
+                        <p:inputText id="telefono" value="#{mbPerJuridica.establecimiento.telefono}" required="false"/>
+
+
+                    </h:panelGrid>
+                </p:panel>
+
+
   <!-- Comienza la carga de los datos del domicilio-->
   
                 
-                    <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">        
-                        <h:panelGrid columns="8">
+                <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">        
+                    <h:panelGrid columns="8">
 
                         <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
                         <p:inputText id="calle" value="#{mbPerJuridica.establecimiento.domicilio.calle}" required="false"/>
@@ -80,104 +85,12 @@
   <!-- termina la carga de los datos del domicilio-->                   
 
 
-                <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimiento}" update="prmNew" />
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.updateEstablecimiento}" update="prmNew" />
                     <p:commandButton icon="ui-icon-cancel" value="Limpiar" >
                         <p:ajax update="prmNew" resetValues="true" />
                     </p:commandButton>
 
-       
- <!-- a partir de aquí es el listado de establecimientos asociadas -->  
-                          
-            <p:contextMenu for="establecimientos" widgetVar="cMenu">   
-                <p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('establecimientos').showCellEditor();return false"/>  
-                <p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>  
-            </p:contextMenu> 
-            
-            <p:dataTable id="establecimientos" var="est" value="#{mbPerJuridica.selected.establecimientos}" editable="true" >
-                <f:facet name="header">
-                    Hacer click en el campo para editarlo
-                </f:facet>
 
-                <p:ajax event="rowEdit" listener="#{mbPerJuridica.onRowEdit}" update=":frmProm:messages" />
-                <p:ajax event="rowEditCancel" listener="#{mbPerJuridica.estabDelete}" update=":frmProm:messages" /> 
-
-                <p:column headerText="Tipo de Establecimiento">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.tipo.nombre}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.tipo.nombre}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>
-
-                    <p:column headerText="Actividad">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.actividad.nombre}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.actividad.nombre}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>
-
-                    <p:column headerText="Correo Electrónico">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.correoElectronico}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.correoElectronico}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>                    
-                    
-                    <p:column headerText="Estado" >
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.estado.nombre}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.estado.nombre}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>
-
-                    <p:column headerText="Teléfono">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.telefono}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.telefono}" style="width:96%"/></f:facet> 
-                        </p:cellEditor>
-                    </p:column>
-
-                    <p:column headerText="Calle">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.calle}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.calle}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>
-                
-                    <p:column headerText="Número">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.numero}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.numero}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>
-                
-                    <p:column headerText="Piso">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.piso}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.piso}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>
-                
-                    <p:column headerText="Dpto.">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.dpto}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.dpto}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>
-
-                     <p:column headerText="Localidad">
-                        <p:cellEditor>
-                            <f:facet name="output"><h:outputLabel value="#{est.domicilio.localidad}" /></f:facet>
-                            <f:facet name="input"><p:inputText id="modelInput" value="#{est.domicilio.localidad}" style="width:96%"/></f:facet>
-                        </p:cellEditor>
-                    </p:column>
-                
-                    <p:column style="width:32px">
-                        <p:rowEditor/>
-                    </p:column>
-                
-                </p:dataTable>
-
-<!-- hasta aquí es el listado de establecimientos asociados -->              
             </p:panel>
         </h:form>
     </h:body>

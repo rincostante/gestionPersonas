@@ -665,6 +665,32 @@ public class MbPerJuridica implements Serializable{
         }
     }
 
+            /**
+     * Método para actualizar un Establecimiento
+     */
+    public void updateEstablecimiento(){
+        boolean docenteOcupado = false;
+        List<Establecimiento> establecimientosSwap = new ArrayList<>();
+        for (Establecimiento cls : current.getEstablecimientos()) {
+            if(!cls.getId().equals(establecimiento.getId())){
+                
+                establecimientosSwap.add(cls);
+            }else{
+                establecimientosSwap.add(establecimiento);
+            }
+        }
+        if(!docenteOcupado){
+            current.setEstablecimientos(establecimientosSwap);
+            getFacade().edit(current);
+            // reseteo la variable para volverla a poblar con la próxima, si hubiera.
+            establecimiento = null;
+            establecimiento = new Establecimiento();
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoUpdated"));
+        }else{
+            JsfUtil.addErrorMessage("El Establecimiento seleccionado no se puede modificar");
+        }   
+    }
+
            /**
      * Método para eliminar establecimientos
      * @param event
