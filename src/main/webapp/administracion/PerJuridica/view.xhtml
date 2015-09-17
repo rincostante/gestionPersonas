@@ -49,6 +49,30 @@
                 </h:panelGrid>
              </p:panel>
                     
+             <p:panel id="pnNew4" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
+                 <h:panelGrid columns="2">                   
+                     <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
+                            <h:outputText   value="#{mbPerJuridica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
+
+                            <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
+                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
+
+                            <h:outputLabel  value="#{bundle.LabelUsuarioModif}"/>
+                            <h:outputText   value="#{mbPerJuridica.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
+
+                            <h:outputLabel  value="#{bundle.LabelFechaModif}"/>
+                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
+
+                            <h:outputLabel  value="#{bundle.LabelUsuario}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
+                            <h:outputText   value="#{mbPerJuridica.selected.admin.usBaja.nombre}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
+                                            title="#{bundle.LabelUsuario}"/>                        
+
+                            <h:outputLabel  value="#{bundle.LabelFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
+                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
+                                            title="#{bundle.LabelFechaBaja}"/>             
+                 </h:panelGrid>
+             </p:panel>
+                    
              <p:panel id="pnNew3" header="#{bundle.EstablecimientoTitle}" style="margin-bottom: 10px">
                     <p:growl id="msgs" showDetail="true" />
                     <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="esta"  style="font-weight: normal; font-size: 80%"> 
@@ -96,35 +120,15 @@
 
                                 <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
                                 <h:outputText   value="#{esta.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
-                                <p:commandButton value="Editar" id="pnNew3" actionListener="#{mbPerJuridica.editarEstablecimientos}" icon="ui-icon-disk" />
+                                <p:commandButton value="Editar" id="pnNew3" action="#{mbPerJuridica.editarEstablecimientos}" icon="ui-icon-disk" >
+                                    <f:setPropertyActionListener value="#{esta}" target="#{mbPerJuridica.establecimiento}" />
+                                </p:commandButton>
                             </h:panelGrid>    
                         </p:tab>
                     </p:accordionPanel>
                     </p:panel>
     
-                 <p:panel id="pnNew4" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
-                 <h:panelGrid columns="2">                   
-                     <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
 
-                            <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
-
-                            <h:outputLabel  value="#{bundle.LabelUsuarioModif}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
-
-                            <h:outputLabel  value="#{bundle.LabelFechaModif}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
-
-                            <h:outputLabel  value="#{bundle.LabelUsuario}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.usBaja.nombre}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
-                                            title="#{bundle.LabelUsuario}"/>                        
-
-                            <h:outputLabel  value="#{bundle.LabelFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
-                                            title="#{bundle.LabelFechaBaja}"/>             
-                 </h:panelGrid>
-                 </p:panel>
                     
                  </p:panel>
                     <p:toolbar>
@@ -136,4 +140,3 @@
         </ui:define>
     </ui:composition>
 </html>
-

@@ -148,6 +148,7 @@ public class PerJuridica implements Serializable {
     public void setEstablecimientos(List<Establecimiento> establecimientos) {
         this.establecimientos = establecimientos;
     }
+    
 
     public Expediente getExpediente() {
         return expediente;
@@ -207,6 +208,10 @@ public class PerJuridica implements Serializable {
     }
 
     public void setDomicilio(Domicilio domicilio) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Establecimiento getEstablecimiento() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -23,6 +23,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.EstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
@@ -95,6 +96,8 @@ public class MbPerJuridica implements Serializable{
     private TipoEstablecimientoFacade tipoEstablecimientoFacade;
     @EJB
     private DomicilioFacade domicilioFacade;
+    @EJB
+    private EstablecimientoFacade establecimientoFacade;
     
     private PerJuridica perJuridicaSelected;
     private MbLogin login;
@@ -488,6 +491,7 @@ public class MbPerJuridica implements Serializable{
         
         //pueblo los combos
         listaEstado = estadoFacade.findAll();
+        listaActividad = actividadFacade.findAll();
         listaEspecialidad = especialidadFacade.findAll();
         listaTipoPersonaJuridica = tipoFacade.findAll();
         representantes = perFisicaFacade.findAll();
@@ -660,7 +664,21 @@ public class MbPerJuridica implements Serializable{
             JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoExistente"));
         }
     }
-   
+
+           /**
+     * Método para eliminar establecimientos
+     * @param event
+     */
+    public void estaDelete(RowEditEvent event){
+        try{
+            current.getEstablecimientos().remove((Establecimiento)event.getObject());
+             
+            JsfUtil.addSuccessMessage("Establecimiento eliminado.");
+        }catch(Exception e){
+            JsfUtil.addErrorMessage("Hubo un error eliminando el Establecimiento. " + e.getMessage());
+        }
+    }    
+  
 /*-----------------------------------------------------------------------------------------------------------*/
     
     /**
@@ -809,7 +827,7 @@ public class MbPerJuridica implements Serializable{
      * Método para mostrar los establecimientos vinculados
      */
     public void verEstablecimientos(){
-        establecimientos = current.getEstablecimientos();
+        establecimiento = current.getEstablecimiento();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 950);
         RequestContext.getCurrentInstance().openDialog("", options, null);
@@ -995,4 +1013,10 @@ public class MbPerJuridica implements Serializable{
             }
         }
     }        
+
+    private static class domicilio {
+
+        public domicilio() {
+        }
+    }
 }
