@@ -7,13 +7,13 @@
       xmlns:p="http://primefaces.org/ui">
         <ui:composition template="/WEB-INF/facelets/templates/entidadTemplate.xhtml">
         <ui:define name="title">
-            <h:outputText value="#{bundle.PerJuridicaTitle}" />
+        <h:outputText value="#{bundle.PerJuridicaTitle}" />
         </ui:define>
         <ui:define name="content">
         <br/>
-        <h:form id="frmPerJuridicaView">
+        <h:form id="form">
             <p:panel id="pnView" header="#{bundle.PerJuridicaViewTitle}" style="margin-bottom:10px;">
-                    <p:messages id="messages" />
+                    <p:messages id="messages"/>
    
             <p:panel id="pnNew1" header="#{bundle.ExpedienteViewTitle}" style="margin-bottom:10px;">
                     <h:panelGrid columns="2">           
@@ -27,121 +27,61 @@
                     
             <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
                 <h:panelGrid columns="2">                                   
-                      <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>
-                      <h:outputLabel  value=" #{mbPerJuridica.selected.razonSocial}" title="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>                 
+                    <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>
+                    <h:outputLabel value=" #{mbPerJuridica.selected.razonSocial}" title="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>                 
                         
-                      <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
-                      <h:outputLabel  value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
+                    <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
+                    <h:outputLabel value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
                                         
-                     <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_correoElectronico}"/>
-                     <h:outputLabel  value=" #{mbPerJuridica.selected.correoElectronico}"/>
+                    <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_correoElectronico}"/>
+                    <h:outputLabel value=" #{mbPerJuridica.selected.correoElectronico}"/>
                                         
-                     <h:outputLabel  value="#{bundle.CreatePerJuridicaLabel_telefono}"/>
-                     <h:outputLabel  value=" #{mbPerJuridica.selected.telefono}"/>                       
+                    <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_telefono}"/>
+                    <h:outputLabel value=" #{mbPerJuridica.selected.telefono}"/>                       
+                    <h:outputLabel value="#{bundle.EstadoViewTitle} "/>
 
-                     <h:outputLabel value="#{bundle.EstadoViewTitle} "/>
-                     <h:outputText  value="#{mbPerJuridica.selected.estado.nombre}" 
-                                    title="#{bundle.EstadoViewTitle}"/>
+                    <h:outputText value="#{mbPerJuridica.selected.estado.nombre}" 
+                                  title="#{bundle.EstadoViewTitle}"/>
 
-                     <h:outputLabel value="#{bundle.EspecialidadViewTitle} "/>
-                     <h:outputText  value="#{mbPerJuridica.selected.especialidad.nombre}" 
-                                    title="#{bundle.EspecialidadViewTitle}"/>
+                    <h:outputLabel value="#{bundle.EspecialidadViewTitle} "/>
+                    <h:outputText value="#{mbPerJuridica.selected.especialidad.nombre}" 
+                                  title="#{bundle.EspecialidadViewTitle}"/>
+            
+                    <h:outputLabel value="#{bundle.LabelUsuarioAlta}"/>
+                    <h:outputText value="#{mbPerJuridica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
+
+                    <h:outputLabel value="#{bundle.LabelFechaAlta}"/>
+                    <h:outputText value="#{mbPerJuridica.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
+
+                    <h:outputLabel value="#{bundle.LabelUsuarioModif}"/>
+                    <h:outputText value="#{mbPerJuridica.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
+
+                    <h:outputLabel value="#{bundle.LabelFechaModif}"/>
+                    <h:outputText value="#{mbPerJuridica.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
+
+                    <h:outputLabel value="#{bundle.LabelUsuario}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
+                    <h:outputText value="#{mbPerJuridica.selected.admin.usBaja.nombre}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
+                                  title="#{bundle.LabelUsuario}"/>                        
+
+                    <h:outputLabel value="#{bundle.LabelFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
+                    <h:outputText value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
+                                  title="#{bundle.LabelFechaBaja}"/>             
+
+                 
+                    <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.prepareViewEstablecimiento}" value="Ver Establecimientos"/>
+              
                 </h:panelGrid>
              </p:panel>
-                    
-             <p:panel id="pnNew4" header="#{bundle.UsuarioViewTitle}" style="margin-bottom:10px;">
-                 <h:panelGrid columns="2">                   
-                     <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
 
-                            <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
+                
 
-                            <h:outputLabel  value="#{bundle.LabelUsuarioModif}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
+                <p:toolbar>
+                    <f:facet name="right">
+                        <p:commandButton icon="ui-icon-refresh" action="#{mbPerJuridica.prepareList}" value="Volver" ajax="false"/>
+                    </f:facet>
+                </p:toolbar>
 
-                            <h:outputLabel  value="#{bundle.LabelFechaModif}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
-
-                            <h:outputLabel  value="#{bundle.LabelUsuario}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.usBaja.nombre}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
-                                            title="#{bundle.LabelUsuario}"/>                        
-
-                            <h:outputLabel  value="#{bundle.LabelFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
-                            <h:outputText   value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
-                                            title="#{bundle.LabelFechaBaja}"/>             
-                 </h:panelGrid>
-             </p:panel>
-                    
-             <p:panel id="pnNew3" header="#{bundle.EstablecimientoTitle}" style="margin-bottom: 10px">
-                    <p:growl id="msgs" showDetail="true" />
-                    <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="esta"  style="font-weight: normal; font-size: 80%"> 
-                        
-                        <p:tab title="#{esta.domicilio.calle} #{esta.domicilio.numero}"> 
-                            <h:panelGrid columns="2" cellpadding="5">
-                                <h:outputLabel  value="#{bundle.TipoEstablecimientoViewTitle}"/>
-                                <h:outputText   value="#{esta.tipo}"/>
-
-                                <h:outputLabel  value="#{bundle.ActividadViewTitle}"/>
-                                <h:outputText   value="#{esta.actividad.nombre}"/>   
-
-                                <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_correoElectronico}"/>
-                                <h:outputText   value="#{esta.correoElectronico}"/> 
-
-                                <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_Telefono}"/>
-                                <h:outputText   value="#{esta.telefono}"/>     
-
-                                <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_Estado}"/>
-                                <h:outputText   value="#{esta.estado.nombre}"/>
-
-                                <h:outputLabel  value="#{bundle.CreateDomicilioLabel_calle}"/>
-                                <h:outputText   value="#{esta.domicilio.calle}"/>
-
-                                <h:outputLabel  value="#{bundle.CreateDomicilioLabel_numero}"/>
-                                <h:outputText   value="#{esta.domicilio.numero}"/>
-
-                                <h:outputLabel  value="#{bundle.CreateDomicilioLabel_piso}"/>
-                                <h:outputText   value="#{esta.domicilio.piso}"/>
-
-                                <h:outputLabel  value="#{bundle.CreateDomicilioLabel_dpto}"/>
-                                <h:outputText   value="#{esta.domicilio.dpto}"/>
-
-                                <h:outputLabel  value="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
-                                <h:outputText   value="#{esta.domicilio.idLocalidad}"/>
-
-                                <h:outputLabel  value="#{bundle.CreateDomicilioLabel_localidad}"/>
-                                <h:outputText   value="#{esta.domicilio.localidad}"/>
-
-                                <h:outputLabel  value="#{bundle.CreateDomicilioLabel_provincia}"/>
-                                <h:outputText   value="#{esta.domicilio.provincia}"/>
-
-                                <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
-                                <h:outputText   value="#{esta.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
-
-                                <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
-                                <h:outputText   value="#{esta.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
-                                
-                                <p:commandButton value="Editar" id="pnNew3" action="#{mbPerJuridica.editarEstablecimientos}" icon="ui-icon-disk" >
-                                    <f:setPropertyActionListener value="#{esta}" target="#{mbPerJuridica.establecimiento}" />
-                                </p:commandButton>
-                                
-                                <p:commandButton icon="ui-icon-refresh" action="#{mbPerJuridica.prepareView}" title="Ver detalle">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                                </p:commandButton>
-                                
-                            </h:panelGrid>    
-                        </p:tab>
-                    </p:accordionPanel>
-                    </p:panel>
-    
-
-                    
-                 </p:panel>
-                    <p:toolbar>
-                        <f:facet name="right">
-                            <p:commandButton icon="ui-icon-refresh" action="#{mbPerJuridica.prepareList}" value="Volver" ajax="false"/>
-                        </f:facet>
-                    </p:toolbar>
+            </p:panel>
         </h:form>
         </ui:define>
     </ui:composition>

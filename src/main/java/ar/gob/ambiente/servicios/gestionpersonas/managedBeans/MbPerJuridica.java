@@ -112,7 +112,7 @@ public class MbPerJuridica implements Serializable{
     private List<Actividad> listaActividad;
     private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
     private List<TipoEstablecimiento> listaTipoEstablecimiento;
-   // private String razonSocial;
+    // private String razonSocial;
     private List<PerFisica> representantes;
     private List<Establecimiento> listEstablecimientosFilter;
 
@@ -457,8 +457,13 @@ public class MbPerJuridica implements Serializable{
      */
     public String prepareView() {
         listEstablecimientos = current.getEstablecimientos();
+        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
+        listaActividad = actividadFacade.findAll();
+        listaEstado = estadoFacade.findAll();
         return "view";
     }
+
+    
 
     /** (Probablemente haya que embeberlo con el listado para una misma vista)
      * @return acción para el formulario de nuevo
@@ -472,12 +477,13 @@ public class MbPerJuridica implements Serializable{
         domicilio = new Domicilio();
         listEstablecimientos = new ArrayList();
 
-        listaEstado = estadoFacade.findAll();
+        
         listaEspecialidad = especialidadFacade.findAll();
         listaTipoPersonaJuridica = tipoFacade.findAll();
         representantes = perFisicaFacade.findAll();
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
         listaActividad = actividadFacade.findAll();
+        listaEstado = estadoFacade.findAll();
         return "new";
     }
     
@@ -567,7 +573,7 @@ public class MbPerJuridica implements Serializable{
 
     }
     
-    public void agregarEstablecimientos(){
+    public void prepareCreateEstablecimientos(){
         // instanciamos el Domicilio del Establecimiento
         Domicilio dom = new Domicilio();
         establecimiento.setDomicilio(dom);
@@ -579,15 +585,16 @@ public class MbPerJuridica implements Serializable{
 
 
             
-    public void editarEstablecimientos(){
-           // establecimiento = current.getEstablecimientos();
-           // listEstablecimiento = establecimientoFacade.findAll();
-
-            //listaEstados = estadoFacade.getEstadosXapp(app);
-            Map<String,Object> options = new HashMap<>();
-            options.put("contentWidth", 1200);
-            RequestContext.getCurrentInstance().openDialog("dlgEditEstablecimientos", options, null);
+    public void prepareViewEstablecimiento(){
+        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
+        listaActividad = actividadFacade.findAll();
+        listaEstado = estadoFacade.findAll();
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 1200);
+        RequestContext.getCurrentInstance().openDialog("dlgViewEstablecimientos", options, null);
     }
+    
+    
 /*-----------------------------------------------------------------------------------------------------------*/    
      /**
      * Método para validar si una instacia ya existe en el list que las guarda en memoria
@@ -665,11 +672,11 @@ public class MbPerJuridica implements Serializable{
         }
     }
 
-            /**
+      /**
      * Método para actualizar un Establecimiento
      */
     public void updateEstablecimiento(){
-        boolean docenteOcupado = false;
+        boolean estable = false;
         List<Establecimiento> establecimientosSwap = new ArrayList<>();
         for (Establecimiento cls : current.getEstablecimientos()) {
             if(!cls.getId().equals(establecimiento.getId())){
@@ -679,7 +686,7 @@ public class MbPerJuridica implements Serializable{
                 establecimientosSwap.add(establecimiento);
             }
         }
-        if(!docenteOcupado){
+        if(!estable){
             current.setEstablecimientos(establecimientosSwap);
             getFacade().edit(current);
             // reseteo la variable para volverla a poblar con la próxima, si hubiera.
@@ -688,7 +695,8 @@ public class MbPerJuridica implements Serializable{
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoUpdated"));
         }else{
             JsfUtil.addErrorMessage("El Establecimiento seleccionado no se puede modificar");
-        }   
+        } 
+     
     }
 
            /**
