@@ -5,7 +5,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Edite los datos del Establecimiento relacionado a esta Persona Jurídica</title>
+        <title>Establecimiento relacionado a esta Persona Jurídica</title>
     </h:head>
     
     <h:body>
@@ -18,7 +18,7 @@
                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                            rowsPerPageTemplate="5,10,15">
       
-                    <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{esta.tipo}" filterBy="#{esta.tipo}">
+                    <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{esta.tipo}">
                         <p:outputLabel value="#{esta.tipo.nombre}"/>
                     </p:column>
 
@@ -61,32 +61,11 @@
     
     <!--Hasta aquí es la carga de los datos del domicilio-->
                         
-                    <p:column headerText="Acciones" style="width:140px">
+                    <p:column headerText="Acciones" style="text-align: center"   >
                         <p:growl id="messages" showDetail="true" />
-                        
-                        <p:commandButton icon="ui-icon-zoomin" action="#{mbPerJuridica.prepareView}" title="Ver detalle">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                        </p:commandButton>
-                        
-                        <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.prepareEdit}" title="Editar">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                        </p:commandButton>
-
-                        <p:commandButton icon="ui-icon-trash" action="#{mbPerJuridica.prepareDesHabilitar}" rendered="#{e.admin.habilitado == 'true'}" 
-                                             update="perJuridicaList" title="Deshabilitar">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                            <p:confirm header="Confirmar" message="¿Desea deshabilitar el PerFisica?" />
-                        </p:commandButton>
-                        <p:commandButton icon="ui-icon-check" action="#{mbPerJuridica.prepareHabilitar}" rendered="#{e.admin.habilitado == 'false'}" 
-                                             title="Habilitar" update="perJuridicaList">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                                <p:confirm header="Confirmar" message="¿Desea habilitar el PerFisica?" icon="ui-icon-alert" />
-                        </p:commandButton>                          
-                        
-                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                           <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                           <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                       </p:confirmDialog>                       
+                        <p:commandButton icon="ui-icon-pencil"  action="#{mbPerJuridica.prepareEditEstablecimiento}" title="Editar">
+                            <f:setPropertyActionListener value="#{esta}" target="#{mbPerJuridica.establecimiento}" />
+                        </p:commandButton>                                        
                     </p:column>    
     
                 </p:dataTable>
@@ -98,4 +77,3 @@
         </h:form>
     </h:body>
 </html>
-

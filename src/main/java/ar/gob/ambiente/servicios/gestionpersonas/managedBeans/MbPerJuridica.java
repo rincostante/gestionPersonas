@@ -310,7 +310,7 @@ public class MbPerJuridica implements Serializable{
     }
 
     public EstadoFacade getEstadoFacade() {
-        return estadoFacade;
+       return estadoFacade;
     }
 
     public void setEstadoFacade(EstadoFacade estadoFacade) {
@@ -422,7 +422,7 @@ public class MbPerJuridica implements Serializable{
 
     public void setTipoFacade(TipoPersonaJuridicaFacade tipoFacade) {
         this.tipoFacade = tipoFacade;
-    }
+   }
 
     public List<TipoPersonaJuridica> getListaTipoPersonaJuridica() {
         return listaTipoPersonaJuridica;
@@ -594,7 +594,28 @@ public class MbPerJuridica implements Serializable{
         RequestContext.getCurrentInstance().openDialog("dlgViewEstablecimientos", options, null);
     }
     
-    
+   /**
+     * @return acción para la edición de la entidad
+     */
+    public String prepareEditEstablecimiento() {
+        current.getEstablecimientos();
+//        domVinc = establecimiento.getDomicilio();
+        listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
+        listaActividad = actividadFacade.findAll();
+        listaEstado = estadoFacade.findAll();
+       //expVinc = current.getExpediente();
+        return "dlgEditEstablecimientos";
+    }
+
+    /**
+     * Método para inicializar el listado de los Actividades Planificadass habilitadas
+     * @return acción para el listado de entidades
+     */
+    public String prepareListEstablecimiento() {
+        iniciado = true;
+        recreateModel();
+        return "dlgViewEstablecimientos";
+    }    
 /*-----------------------------------------------------------------------------------------------------------*/    
      /**
      * Método para validar si una instacia ya existe en el list que las guarda en memoria
@@ -849,23 +870,23 @@ public class MbPerJuridica implements Serializable{
     
     /**
      * Método para mostrar los Expedientes vinculados
-     */
+   
     public void verExpedientes(){
         expediente = current.getExpediente();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 950);
         RequestContext.getCurrentInstance().openDialog("", options, null);
-    }    
+    }      */
     
         /**
      * Método para mostrar los establecimientos vinculados
-     */
+
     public void verEstablecimientos(){
         establecimiento = current.getEstablecimiento();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 950);
         RequestContext.getCurrentInstance().openDialog("", options, null);
-    } 
+    }     */
 
     /****************************
      * Métodos de validación
@@ -925,9 +946,7 @@ public class MbPerJuridica implements Serializable{
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
-    }
-
-  
+    }  
     
     private void validarExpedienteExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExisteExpediente(null, expediente)){ 

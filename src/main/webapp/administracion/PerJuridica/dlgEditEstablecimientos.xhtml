@@ -2,99 +2,99 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-    <h:head>
+        <h:head>
         <title>Edite los datos del Establecimiento relacionado a esta Persona Jurídica</title>
     </h:head>
     
     <h:body>
-        <h:form id="frmProm" style="font-size: 80%">
-            <p:panel id="prmNew">
+        <h:form id="pnEdit" style="font-size: 80%">
+            <p:panel id="pnEdit1" header="Editar">
             <h:inputHidden id="id" value="#{mbPerJuridica.selected.id}" />
-  <!-- a partir de aquí va la tabla de los establecimientos vinculados-->                  
-   
-              <p:dataTable id="esta" var="esta" value="#{mbPerJuridica.selected.establecimientos}" editable="true" style="margin-bottom:20px; font-size:80%" rows="5" paginator="true" 
-                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                           rowsPerPageTemplate="5,10,15">
-      
-                    <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{esta.tipo}" filterBy="#{esta.tipo}">
-                        <p:outputLabel value="#{esta.tipo.nombre}"/>
-                    </p:column>
+            
+                    <p:messages id="messages" />
+                                        
+                    <h:panelGrid columns="6" >
+                        <p:outputLabel value="Tipo de establecimiento" for="tipo"/>
+                        <p:selectOneMenu id="tipo" value="#{mbPerJuridica.establecimiento.tipo.nombre}" required="true">
+                            <f:selectItem itemLabel="Seleccione el Tipo" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{mbPerJuridica.listaTipoEstablecimiento}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo.nombre}"/>
+                        </p:selectOneMenu> 
 
-                    <p:column headerText="Actividad" filterMatchMode="contains" sortBy="#{esta.actividad}">
-                        <p:outputLabel value="#{esta.actividad.nombre}" />
-                    </p:column>
+                         <p:outputLabel value="Actividad" for="actividad"/>
+                         <p:selectOneMenu id="actividad" value="#{mbPerJuridica.establecimiento.actividad.nombre}" required="true">
+                            <f:selectItem itemLabel="Seleccione la Actividad" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{mbPerJuridica.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad.nombre}"/>
+                        </p:selectOneMenu> 
 
-                    <p:column headerText="Estado" filterMatchMode="contains" sortBy="#{esta.estado}">
-                        <p:outputLabel value="#{esta.estado.nombre}" />
-                    </p:column>
-                        
-                    <p:column headerText="Email" filterMatchMode="contains" sortBy="#{esta.correoElectronico}">
-                        <p:outputLabel value="#{esta.correoElectronico}" />
-                    </p:column>
-                        
-                    <p:column headerText="Telefono" filterMatchMode="contains" sortBy="#{esta.telefono}">
-                        <p:outputLabel value="#{esta.telefono}" />
-                    </p:column>
-                        
-    <!--Desde aquí va la carga de los datos del domicilio-->
-                    <p:column headerText="Calle" filterMatchMode="contains" sortBy="#{esta.domicilio.calle}">
-                        <p:outputLabel value="#{esta.domicilio.calle}" />
-                    </p:column>
-                        
-                    <p:column headerText="Número" filterMatchMode="contains" sortBy="#{esta.domicilio.numero}">
-                        <p:outputLabel value="#{esta.domicilio.numero}" />
-                    </p:column>
-                        
-                    <p:column headerText="Piso" filterMatchMode="contains" sortBy="#{esta.domicilio.piso}">
-                        <p:outputLabel value="#{esta.domicilio.piso}" />
-                    </p:column>
-                        
-                    <p:column headerText="Dpto." filterMatchMode="contains" sortBy="#{esta.domicilio.dpto}">
-                        <p:outputLabel value="#{esta.domicilio.dpto}" />
-                    </p:column>
-                        
-                    <p:column headerText="IdLocalidad" filterMatchMode="contains" sortBy="#{esta.domicilio.idLocalidad}">
-                        <p:outputLabel value="#{esta.domicilio.idLocalidad}" />
-                    </p:column> 
-    
-    <!--Hasta aquí es la carga de los datos del domicilio-->
-                        
-                    <p:column headerText="Acciones" style="width:140px">
-                        <p:growl id="messages" showDetail="true" />
-                        
-                        <p:commandButton icon="ui-icon-zoomin" action="#{mbPerJuridica.prepareView}" title="Ver detalle">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                        </p:commandButton>
-                        
-                        <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.prepareEdit}" title="Editar">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                        </p:commandButton>
+                        <p:outputLabel value="Estado" for="estado"/>
+                        <p:selectOneMenu id="estado" value="#{mbPerJuridica.establecimiento.estado.nombre}" >
+                              <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                              <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.nombre}"/>
+                        </p:selectOneMenu>   
 
-                        <p:commandButton icon="ui-icon-trash" action="#{mbPerJuridica.prepareDesHabilitar}" rendered="#{e.admin.habilitado == 'true'}" 
-                                             update="perJuridicaList" title="Deshabilitar">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                            <p:confirm header="Confirmar" message="¿Desea deshabilitar el PerFisica?" />
-                        </p:commandButton>
-                        <p:commandButton icon="ui-icon-check" action="#{mbPerJuridica.prepareHabilitar}" rendered="#{e.admin.habilitado == 'false'}" 
-                                             title="Habilitar" update="perJuridicaList">
-                            <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                                <p:confirm header="Confirmar" message="¿Desea habilitar el PerFisica?" icon="ui-icon-alert" />
-                        </p:commandButton>                          
-                        
-                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                           <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                           <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                       </p:confirmDialog>                       
-                    </p:column>    
-    
-                </p:dataTable>
-         
-<!-- hasta aquí va la tabla editable de los establecimientos-->
-                
+                        <p:outputLabel value="#{bundle.CreateEstablecimientoLabel_correoElectronico}" for="correo"/>
+                        <p:inputText id="correo" value="#{mbPerJuridica.establecimiento.correoElectronico}" required="false"/>    
 
+                        <p:outputLabel value="Telefono" for="telefono"/>
+                        <p:inputText id="telefono" value="#{mbPerJuridica.establecimiento.telefono}" required="false"/>
+
+                    </h:panelGrid>
             </p:panel>
-        </h:form>
+
+            
+            <p:panel id="pnEdit2" style="margin-bottom:10px;">
+                <h:panelGrid columns="8">
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
+                <p:inputText id="calle" value="#{mbPerJuridica.establecimiento.domicilio.calle}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}" for="numero_dom"/>
+                <p:inputText id="numero_dom" value="#{mbPerJuridica.establecimiento.domicilio.numero}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_numero}" required="true"/>
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}" for="piso"/>
+                <p:inputText id="piso" value="#{mbPerJuridica.establecimiento.domicilio.piso}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_piso}" required="true"/>
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}" for="dpto"/>
+                <p:inputText id="dpto" value="#{mbPerJuridica.establecimiento.domicilio.dpto}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_dpto}" required="true"/>                         
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_idLocalidad}" for="idLocalidad"/>
+                <p:inputText id="idLocalidad" value="#{mbPerJuridica.establecimiento.domicilio.idLocalidad}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_idLocalidad}" required="true"/>  
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_localidad}" for="localidad"/>
+                <p:inputText id="localidad" value="#{mbPerJuridica.establecimiento.domicilio.localidad}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_localidad}" required="true"/>  
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_provincia}" for="provincia"/>
+                <p:inputText id="provincia" value="#{mbPerJuridica.establecimiento.domicilio.provincia}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_provincia}" required="true"/> 
+                </h:panelGrid>
+            </p:panel>
+
+
+
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.updateEstablecimiento}" update="pnEdit"/>
+                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: next">
+                        <p:ajax update="pnEdit" resetValues="true" /></p:commandButton>
+                    <p:commandButton icon="ui-icon-refresh" action="#{mbPerJuridica.prepareListEstablecimiento}" value="Volver" ajax="pnEdit"/>
+                </f:facet>
+            </p:toolbar>
+
+            </h:form>
     </h:body>
 </html>
