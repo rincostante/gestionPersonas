@@ -149,7 +149,6 @@ public class PerJuridica implements Serializable {
         this.establecimientos = establecimientos;
     }
     
-
     public Expediente getExpediente() {
         return expediente;
     }

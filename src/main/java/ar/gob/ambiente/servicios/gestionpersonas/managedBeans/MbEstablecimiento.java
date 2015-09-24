@@ -53,7 +53,7 @@ public class MbEstablecimiento implements Serializable{
     private Establecimiento current;
     
     private Domicilio domicilio;
-    private List<Domicilio> listDomicilios;    
+    private List<Domicilio> listaDomicilios;    
     private Domicilio domVinc;
     private List<Establecimiento> listEstablecimiento;
     private List<Establecimiento> listaFilter;
@@ -161,12 +161,12 @@ public class MbEstablecimiento implements Serializable{
         this.domicilio = domicilio;
     }
 
-    public List<Domicilio> getListDomicilios() {
-        return listDomicilios;
+    public List<Domicilio> getListaDomicilios() {
+        return listaDomicilios;
     }
 
-    public void setListDomicilios(List<Domicilio> listDomicilios) {
-        this.listDomicilios = listDomicilios;
+    public void setListaDomicilios(List<Domicilio> listaDomicilios) {
+        this.listaDomicilios = listaDomicilios;
     }
 
     public List<Establecimiento> getListEstablecimiento() {
@@ -401,7 +401,7 @@ public class MbEstablecimiento implements Serializable{
     **************************/
     
         /**
-     * Método para guardar los domicilio creados en el listDomicilios que irán en la nueva persona fisica
+     * Método para guardar los domicilio creados en el listaDomicilios que irán en la nueva persona fisica
      */
     public void createDomicilio(){
             // se agregan los datos del AdminEntidad
@@ -433,7 +433,7 @@ public class MbEstablecimiento implements Serializable{
         current.setDomicilio(domicilio);
 
         //current.setExpedientes(listExpedientes);
-        //current.setDomicilios(listDomicilios);
+        //current.setDomicilios(listaDomicilios);
         getFacade().create(current);
         return "view";
     
@@ -639,9 +639,9 @@ public class MbEstablecimiento implements Serializable{
         listEstablecimiento.clear();
         listEstablecimiento = null;
 
-        if(listDomicilios != null){
-            listDomicilios.clear();
-            listDomicilios =null;
+        if(listaDomicilios != null){
+            listaDomicilios.clear();
+            listaDomicilios =null;
         }   
     } 
     

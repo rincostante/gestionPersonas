@@ -63,17 +63,12 @@ public class MbPerJuridica implements Serializable{
     private PerJuridica current;
     private Expediente expediente;
     private Establecimiento establecimiento;
-    private Domicilio domicilio;
-    private List<Domicilio> listDomicilios;    
+    private Domicilio domicilio;  
     private Domicilio domVinc;
     
-    
+    private List<Domicilio> listaDomicilios;
     private List<Expediente> listaExpedientes;
-    private List<Expediente> expVinc;
-    
     private List<Establecimiento> establecimientos;
-    private List<Establecimiento> establecimientosFilter;
-    private List<Establecimiento> listEstablecimientos;
         
 
     @EJB
@@ -94,10 +89,6 @@ public class MbPerJuridica implements Serializable{
     private TipoPersonaJuridicaFacade tipoFacade;
     @EJB
     private TipoEstablecimientoFacade tipoEstablecimientoFacade;
-    @EJB
-    private DomicilioFacade domicilioFacade;
-    @EJB
-    private EstablecimientoFacade establecimientoFacade;
     
     private PerJuridica perJuridicaSelected;
     private MbLogin login;
@@ -105,6 +96,7 @@ public class MbPerJuridica implements Serializable{
     
     private boolean iniciado;
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
+    
     private List<Especialidad> listaEspecialidad;
     private List<PerJuridica> listaPerJuridica;
     private List<Estado> listaEstado;
@@ -112,10 +104,7 @@ public class MbPerJuridica implements Serializable{
     private List<Actividad> listaActividad;
     private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
     private List<TipoEstablecimiento> listaTipoEstablecimiento;
-    // private String razonSocial;
     private List<PerFisica> representantes;
-    private List<Establecimiento> listEstablecimientosFilter;
-
     
     /**
      * Creates a new instance of MbPerJuridica
@@ -169,12 +158,12 @@ public class MbPerJuridica implements Serializable{
         this.domicilio = domicilio;
     }
 
-    public List<Domicilio> getListDomicilios() {
-        return listDomicilios;
+    public List<Domicilio> getListaDomicilios() {
+        return listaDomicilios;
     }
 
-    public void setListDomicilios(List<Domicilio> listDomicilios) {
-        this.listDomicilios = listDomicilios;
+    public void setListaDomicilios(List<Domicilio> listaDomicilios) {
+        this.listaDomicilios = listaDomicilios;
     }
 
     public Domicilio getDomVinc() {
@@ -184,15 +173,6 @@ public class MbPerJuridica implements Serializable{
     public void setDomVinc(Domicilio domVinc) {
         this.domVinc = domVinc;
     }
-
-    public List<Establecimiento> getListEstablecimientosFilter() {
-        return listEstablecimientosFilter;
-    }
-
-    public void setListEstablecimientosFilter(List<Establecimiento> listEstablecimientosFilter) {
-        this.listEstablecimientosFilter = listEstablecimientosFilter;
-    }
-
    
     public List<PerFisica> getRepresentantes() {
         return representantes;
@@ -251,30 +231,6 @@ public class MbPerJuridica implements Serializable{
 
     public void setListaExpedientes(List<Expediente> listaExpedientes) {
         this.listaExpedientes = listaExpedientes;
-    }
-
-    public List<Establecimiento> getEstablecimientosFilter() {
-        return establecimientosFilter;
-    }
-
-    public void setEstablecimientosFilter(List<Establecimiento> establecimientosFilter) {
-        this.establecimientosFilter = establecimientosFilter;
-    }
-
-    public List<Establecimiento> getListEstablecimientos() {
-        return listEstablecimientos;
-    }
-
-    public void setListEstablecimientos(List<Establecimiento> listEstablecimientos) {
-        this.listEstablecimientos = listEstablecimientos;
-    }
-
-    public List<Expediente> getExpVinc() {
-        return expVinc;
-    }
-
-    public void setExpVinc(List<Expediente> expVinc) {
-        this.expVinc = expVinc;
     }
 
     public PerJuridicaFacade getPerJuridicaFacade() {
@@ -456,7 +412,7 @@ public class MbPerJuridica implements Serializable{
      * @return acción para el detalle de la entidad
      */
     public String prepareView() {
-        listEstablecimientos = current.getEstablecimientos();
+        establecimientos = current.getEstablecimientos();
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
         listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
@@ -475,7 +431,7 @@ public class MbPerJuridica implements Serializable{
         expediente = new Expediente();
         establecimiento = new Establecimiento();
         domicilio = new Domicilio();
-        listEstablecimientos = new ArrayList();
+        establecimientos = new ArrayList();
 
         
         listaEspecialidad = especialidadFacade.findAll();
@@ -613,13 +569,13 @@ public class MbPerJuridica implements Serializable{
      */
     public String prepareListEstablecimiento() {
         iniciado = true;
-        recreateModel();
-        return "dlgViewEstablecimientos";
+        recreateModel();   
+        return "dlgActualizado";
     }    
-/*-----------------------------------------------------------------------------------------------------------*/    
-     /**
-     * Método para validar si una instacia ya existe en el list que las guarda en memoria
-     */
+    /*-----------------------------------------------------------------------------------------------------------*/    
+    /**
+    * Método para validar si una instacia ya existe en el list que las guarda en memoria
+    */
     private boolean compararEstablecimiento(Establecimiento esta){
         boolean retorno = false;
         Iterator estaIt;
@@ -629,18 +585,17 @@ public class MbPerJuridica implements Serializable{
         if(current.getId() != null){
             estaIt = current.getEstablecimientos().iterator();
         }else{
-            estaIt = listEstablecimientos.iterator(); 
+            estaIt = establecimientos.iterator(); 
         }
         
         while(estaIt.hasNext()){
             Establecimiento establecimiento = (Establecimiento)estaIt.next();
             if(establecimiento.getActividad().equals(esta.getActividad())
-  //                  && establecimiento.getDomicilio().equals(esta.getDomicilio())
+            //      && establecimiento.getDomicilio().equals(esta.getDomicilio())
                     && establecimiento.getEstado().equals(esta.getEstado())){
                 retorno = true;
             }
-        }
-        
+        } 
         return retorno;
     }   
     
@@ -678,7 +633,7 @@ public class MbPerJuridica implements Serializable{
                 establecimiento.setAdmin(admEnt);
                 
                 // agrego el establecimiento al listado
-                listEstablecimientos.add(establecimiento); 
+                establecimientos.add(establecimiento); 
             }
             
             // reseteo el establecimiento
@@ -711,8 +666,8 @@ public class MbPerJuridica implements Serializable{
             current.setEstablecimientos(establecimientosSwap);
             getFacade().edit(current);
             // reseteo la variable para volverla a poblar con la próxima, si hubiera.
-            establecimiento = null;
-            establecimiento = new Establecimiento();
+            //establecimiento = null;
+            //establecimiento = new Establecimiento();
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoUpdated"));
         }else{
             JsfUtil.addErrorMessage("El Establecimiento seleccionado no se puede modificar");
@@ -754,7 +709,7 @@ public class MbPerJuridica implements Serializable{
         current.setExpediente(expediente);
         
         //Asigno los Establecimientos
-        current.setEstablecimientos(listEstablecimientos);
+        current.setEstablecimientos(establecimientos);
         
         if(current.getRazonSocial().isEmpty()){
             JsfUtil.addSuccessMessage("La persona Jurídica que está guardando debe tener una Razón Social.");
@@ -970,9 +925,9 @@ public class MbPerJuridica implements Serializable{
             listaExpedientes.clear();
             listaExpedientes =null;
         }
-        if(listEstablecimientos !=null){
-            listEstablecimientos.clear();
-            listEstablecimientos =null;
+        if(establecimientos !=null){
+            establecimientos.clear();
+            establecimientos =null;
         }   
     } 
 
@@ -1066,10 +1021,5 @@ public class MbPerJuridica implements Serializable{
             }
         }
     }        
-
-    private static class domicilio {
-
-        public domicilio() {
-        }
-    }
+    
 }

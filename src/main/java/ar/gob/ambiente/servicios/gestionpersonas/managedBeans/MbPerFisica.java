@@ -54,11 +54,9 @@ public class MbPerFisica implements Serializable{
     private Domicilio domicilio;
     private Expediente expediente;
     
-    private List<Domicilio> listDomicilios;
     private List<PerFisica> listPerFisica;
     private Domicilio domVinc;
     
-    private List<Expediente> listExpedientes;
     private List<Expediente> expVinc;
     
     @EJB
@@ -448,7 +446,7 @@ public class MbPerFisica implements Serializable{
         current.setDomicilio(domicilio);
 
         //current.setExpedientes(listExpedientes);
-        //current.setDomicilios(listDomicilios);
+        //current.setDomicilios(listaDomicilios);
         //getFacade().create(current);
         //return "view";
         if(current.getNombre().isEmpty()){
@@ -647,7 +645,7 @@ public class MbPerFisica implements Serializable{
      */
     private boolean compararDomicilio(Domicilio dom){
       boolean retorno = false;
-     /**   Iterator domIt = listDomicilios.iterator();
+     /**   Iterator domIt = listaDomicilios.iterator();
         while(domIt.hasNext()){
             Domicilio domicilio = (Domicilio)domIt.next();
             if(domicilio.getCalle().equals(dom.getCalle())
