@@ -541,12 +541,13 @@ public class MbPerJuridica implements Serializable{
     
     public void prepareNewCreateEstablecimientos(){
         // instanciamos el Domicilio del Establecimiento
-        Domicilio dom = new Domicilio();
-        establecimiento.setDomicilio(dom);
+        current.getId();
+//        Domicilio dom = new Domicilio();
+//        establecimiento.setDomicilio(dom);
         
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 1200);
-        RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimientos", options, null);
+        RequestContext.getCurrentInstance().openDialog("dlgNewAddEstablecimientos", options, null);
     }
 
             
