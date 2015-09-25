@@ -13,7 +13,9 @@
             <p:panel id="prmNew">
             <h:inputHidden id="id" value="#{mbPerJuridica.selected.id}" />
   <!-- a partir de aquí va la tabla de los establecimientos vinculados-->                  
-   
+            
+            <p:commandButton value="Agregar" action="#{mbPerJuridica.prepareNewCreateEstablecimientos}" process="@this" />
+  
               <p:dataTable id="esta" var="esta" value="#{mbPerJuridica.selected.establecimientos}" editable="true" style="margin-bottom:20px; font-size:80%" rows="5" paginator="true" 
                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                            rowsPerPageTemplate="5,10,15">
