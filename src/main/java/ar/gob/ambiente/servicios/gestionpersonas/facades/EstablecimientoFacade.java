@@ -127,6 +127,21 @@ public class EstablecimientoFacade extends AbstractFacade<Establecimiento> {
                 .setParameter("actividad", actividad);
         return q.getResultList();
     }
+    /**
+     * Método que devuelve todos los estados de una app 
+     * @param pjur: ID de la entidad
+     * @return: True o False
+     */
+    public List<Establecimiento> getEstabXpJuridica(int pjur){
+        em = getEntityManager();        
+        String queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.perJuridica = :pjur"; 
+
+      
+        Query q = em.createQuery(queryString)
+                .setParameter("pjur", pjur);
+        return q.getResultList();
+    }    
 
     public List<Establecimiento> findAll(int perJuridica) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

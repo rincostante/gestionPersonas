@@ -12,14 +12,12 @@
         <h:form id="frmProm" style="font-size: 80%">
             <p:panel id="prmNew">
             <h:inputHidden id="id" value="#{mbPerJuridica.selected.id}" />
-             
+  <!-- a partir de aquí va la tabla de los establecimientos vinculados-->                  
             
-            <p:commandButton value="Agregar" action="#{mbPerJuridica.prepareNewCreateEstablecimientos}" process="@this" />
-            
-<!-- a partir de aquí va la tabla de los establecimientos vinculados-->     
-                <p:dataTable id="esta" var="esta" value="#{mbPerJuridica.selected.establecimientos}" editable="true" style="margin-bottom:20px; font-size:80%" rows="5" paginator="true" 
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             rowsPerPageTemplate="5,10,15">
+ 
+              <p:dataTable id="esta" var="esta" value="#{mbPerJuridica.selected.establecimientos}" editable="true" style="margin-bottom:20px; font-size:80%" rows="5" paginator="true" 
+                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                           rowsPerPageTemplate="5,10,15">
       
                     <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{esta.tipo}">
                         <p:outputLabel value="#{esta.tipo.nombre}"/>
@@ -64,12 +62,7 @@
     
     <!--Hasta aquí es la carga de los datos del domicilio-->
                         
-                    <p:column headerText="Acciones" style="text-align: center"   >
-                        <p:growl id="messages" showDetail="true" />
-                        <p:commandButton icon="ui-icon-pencil"  action="#{mbPerJuridica.prepareEditEstablecimiento}" title="Editar">
-                            <f:setPropertyActionListener value="#{esta}" target="#{mbPerJuridica.establecimiento}" />
-                        </p:commandButton>                                        
-                    </p:column>    
+  
     
                 </p:dataTable>
          

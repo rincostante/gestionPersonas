@@ -89,6 +89,8 @@ public class MbPerJuridica implements Serializable{
     private TipoPersonaJuridicaFacade tipoFacade;
     @EJB
     private TipoEstablecimientoFacade tipoEstablecimientoFacade;
+    @EJB
+    private EstablecimientoFacade establecimientoFacade;
     
     private PerJuridica perJuridicaSelected;
     private MbLogin login;
@@ -105,6 +107,8 @@ public class MbPerJuridica implements Serializable{
     private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
     private List<TipoEstablecimiento> listaTipoEstablecimiento;
     private List<PerFisica> representantes;
+
+
     
     /**
      * Creates a new instance of MbPerJuridica
@@ -542,35 +546,50 @@ public class MbPerJuridica implements Serializable{
     public void prepareNewCreateEstablecimientos(){
         // instanciamos el Domicilio del Establecimiento
         current.getId();
-//        Domicilio dom = new Domicilio();
-//        establecimiento.setDomicilio(dom);
+        current.getEstablecimientos();
+        Domicilio dom = new Domicilio();
+        establecimiento.setDomicilio(dom);
         
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 1200);
-        RequestContext.getCurrentInstance().openDialog("dlgNewAddEstablecimientos", options, null);
+        RequestContext.getCurrentInstance().openDialog("dlgNewAddEstablecimientos", options, null);          
+    
     }
 
+    
             
     public void prepareViewEstablecimiento(){
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
         listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
+        
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 1200);
         RequestContext.getCurrentInstance().openDialog("dlgViewEstablecimientos", options, null);
     }
-    
+               
+    public void viewEstablecimiento(){
+        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
+        listaActividad = actividadFacade.findAll();
+        listaEstado = estadoFacade.findAll();
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 1200);
+        RequestContext.getCurrentInstance().openDialog("dlgListEstablecimientos", options, null);
+    } 
    /**
      * @return acción para la edición de la entidad
      */
-    public String prepareEditEstablecimiento() {
+    public void prepareEditEstablecimiento() {
         current.getEstablecimientos();
 //        domVinc = establecimiento.getDomicilio();
         listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
         listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
        //expVinc = current.getExpediente();
-        return "dlgEditEstablecimientos";
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 1200);
+        RequestContext.getCurrentInstance().openDialog("dlgEditEstablecimientos", options, null);
+
     }
 
     /**
@@ -649,8 +668,11 @@ public class MbPerJuridica implements Serializable{
             // reseteo el establecimiento
             establecimiento = null;
             establecimiento = new Establecimiento();
+
+
             
             // volvemos a instanciar el Domicilio del Establecimiento
+            domicilio = null;
             Domicilio dom = new Domicilio();
             establecimiento.setDomicilio(dom);            
         } else{
