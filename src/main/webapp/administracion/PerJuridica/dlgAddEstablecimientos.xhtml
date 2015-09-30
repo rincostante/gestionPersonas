@@ -16,7 +16,7 @@
                 <p:panel header="Datos del Establecimiento">
                     <h:panelGrid columns="6">                             
                         <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>                             
-                        <p:selectOneMenu id="tipoEstablecimiento" value="#{mbPerJuridica.establecimiento.tipo.nombre}" >
+                        <p:selectOneMenu id="tipoEstablecimiento" value="#{mbPerJuridica.establecimiento.tipo}" >
                               <f:selectItem itemLabel="Tipo Establecimiento" itemValue="" noSelectionOption="true" />                           
                               <f:selectItems value="#{mbPerJuridica.listaTipoEstablecimiento}" var="tipoEstablecimiento" itemLabel="#{tipoEstablecimiento.nombre}" itemValue="#{tipoEstablecimiento}"/>
                         </p:selectOneMenu> 
@@ -110,4 +110,3 @@
         </h:form>
     </h:body>
 </html>
-
