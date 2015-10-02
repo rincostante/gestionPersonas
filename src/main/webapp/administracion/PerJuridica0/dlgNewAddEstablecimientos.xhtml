@@ -73,11 +73,41 @@
 
                 <!-- termina la carga de los datos del domicilio-->                   
 
-                <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimientoUpdate()}" update="inNew" />
+                <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimiento}" update="inNew" />
                     <p:commandButton icon="ui-icon-cancel" value="Limpiar" >
                     <p:ajax update="inNew" resetValues="true" />
                 </p:commandButton>
- 
+
+                <!-- a partir de aquí es el listado de establecimientos asociadas -->  
+
+                <p:dataTable id="establecimientos" var="est" value="#{mbPerJuridica.establecimientos}" >              
+                    <p:column headerText="Tipo de Establecimiento" style="font-size: 90%">
+                    <h:outputLabel value="#{est.tipo.nombre}" />
+                    </p:column>
+                    
+                    <p:column headerText="Actividad" style="font-size: 90%">
+                    <h:outputLabel value="#{est.actividad.nombre}" />
+                    </p:column>
+                    
+                    <p:column headerText="Correo Electrónico" width="8%" style="font-size: 90%">
+                    <h:outputLabel value="#{est.correoElectronico}" />
+                    </p:column> 
+                    
+                    <p:column headerText="Estado" style="font-size: 90%">
+                    <h:outputLabel value="#{est.estado.nombre}" />
+                    </p:column>
+                    
+                    <p:column headerText="Teléfono" style="font-size: 90%">
+                    <h:outputLabel value="#{est.telefono}" />
+                    </p:column>
+                    
+                    <p:column headerText="Domicilio" style="font-size: 90%">
+                        <h:outputLabel value="#{est.domicilio.calle} #{est.domicilio.numero} #{est.domicilio.localidad}" />
+                    </p:column>  
+                    
+                </p:dataTable>
+
+            <!-- hasta aquí es el listado de establecimientos asociados -->  
             </p:panel>
         </h:form>
     </h:body>

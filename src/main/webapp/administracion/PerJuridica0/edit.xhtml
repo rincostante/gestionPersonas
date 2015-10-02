@@ -65,8 +65,7 @@
                     </p:selectOneMenu>
 
                     <p:outputLabel value="Establecimientos "/>
-                    <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.prepareViewEstablecimiento}" value="Editar Establecimientos"/>
-                    
+                    <p:commandButton value="Editar" action="#{mbPerJuridica.editarEstablecimientos}" process="@this" />
 
                  </h:panelGrid>
             </p:panel>

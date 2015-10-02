@@ -21,7 +21,6 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
@@ -69,6 +68,7 @@ public class MbPerJuridica implements Serializable{
     private List<Domicilio> listaDomicilios;
     private List<Expediente> listaExpedientes;
     private List<Establecimiento> establecimientos;
+    private List<Establecimiento> listaEstablecimientos;
         
 
     @EJB
@@ -154,6 +154,14 @@ public class MbPerJuridica implements Serializable{
      * @return 
      ********************************/
    
+    public List<Establecimiento> getListaEstablecimientos() {
+        return listaEstablecimientos;
+    }
+
+    public void setListaEstablecimientos(List<Establecimiento> listaEstablecimientos) {
+        this.listaEstablecimientos = listaEstablecimientos;
+    }
+
     public Domicilio getDomicilio() {
         return domicilio;
     }
@@ -552,7 +560,8 @@ public class MbPerJuridica implements Serializable{
         establecimiento.setDomicilio(dom);
         
         Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 1200);
+        options.put("contentWidth", 1000);
+        //options.put("contentHeight", 400);
         RequestContext.getCurrentInstance().openDialog("dlgNewAddEstablecimientos", options, null);          
     
     }
@@ -566,6 +575,7 @@ public class MbPerJuridica implements Serializable{
         
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 1200);
+        options.put("contentHeight", 500);
         RequestContext.getCurrentInstance().openDialog("dlgViewEstablecimientos", options, null);
     }
                
@@ -588,7 +598,7 @@ public class MbPerJuridica implements Serializable{
         listaEstado = estadoFacade.findAll();
        //expVinc = current.getExpediente();
         Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 1200);
+        options.put("contentWidth", 1000);
         RequestContext.getCurrentInstance().openDialog("dlgEditEstablecimientos", options, null);
 
     }
@@ -674,8 +684,8 @@ public class MbPerJuridica implements Serializable{
             
             // volvemos a instanciar el Domicilio del Establecimiento
             domicilio = null;
-            Domicilio dom = new Domicilio();
-            establecimiento.setDomicilio(dom);      
+            domicilio = new Domicilio();
+            establecimiento.setDomicilio(domicilio);      
             
             //Asigno los Establecimientos
             current.setEstablecimientos(establecimientos);
@@ -702,14 +712,52 @@ public class MbPerJuridica implements Serializable{
             current.setEstablecimientos(establecimientosSwap);
             getFacade().edit(current);
             // reseteo la variable para volverla a poblar con la próxima, si hubiera.
-            //establecimiento = null;
-            //establecimiento = new Establecimiento();
+            establecimiento = null;
+            establecimiento = new Establecimiento();
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoUpdated"));
         }else{
             JsfUtil.addErrorMessage("El Establecimiento seleccionado no se puede modificar");
         } 
      
     }
+    
+          /**
+     * Método para guardar los establecimientos creados en el listaEstablecimientos que irán en la nueva perJuridica
+     */
+    public void createEstablecimientoUpdate(){
+        if(!compararEstablecimiento(establecimiento)){ 
+
+            // Si estoy creanto un procedimiento nuevo, agrego la instancia al list
+            // Si no se la agrego a la propiedad instancias del procedimiento
+             
+            if(current.getId() != null){
+
+                current.getEstablecimientos().add(establecimiento);
+                // se agregan los datos del AdminEntidad
+                Date date = new Date(System.currentTimeMillis());
+                AdminEntidad admEnt = new AdminEntidad();
+                admEnt.setFechaAlta(date);
+                admEnt.setHabilitado(true);
+                admEnt.setUsAlta(usLogeado);
+                current.setAdmin(admEnt);
+            }else{
+                // se agregan los datos del AdminEntidad
+                Date date = new Date(System.currentTimeMillis());
+                AdminEntidad admEnt = new AdminEntidad();
+                admEnt.setFechaAlta(date);
+                admEnt.setHabilitado(true);
+                admEnt.setUsAlta(usLogeado);
+                establecimiento.setAdmin(admEnt);
+                listaEstablecimientos.add(establecimiento);    
+            }
+            // reseteo la instancia
+            establecimiento = null;
+            establecimiento = new Establecimiento();
+        } else{
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstblecimientoExistente"));
+        }
+    }
+
 
            /**
      * Método para eliminar establecimientos
@@ -857,27 +905,6 @@ public class MbPerJuridica implements Serializable{
 
         return "inicio";
     }  
-    
-    
-    /**
-     * Método para mostrar los Expedientes vinculados
-   
-    public void verExpedientes(){
-        expediente = current.getExpediente();
-        Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 950);
-        RequestContext.getCurrentInstance().openDialog("", options, null);
-    }      */
-    
-        /**
-     * Método para mostrar los establecimientos vinculados
-
-    public void verEstablecimientos(){
-        establecimiento = current.getEstablecimiento();
-        Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 950);
-        RequestContext.getCurrentInstance().openDialog("", options, null);
-    }     */
 
     /****************************
      * Métodos de validación

@@ -12,20 +12,13 @@
         <h:form id="frmProm" style="font-size: 80%">
             <p:panel id="prmNew">
             <h:inputHidden id="id" value="#{mbPerJuridica.selected.id}" />
-            
-<!-- a partir de aquí va la tabla de los establecimientos vinculados-->                  
-            
-            <p:commandButton value="Agregar" action="#{mbPerJuridica.prepareNewCreateEstablecimientos}" process="@this" />
-            
-<!-- a partir de aquí va la tabla de los establecimientos vinculados-->     
-                <p:dataTable id="esta" var="esta" value="#{mbPerJuridica.selected.establecimientos}" editable="true" style="margin-bottom:20px; font-size:80%" rows="5" paginator="true" 
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             rowsPerPageTemplate="5,10,15">
-                    <f:facet name="header">
-                        <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbPerJuridica.prepareListEstablecimiento}" update="esta" style="margin-left: 10px"/>
-                    </f:facet>
-                             
-                    <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{esta.tipo}">
+  <!-- a partir de aquí va la tabla de los establecimientos vinculados-->                  
+   
+              <p:dataTable id="esta" var="esta" value="#{mbPerJuridica.selected.establecimientos}" editable="true" style="margin-bottom:20px; font-size:80%" rows="5" paginator="true" 
+                           paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                           rowsPerPageTemplate="5,10,15">
+      
+                    <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{esta.tipo}" filterBy="#{esta.tipo}">
                         <p:outputLabel value="#{esta.tipo.nombre}"/>
                     </p:column>
 
@@ -68,16 +61,24 @@
     
     <!--Hasta aquí es la carga de los datos del domicilio-->
                         
-                    <p:column headerText="Acciones" style="text-align: center"   >
+                    <p:column headerText="Acciones">
                         <p:growl id="messages" showDetail="true" />
-                        <p:commandButton icon="ui-icon-pencil"  action="#{mbPerJuridica.prepareEditEstablecimiento}" title="Editar">
+                        
+                        <p:commandButton icon="ui-icon-zoomin" action="#{mbPerJuridica.prepareViewEstablecimiento}" title="Ver detalle">
                             <f:setPropertyActionListener value="#{esta}" target="#{mbPerJuridica.establecimiento}" />
-                        </p:commandButton>                                        
+                        </p:commandButton>
+                        
+                        <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.prepareEditEstablecimiento}" title="Editar">
+                            <f:setPropertyActionListener value="#{esta}" target="#{mbPerJuridica.establecimiento}" />
+                        </p:commandButton>
+
+                                              
                     </p:column>    
     
                 </p:dataTable>
          
-    <!-- hasta aquí va la tabla editable de los establecimientos-->        
+<!-- hasta aquí va la tabla editable de los establecimientos-->
+                
 
             </p:panel>
         </h:form>
