@@ -67,15 +67,16 @@
                     <p:inputText id="provincia" value="#{mbPerJuridica.establecimiento.domicilio.provincia}" required="false"/> 
 
                     </h:panelGrid>
-                </p:panel>  
+
 
                 <!-- termina la carga de los datos del domicilio-->                   
 
+
                 <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimiento}" update="prmNew" />
                     <p:commandButton icon="ui-icon-cancel" value="Limpiar" >
-                    <p:ajax update="prmNew" resetValues="true" />
-                </p:commandButton>
-
+                        <p:ajax update="prmNew" resetValues="true" />
+                    </p:commandButton>
+                </p:panel>  
                 <!-- a partir de aquí es el listado de establecimientos asociadas -->  
 
                 <p:dataTable id="establecimientos" var="est" value="#{mbPerJuridica.establecimientos}" >              

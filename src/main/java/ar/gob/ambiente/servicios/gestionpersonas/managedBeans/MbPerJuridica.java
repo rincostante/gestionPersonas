@@ -406,6 +406,22 @@ public class MbPerJuridica implements Serializable{
         }
         return current;
     }   
+
+    public TipoEstablecimientoFacade getTipoEstablecimientoFacade() {
+        return tipoEstablecimientoFacade;
+    }
+
+    public void setTipoEstablecimientoFacade(TipoEstablecimientoFacade tipoEstablecimientoFacade) {
+        this.tipoEstablecimientoFacade = tipoEstablecimientoFacade;
+    }
+
+    public EstablecimientoFacade getEstablecimientoFacade() {
+        return establecimientoFacade;
+    }
+
+    public void setEstablecimientoFacade(EstablecimientoFacade establecimientoFacade) {
+        this.establecimientoFacade = establecimientoFacade;
+    }
     
     /*******************************
      ** Métodos de inicialización **
@@ -478,31 +494,8 @@ public class MbPerJuridica implements Serializable{
         return "/faces/index";
     }
     
-       /**
-     * @return mensaje que notifica la actualizacion de estado
-     */    
-    public String habilitar() {
-        current.getAdmin().setHabilitado(true);
-        update();        
-        recreateModel();
-        return "view";
-    } 
-    
-    public String deshabilitar() {
-        if (getFacade().noTieneDependencias(current.getId())){
-            current.getAdmin().setHabilitado(false);
-            update();        
-            recreateModel();
-        }
-        else{
-            //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DeshabilitarError"));            
-        }
-        return "view";
-    } 
-    
     /**
-     * 
+     * Damos valor a la variable Update
      */
     public void prepareHabilitar(){
         update = 2;
@@ -510,64 +503,71 @@ public class MbPerJuridica implements Serializable{
     }
     
     /**
-     * 
+     * Damos valor a la variable Update
      */
-    public void prepareDesHabilitar(){
+    public void prepareDeshabilitar(){
         update = 1;
         update();        
     } 
+    
+    /**
+     * 
+     */
+    public void prepareHabilitarEstablecimiento(){
+        update = 2;
+        updateEstablecimiento();
+    }
+    
+    /**
+     * 
+     */
+    public void prepareDeshabilitarEstablecimiento(){
+        update = 1;
+        updateEstablecimiento();
+    }
 
     /*************************
     ** Métodos de operación **
     **************************/
     /**
-     * Método para guardar los expediente creados en el listExpedientes que irán en la nueva persona fisica
+     * Método para guardar los expediente desde persona Juridica
      */
     public void createExpediente(){
-        //if(!compararExpediente(expediente)){
-            // se agregan los datos del AdminEntidad
-            Date date = new Date(System.currentTimeMillis());
-            AdminEntidad admEnt = new AdminEntidad();
-            admEnt.setFechaAlta(date);
-            admEnt.setHabilitado(true);
-            admEnt.setUsAlta(usLogeado);
-            current.setAdmin(admEnt);
-            // reseteo la expediente
-            expediente = null;
-            expediente = new Expediente();
-      //  } else{
-       //     JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteExistente"));
-      //  }
-
+        // reseteo la expediente
+        expediente = null;
+        expediente = new Expediente();
     }
     
+    /**
+     * Agrega un Establecimiento y su domicilio
+     */
     public void prepareCreateEstablecimientos(){
-        // instanciamos el Domicilio del Establecimiento
-        Domicilio dom = new Domicilio();
-        establecimiento.setDomicilio(dom);
-        
-        Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 1200);
-        RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimientos", options, null);          
-    }
-    
-    public void prepareNewCreateEstablecimientos(){
-        // instanciamos el Domicilio del Establecimiento
-        current.getId();
-        current.getEstablecimientos();
-        establecimiento = new Establecimiento();
-        Domicilio dom = new Domicilio();
-        establecimiento.setDomicilio(dom);
-        
-        Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 1000);
-        //options.put("contentHeight", 400);
-        RequestContext.getCurrentInstance().openDialog("dlgNewAddEstablecimientos", options, null);          
-    
+        if(current.getId()== null){
+            //Si el ID es nulo, preparamos la carga de un nuevo Establecimiento y su Domicilio
+            // instanciamos el Domicilio del Establecimiento
+            Domicilio dom = new Domicilio();
+            establecimiento.setDomicilio(dom);
+
+            Map<String,Object> options = new HashMap<>();
+            options.put("contentWidth", 1200);
+            RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimientos", options, null); 
+            
+        }else{
+            //Si el ID del current existe 
+            current.getId();
+            current.getEstablecimientos();
+            establecimiento = new Establecimiento();
+            Domicilio dom = new Domicilio();
+            establecimiento.setDomicilio(dom);      
+            Map<String,Object> options = new HashMap<>();
+            options.put("contentWidth", 1000);
+            RequestContext.getCurrentInstance().openDialog("dlgNewAddEstablecimientos", options, null);  
+        }            
     }
 
-    
-            
+    /**
+     * Abre el dlgViewEstablecimientos
+     */        
     public void prepareViewEstablecimiento(){
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
         listaActividad = actividadFacade.findAll();
@@ -578,41 +578,32 @@ public class MbPerJuridica implements Serializable{
         options.put("contentHeight", 500);
         RequestContext.getCurrentInstance().openDialog("dlgViewEstablecimientos", options, null);
     }
-               
-    public void viewEstablecimiento(){
-        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
-        listaActividad = actividadFacade.findAll();
-        listaEstado = estadoFacade.findAll();
-        Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 1200);
-        RequestContext.getCurrentInstance().openDialog("dlgListEstablecimientos", options, null);
-    } 
+    
    /**
-     * @return acción para la edición de la entidad
+     * Edita un establecimiento
      */
     public void prepareEditEstablecimiento() {
         current.getEstablecimientos();
-//        domVinc = establecimiento.getDomicilio();
         listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
         listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
-       //expVinc = current.getExpediente();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 1000);
         RequestContext.getCurrentInstance().openDialog("dlgEditEstablecimientos", options, null);
 
     }
-
+    
     /**
-     * Método para inicializar el listado de los Actividades Planificadass habilitadas
-     * @return acción para el listado de entidades
+     * Método para actualizar el listado de los establecimientos en el EDIT
+     * 
      */
-    public String prepareListEstablecimiento() {
+    public void prepareListEstablecimiento() {
         iniciado = true;
-        recreateModel();   
-        return "dlgActualizado";
+        current.getEstablecimientos();
     }    
-    /*-----------------------------------------------------------------------------------------------------------*/    
+    
+    
+    /*--------------------------------------------------------------------------------*/    
     /**
     * Método para validar si una instacia ya existe en el list que las guarda en memoria
     */
@@ -631,7 +622,7 @@ public class MbPerJuridica implements Serializable{
         while(estaIt.hasNext()){
             Establecimiento establecimiento = (Establecimiento)estaIt.next();
             if(establecimiento.getActividad().equals(esta.getActividad())
-            //      && establecimiento.getDomicilio().equals(esta.getDomicilio())
+           //      && establecimiento.getDomicilio().equals(esta.getDomicilio())
                     && establecimiento.getEstado().equals(esta.getEstado())){
                 retorno = true;
             }
@@ -639,92 +630,11 @@ public class MbPerJuridica implements Serializable{
         return retorno;
     }   
     
+    
     /**
      * Método para guardar los Establecimientos creados en el listaEstablecimiento que irán en la nueva perJuridica
      */
     public void createEstablecimiento(){
-        if(!compararEstablecimiento(establecimiento)){ 
-
-            // Si estoy creando una persona jurídica nueva, agrego el establecimiento al list
-            // Si no se la agrego a la propiedad establecimientos de la persona jurídica
-             
-            if(current.getId() != null){
-
-                current.getEstablecimientos().add(establecimiento);
-                
-                // se agregan los datos del AdminEntidad
-                Date date = new Date(System.currentTimeMillis());
-                AdminEntidad admEnt = new AdminEntidad();
-                admEnt.setFechaAlta(date);
-                admEnt.setHabilitado(true);
-                admEnt.setUsAlta(usLogeado);
-                current.setAdmin(admEnt);
-                establecimiento.setDomicilio(domicilio);
-                
-            }else{
-                // se agregan los datos del AdminEntidad
-                Date date = new Date(System.currentTimeMillis());
-                AdminEntidad admEnt = new AdminEntidad();
-                admEnt.setFechaAlta(date);
-                admEnt.setHabilitado(true);
-                admEnt.setUsAlta(usLogeado);
-                
-                // asigno la admin
-                establecimiento.setAdmin(admEnt);
-                
-                // agrego el establecimiento al listado
-                establecimientos.add(establecimiento); 
-            }
-            
-            // reseteo el establecimiento
-            establecimiento = null;
-            establecimiento = new Establecimiento();
-
-
-            
-            // volvemos a instanciar el Domicilio del Establecimiento
-            domicilio = null;
-            domicilio = new Domicilio();
-            establecimiento.setDomicilio(domicilio);      
-            
-            //Asigno los Establecimientos
-            current.setEstablecimientos(establecimientos);
-        } else{
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoExistente"));
-        }
-    }
-
-      /**
-     * Método para actualizar un Establecimiento
-     */
-    public void updateEstablecimiento(){
-        boolean estable = false;
-        List<Establecimiento> establecimientosSwap = new ArrayList<>();
-        for (Establecimiento cls : current.getEstablecimientos()) {
-            if(!cls.getId().equals(establecimiento.getId())){
-                
-                establecimientosSwap.add(cls);
-            }else{
-                establecimientosSwap.add(establecimiento);
-            }
-        }
-        if(!estable){
-            current.setEstablecimientos(establecimientosSwap);
-            getFacade().edit(current);
-            // reseteo la variable para volverla a poblar con la próxima, si hubiera.
-            establecimiento = null;
-            establecimiento = new Establecimiento();
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoUpdated"));
-        }else{
-            JsfUtil.addErrorMessage("El Establecimiento seleccionado no se puede modificar");
-        } 
-     
-    }
-    
-          /**
-     * Método para guardar los establecimientos creados en el listaEstablecimientos que irán en la nueva perJuridica
-     */
-    public void createEstablecimientoUpdate(){
         if(!compararEstablecimiento(establecimiento)){ 
 
             // Si estoy creanto un procedimiento nuevo, agrego la instancia al list
@@ -740,6 +650,16 @@ public class MbPerJuridica implements Serializable{
                 admEnt.setHabilitado(true);
                 admEnt.setUsAlta(usLogeado);
                 current.setAdmin(admEnt);
+                
+                // se agregan los datos del AdminEntidad para el Establecimiento
+                AdminEntidad admEntEstablecimiento = new AdminEntidad();
+                admEntEstablecimiento.setFechaAlta(date);
+                admEntEstablecimiento.setHabilitado(true);
+                admEntEstablecimiento.setUsAlta(usLogeado);
+                establecimiento.setAdmin(admEntEstablecimiento);
+                //establecimiento.setDomicilio(domicilio);  
+                //current.getEstablecimientos().add(establecimiento); 
+                
             }else{
                 // se agregan los datos del AdminEntidad
                 Date date = new Date(System.currentTimeMillis());
@@ -747,33 +667,99 @@ public class MbPerJuridica implements Serializable{
                 admEnt.setFechaAlta(date);
                 admEnt.setHabilitado(true);
                 admEnt.setUsAlta(usLogeado);
+                
+                // asigno la admin
                 establecimiento.setAdmin(admEnt);
-                listaEstablecimientos.add(establecimiento);    
+               
+                // agrego el establecimiento al listado
+                establecimientos.add(establecimiento); 
+
+                // volvemos a instanciar el Domicilio del Establecimiento
+                domicilio = null;
+                domicilio = new Domicilio();
+                //establecimiento.setDomicilio(domicilio);    
+            
+                //Asigno los Establecimientos
+                current.setEstablecimientos(establecimientos);   
+                                                  
             }
-            // reseteo la instancia
+           // reseteo establecimientos y domicilios
             establecimiento = null;
             establecimiento = new Establecimiento();
+
         } else{
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstblecimientoExistente"));
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoExistente"));
+            
         }
+
     }
 
 
-           /**
-     * Método para eliminar establecimientos
-     * @param event
+      /**
+     * Método para actualizar un Establecimiento
+    * @return dlgViewEstablecimiento
      */
-    public void estaDelete(RowEditEvent event){
-        try{
-            current.getEstablecimientos().remove((Establecimiento)event.getObject());
-             
-            JsfUtil.addSuccessMessage("Establecimiento eliminado.");
-        }catch(Exception e){
-            JsfUtil.addErrorMessage("Hubo un error eliminando el Establecimiento. " + e.getMessage());
+    public String updateEstablecimiento(){
+        
+        boolean edito;
+        Establecimiento esta;
+        Date date = new Date(System.currentTimeMillis());
+
+        //Deshabilito
+        if(update == 1){
+            establecimiento.getAdmin().setFechaBaja(date);
+            establecimiento.getAdmin().setUsBaja(usLogeado);
+            establecimiento.getAdmin().setHabilitado(false);
         }
-    }    
-  
-/*-----------------------------------------------------------------------------------------------------------*/
+        //Habilito
+        if(update == 2){
+            establecimiento.getAdmin().setFechaModif(date);
+            establecimiento.getAdmin().setUsModif(usLogeado);
+            establecimiento.getAdmin().setHabilitado(true);
+            establecimiento.getAdmin().setFechaBaja(null);
+            establecimiento.getAdmin().setUsBaja(usLogeado);
+        }
+        //Modificar / Editar el establecimiento
+        if(update == 0){
+            establecimiento.getAdmin().setFechaModif(date);
+            establecimiento.getAdmin().setUsModif(usLogeado);
+        }
+        //Actualizo segun la operacion seleccionada
+        try{
+            if(update==0){
+                esta = getEstablecimientoFacade().getExistente(establecimiento.getActividad());
+                if(esta == null){
+                    edito = true;
+                }else{
+                    edito = esta.getId().equals(establecimiento.getId());
+                }
+                if(edito){
+                    //Actualizacion de datos de administracion de la entidad Establecimiento
+                    establecimiento.getAdmin().setFechaModif(date);
+                    establecimiento.getAdmin().setUsModif(usLogeado);
+                    
+                    //Actualizo
+                    getEstablecimientoFacade().edit(establecimiento);                
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ha sido actualizada"));
+                    return "dlgViewEstablecimiento";
+                }else{
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ya Existe"));
+                    return null; 
+                    }
+            }else if(update==1){
+                 getEstablecimientoFacade().edit(establecimiento);
+                 JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Deshabilitado"));
+                return "dlgViewEstablecimiento";
+            }else{
+                getEstablecimientoFacade().edit(establecimiento);
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Habilitado"));
+                return "dlgViewEstablecimiento";
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Actualizado correctamente"));
+            return null;
+        }
+    }
     
     /**
      * Método que inserta una nueva instancia en la base de datos, previamente genera una entidad de administración
@@ -845,7 +831,7 @@ public class MbPerJuridica implements Serializable{
             current.getAdmin().setFechaModif(date);
             current.getAdmin().setUsModif(usLogeado);
         }
-        // acualizo según la operación seleccionada
+       //Acualizo según la operación seleccionada
         try {
             if(update == 0){
                 pej = getFacade().getExistente(current.getRazonSocial(), current.getCuit());
@@ -870,15 +856,15 @@ public class MbPerJuridica implements Serializable{
                 
             }else if(update == 1){
                 getFacade().edit(current);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaDeshabilitado"));
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Deshabilitado"));
                 return "view";
             }else{
                 getFacade().edit(current);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerJuridicaHabilitado"));
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Habilitado"));
                 return "view";
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Persona Jurídica", "Existe un error en la edición"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Persona Jurídica", "Actualizado correctamente"));
             return null;
         }
     } 
@@ -992,40 +978,11 @@ public class MbPerJuridica implements Serializable{
             establecimientos.clear();
             establecimientos =null;
         }   
-    } 
-
-    
-     //Método para validar si una instacia ya existe en el list que las guarda en memoria
-     
-    private boolean compararExpediente(Expediente exp){
-        boolean retorno = false;
-     /**   Iterator expIt = listExpedientes.iterator();
-        while(expIt.hasNext()){
-            Expediente expediente = (Expediente)expIt.next();
-            if(expediente.getNumero().equals(exp.getNumero()))
-                    && expediente.getAnio().equals(exp.getAnio())){
-                retorno = true;
-            }
-        }*/
-        return retorno;
-    } 
-       /**
-     * Método para eliminar establecimientos
-     * @param event
-     */
-    public void estabDelete(RowEditEvent event){
-        try{
-            current.getEstablecimientos().remove((Establecimiento)event.getObject());
-            //getInstFacade().remove((Instancia)event.getObject());
-            JsfUtil.addSuccessMessage("Establecimiento eliminado.");
-        }catch(Exception e){
-            JsfUtil.addErrorMessage("Hubo un error eliminando el Establecimiento. " + e.getMessage());
-        }
-    }         
+    }        
 
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
-    *********************************************************************/
+   *********************************************************************/
     @FacesConverter(forClass = PerJuridica.class)
     public static class PerJuridicaControllerConverter implements Converter {
 

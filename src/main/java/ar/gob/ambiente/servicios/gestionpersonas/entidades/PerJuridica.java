@@ -206,5 +206,9 @@ public class PerJuridica implements Serializable {
         return "ar.gob.ambiente.servicios.gestionPersonas.entidades.PerJuridica[ id=" + id + " ]";
     }
 
+    public void setDomicilio(Domicilio domicilio) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }
