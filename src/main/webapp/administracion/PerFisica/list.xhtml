@@ -25,34 +25,39 @@
                              var="e" id="perFisicaList" rows="5" 
                              filteredValue="#{mbPerFisica.listPerFisica}"
                              paginator="true" widgetVar="perFisicaTable" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             rowsPerPageTemplate="5,10,15">
+                             rowsPerPageTemplate="5,10,15" draggableColumns="true">
                     
                     <f:facet name="header">
+                        Draggable Columns
                         Listado de #{bundle.PerFisicaListTitle}
                         <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
                         <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbPerFisica.prepareList}" update="perFisicaList" style="margin-left: 10px"/>
                         <p:columnToggler datasource="perFisicaList" trigger="toggler" />
                     </f:facet>
                     
-                <p:column headerText="Apellido" style="font-size: 85%" filterMatchMode="contains" sortBy="#{e.apellido}" filterBy="#{e.apellido}">
-                     <p:outputLabel value="#{e.apellido}"/>
-                </p:column>
+                    <p:column headerText="Expediente"  filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente.numero} / #{e.expediente.anio}">
+                         <p:outputLabel value="#{e.expediente.numero} / #{e.expediente.anio}"/>
+                    </p:column>
                     
-                <p:column headerText="Nombre" style="font-size: 85%" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
-                    <p:outputLabel value="#{e.nombre}"/>
-                </p:column>
-                    
-                <p:column headerText="Dni" style="font-size: 85%" filterMatchMode="contains" sortBy="#{e.dni}" filterBy="#{e.dni}">
-                    <p:outputLabel value="#{e.dni}"/>
-                </p:column>
-                    
-                <p:column headerText="Telefono" style="font-size: 85%" filterMatchMode="contains" sortBy="#{e.cel}" filterBy="#{e.cel}">
-                    <p:outputLabel value="#{e.cel}"/>
-                </p:column> 
-                    
+                    <p:column headerText="Apellido"  filterMatchMode="contains" sortBy="#{e.apellido}" filterBy="#{e.apellido}">
+                         <p:outputLabel value="#{e.apellido}"/>
+                    </p:column>
+
+                    <p:column headerText="Nombre"  filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
+                        <p:outputLabel value="#{e.nombre}"/>
+                    </p:column>
+
+                    <p:column headerText="Dni"  filterMatchMode="contains" sortBy="#{e.dni}" filterBy="#{e.dni}">
+                        <p:outputLabel value="#{e.dni}"/>
+                    </p:column>
+
+                    <p:column headerText="Telefono"  filterMatchMode="contains" sortBy="#{e.cel}" filterBy="#{e.cel}">
+                        <p:outputLabel value="#{e.cel}"/>
+                    </p:column> 
+
                     <p:column filterBy="#{e.admin.habilitado}" headerText="Estado" filterMatchMode="equals">
                         <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('perFisicaTable').filter()" style="font-size: 80%">
+                            <p:selectOneMenu onchange="PF('perFisicaTable').filter()">
                                 <f:converter converterId="javax.faces.Boolean" />
                                 <f:selectItem itemLabel="Todos" itemValue="" />
                                 <f:selectItem itemLabel="Activos" itemValue="true" />
@@ -81,7 +86,7 @@
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
                                 <p:confirm header="Confirmar" message="¿Desea habilitar el PerFisica?" icon="ui-icon-alert" />
                         </p:commandButton>                          
-                        
+
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />

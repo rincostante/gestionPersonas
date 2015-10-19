@@ -29,9 +29,9 @@ public class TipoEstablecimiento implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column (nullable=false, length=50, unique=true)
+    @Column (nullable=false, length=250, unique=true)
     @NotNull(message = "El campo nombre no puede quedar nulo")
-    @Size(message = "El campo nombre debe tener entre 1 y 50 caracteres", min = 1, max = 50)
+    @Size(message = "El campo nombre debe tener entre 1 y 250 caracteres", min = 1, max = 250)
     private String nombre;
     
     @OneToMany(mappedBy="tipo")

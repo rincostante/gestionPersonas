@@ -51,6 +51,7 @@
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbEstablecimiento</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+
     <managed-bean>
         <managed-bean-name>mbEstado</managed-bean-name>
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbEstado</managed-bean-class>

@@ -38,12 +38,36 @@ public class PerFisica implements Serializable {
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="expediente_id")
     private Expediente expediente; 
-
+        
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo instrumento Solicitante no puede quedar nulo")
+    @Size(message = "El campo instrumento Solicitante debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String instrumentoSolicitante;
+    
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo Apellido no puede quedar nulo")
+    @Size(message = "El campo Apellido debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String apellido;  
+        
+    @Column (nullable=false, length=50, unique=true)
+    @NotNull(message = "El campo Nombre no puede quedar nulo")
+    @Size(message = "El campo Nombre debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String nombre;  
+    
+    /**
+     * Campo de tipo entero que indica el DNI
+     */
+    @Column (nullable=false)
+    @NotNull(message = "{entidades.fieldNotNullError}")
     private long dni; 
+    
+     /**
+     * Campo de tipo entero que indica el CUIT
+     */
+    @Column (nullable=false)
+    @NotNull(message = "{entidades.fieldNotNullError}")
     private long cuitCuil; 
+    
     private String correoElectronico;
     private String cel;
     
@@ -74,7 +98,7 @@ public class PerFisica implements Serializable {
     @JoinColumn(name="adminentidad_id")
     private AdminEntidad admin; 
    
-   /**
+    /**
     * Constructor
     */
     public PerFisica() {

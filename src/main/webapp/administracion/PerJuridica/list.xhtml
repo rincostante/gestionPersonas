@@ -25,34 +25,39 @@
                              var="e" id="perJuridicaList" rows="5" 
                              filteredValue="#{mbPerJuridica.listaPerJuridica}"
                              paginator="true" widgetVar="perJuridicaTable" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             rowsPerPageTemplate="5,10,15">
+                             rowsPerPageTemplate="5,10,15" draggableColumns="true">
                     
                     <f:facet name="header">
+                        Draggable Columns
                         Listado de #{bundle.PerJuridicaListTitle}
                         <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
                         <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbPerJuridica.prepareList}" update="perJuridicaList" style="margin-left: 10px"/>
                         <p:columnToggler datasource="perJuridicaList" trigger="toggler" />
                     </f:facet>
                     
-                <p:column headerText="Razon Social" filterMatchMode="contains" sortBy="#{e.razonSocial}" filterBy="#{e.razonSocial}">
-                    <p:outputLabel value="#{e.razonSocial}"/>
-                </p:column>
-                
+                    <p:column headerText="Expediente"  filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente.numero} / #{e.expediente.anio}">
+                         <p:outputLabel value="#{e.expediente.numero} / #{e.expediente.anio}"/>
+                    </p:column>                    
+               
+                    <p:column headerText="Razon Social" filterMatchMode="contains" sortBy="#{e.razonSocial}" filterBy="#{e.razonSocial}">
+                        <p:outputLabel value="#{e.razonSocial}"/>
+                    </p:column>
+
                     <p:column headerText="Cuit" filterMatchMode="contains" sortBy="#{e.cuit}" filterBy="#{e.cuit}">
-                    <p:outputLabel value="#{e.cuit}"/>
-                </p:column>
+                        <p:outputLabel value="#{e.cuit}"/>
+                    </p:column>
                 
                     <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{e.tipoPersonaJuridica.nombre}" filterBy="#{e.tipoPersonaJuridica.nombre}">
                         <p:outputLabel value="#{e.tipoPersonaJuridica.nombre}"/>
-                </p:column>
+                    </p:column>
                 
                     <p:column headerText="E-Mail" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
-                    <p:outputLabel value="#{e.correoElectronico}"/>
-                </p:column>
+                        <p:outputLabel value="#{e.correoElectronico}"/>
+                    </p:column>
                 
                     <p:column headerText="Telefono" filterMatchMode="contains" sortBy="#{e.telefono}" filterBy="#{e.telefono}">
-                    <p:outputLabel value="#{e.telefono}"/>
-                </p:column> 
+                        <p:outputLabel value="#{e.telefono}"/>
+                    </p:column> 
                     
                     <p:column filterBy="#{e.admin.habilitado}" headerText="Estado" filterMatchMode="equals">
                         <f:facet name="filter">
@@ -68,27 +73,30 @@
 
                     <p:column headerText="Acciones" style="width:140px">
                         <p:growl id="messages" showDetail="true" />
+                        
                         <p:commandButton icon="ui-icon-zoomin" action="#{mbPerJuridica.prepareView}" title="Ver detalle">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
                         </p:commandButton>
+                        
                         <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.prepareEdit}" title="Editar">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
                         </p:commandButton>
 
                         <p:commandButton icon="ui-icon-trash" action="#{mbPerJuridica.prepareDesHabilitar}" rendered="#{e.admin.habilitado == 'true'}" 
-                                             update="perJuridicaList" title="Deshabilitar">
+                                         update="perJuridicaList" title="Deshabilitar">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
                             <p:confirm header="Confirmar" message="¿Desea deshabilitar el PerFisica?" />
                         </p:commandButton>
+                        
                         <p:commandButton icon="ui-icon-check" action="#{mbPerJuridica.prepareHabilitar}" rendered="#{e.admin.habilitado == 'false'}" 
-                                             title="Habilitar" update="perJuridicaList">
+                                         title="Habilitar" update="perJuridicaList">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                                <p:confirm header="Confirmar" message="¿Desea habilitar el PerFisica?" icon="ui-icon-alert" />
+                            <p:confirm header="Confirmar" message="¿Desea habilitar el PerFisica?" icon="ui-icon-alert" />
                         </p:commandButton>                          
                         
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                           <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                           <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                        </p:confirmDialog>                       
                     </p:column>                
                 </p:dataTable>

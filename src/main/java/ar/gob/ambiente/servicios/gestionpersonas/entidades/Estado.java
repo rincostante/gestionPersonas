@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -27,6 +29,9 @@ public class Estado implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column (nullable=false, length=250, unique=true)
+    @NotNull(message = "El campo nombre del Estado no puede quedar nulo")
+    @Size(message = "El campo nombre del Estado debe tener entre 1 y 250 caracteres", min = 1, max = 250)
     private String nombre;
     
     @OneToMany(mappedBy="estado")

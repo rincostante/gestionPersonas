@@ -688,10 +688,12 @@ public class MbPerJuridica implements Serializable{
             establecimiento = new Establecimiento();
 
         } else{
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoExistente"));
             
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoExistente"));
         }
-
+        
+        Domicilio dom = new Domicilio();
+        establecimiento.setDomicilio(dom);
     }
 
 

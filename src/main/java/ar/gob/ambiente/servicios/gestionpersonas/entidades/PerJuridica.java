@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -38,7 +41,14 @@ public class PerJuridica implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column (nullable=false, length=250, unique=true)
+    @NotNull(message = "El campo Razón Social no puede quedar nulo")
+    @Size(message = "El campo Razón Social debe tener entre 1 y 250 caracteres", min = 1, max = 250)
     private String razonSocial;
+    
+    @Column (nullable=false, length=11, unique=true)
+    @NotNull(message = "El campo CUIT no puede quedar nulo")
+    @Size(message = "El campo CUIT debe tener 11 caracteres", min = 1, max = 11)    
     private String cuit;
     
     @ManyToOne(fetch=FetchType.LAZY)

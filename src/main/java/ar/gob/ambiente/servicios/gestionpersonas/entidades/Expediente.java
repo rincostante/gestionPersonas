@@ -7,10 +7,12 @@
 package ar.gob.ambiente.servicios.gestionpersonas.entidades;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -23,14 +25,20 @@ public class Expediente implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+     /**
+     * Campo de tipo entero que indica el Número del expediente
+     */
+    @Column (nullable=false)
+    @NotNull(message = "{entidades.fieldNotNullError}")
     private int numero;
     
+     /**
+     * Campo de tipo entero que indica el Año del expediente
+     */
+    @Column (nullable=false)
+    @NotNull(message = "{entidades.fieldNotNullError}")
     private int anio;
-    /**
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="perfisica_id")
-    private PerFisica perFisica;
-    */
+ 
     public Long getId() {
         return id;
     }
