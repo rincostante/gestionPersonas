@@ -47,12 +47,12 @@
                         <p:outputLabel value="#{esta.telefono}" />
                     </p:column>
                         
-    <!--Aquí va la columna de los datos del domicilio-->
+    <!--Esta es la columna de los datos del domicilio-->
                     <p:column headerText="Calle" filterMatchMode="contains" sortBy="#{esta.domicilio.calle}">
                         <p:outputLabel value="#{esta.domicilio.calle} #{esta.domicilio.numero}-#{esta.domicilio.localidad}-#{esta.domicilio.provincia}" />
                     </p:column>
                         
-    <!--Aquí es la columna de la condición -->
+    <!--Esta es la columna de la condición -->
                     <p:column filterBy="#{esta.admin.habilitado}" headerText="Condición" filterMatchMode="equals">
                         <f:facet name="filter">
                             <p:selectOneMenu onchange="PF('establecimientoTable').filter()" style="font-size: 80%">

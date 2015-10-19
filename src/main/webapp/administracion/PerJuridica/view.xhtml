@@ -77,13 +77,13 @@
                                 <p:tab title="#{est.domicilio.calle} Nro: #{est.domicilio.numero} - #{est.domicilio.localidad} / #{est.domicilio.provincia}">
                                         <h:panelGrid columns="2" cellpadding="5">
                                             <h:outputLabel value="Tipo"/>
-                                            <h:outputText value="#{est.tipo}"/>    
+                                            <h:outputText value="#{est.tipo.nombre}"/>    
                                             
                                             <h:outputLabel value="Actividad"/>
-                                            <h:outputText value="#{est.actividad}"/>   
+                                            <h:outputText value="#{est.actividad.nombre}"/>   
                                             
                                             <h:outputLabel value="Estado"/>
-                                            <h:outputText value="#{est.estado}"/>       
+                                            <h:outputText value="#{est.estado.nombre}"/>       
                                             
                                             <h:outputLabel value="Email"/>
                                             <h:outputText value="#{est.correoElectronico}"/>    

@@ -41,7 +41,7 @@
                     </h:panelGrid>
                 </p:panel>  
 
-                <!-- Comienza la carga de los datos del domicilio-->
+<!-- Comienza la carga de los datos del domicilio-->
 
                 <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">        
                     <h:panelGrid columns="8">
@@ -69,7 +69,7 @@
                     </h:panelGrid>
 
 
-                <!-- termina la carga de los datos del domicilio-->                   
+<!-- termina la carga de los datos del domicilio-->                   
 
 
                 <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createEstablecimiento}" update="prmNew" />
@@ -77,31 +77,34 @@
                         <p:ajax update="prmNew" resetValues="true" />
                     </p:commandButton>
                 </p:panel>  
-                <!-- a partir de aquí es el listado de establecimientos asociadas -->  
 
-                <p:dataTable id="establecimientos" var="est" value="#{mbPerJuridica.establecimientos}" >              
-                    <p:column headerText="Tipo de Establecimiento" style="font-size: 90%">
-                    <h:outputLabel value="#{est.tipo.nombre}" />
+<!-- a partir de aquí es el listado de establecimientos asociadas -->  
+
+                <p:dataTable id="establecimientos" var="est" value="#{mbPerJuridica.establecimientos}" style="font-size:80%" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15" >      
+                    
+                    <p:column headerText="Tipo de Establecimiento">
+                        <h:outputLabel value="#{est.tipo.nombre}" />
                     </p:column>
                     
-                    <p:column headerText="Actividad" style="font-size: 90%">
-                    <h:outputLabel value="#{est.actividad.nombre}" />
+                    <p:column headerText="Actividad" >
+                        <h:outputLabel value="#{est.actividad.nombre}" />
                     </p:column>
                     
-                    <p:column headerText="Correo Electrónico" width="8%" style="font-size: 90%">
-                    <h:outputLabel value="#{est.correoElectronico}" />
+                    <p:column headerText="Correo Electrónico" width="8%" >
+                        <h:outputLabel value="#{est.correoElectronico}" />
                     </p:column> 
                     
-                    <p:column headerText="Estado" style="font-size: 90%">
-                    <h:outputLabel value="#{est.estado.nombre}" />
+                    <p:column headerText="Estado" >
+                        <h:outputLabel value="#{est.estado.nombre}" />
                     </p:column>
                     
-                    <p:column headerText="Teléfono" style="font-size: 90%">
-                    <h:outputLabel value="#{est.telefono}" />
+                    <p:column headerText="Teléfono" >
+                        <h:outputLabel value="#{est.telefono}" />
                     </p:column>
                     
-                    <p:column headerText="Domicilio" style="font-size: 90%">
-                    <h:outputLabel value="#{est.domicilio.calle} #{est.domicilio.numero}" />
+                    <p:column headerText="Domicilio" >
+                        <p:outputLabel value="#{est.domicilio.calle} #{est.domicilio.numero}-#{est.domicilio.localidad}-#{est.domicilio.provincia}" />
                     </p:column>  
                     
                 </p:dataTable>
