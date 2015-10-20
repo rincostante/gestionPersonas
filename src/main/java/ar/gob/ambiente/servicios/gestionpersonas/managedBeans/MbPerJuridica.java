@@ -193,8 +193,7 @@ public class MbPerJuridica implements Serializable{
     public void setRepresentantes(List<PerFisica> representantes) {
         this.representantes = representantes;
     }
-
-   
+    
     public List<Establecimiento> getEstablecimientos() {
         return establecimientos;
     }
@@ -446,7 +445,6 @@ public class MbPerJuridica implements Serializable{
         listaEstado = estadoFacade.findAll();
         return "view";
     }
-
     
 
     /** (Probablemente haya que embeberlo con el listado para una misma vista)
@@ -816,13 +814,15 @@ public class MbPerJuridica implements Serializable{
         PerJuridica pej;
         Date date = new Date(System.currentTimeMillis());
 
-        // actualizamos según el valor de update
+        //Actualiza según el valor de Update
         if(update == 1){
+            //Deshabilitar
             current.getAdmin().setFechaBaja(date);
             current.getAdmin().setUsBaja(usLogeado);
             current.getAdmin().setHabilitado(false);
         }
         if(update == 2){
+            //Habilitar
             current.getAdmin().setFechaModif(date);
             current.getAdmin().setUsModif(usLogeado);
             current.getAdmin().setHabilitado(true);

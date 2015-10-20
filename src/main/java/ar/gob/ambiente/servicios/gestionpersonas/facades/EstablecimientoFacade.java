@@ -112,6 +112,7 @@ public class EstablecimientoFacade extends AbstractFacade<Establecimiento> {
                 .setParameter("idParam", id);
         return q.getResultList().isEmpty();
     }  
+    
     /**
      * Método que devuelve todos los estados de una app 
      * @param actividad: ID de la entidad

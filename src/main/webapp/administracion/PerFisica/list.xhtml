@@ -79,12 +79,12 @@
                         <p:commandButton icon="ui-icon-trash" action="#{mbPerFisica.prepareDesHabilitar}" rendered="#{e.admin.habilitado == 'true'}" 
                                              update="perFisicaList" title="Deshabilitar">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
-                            <p:confirm header="Confirmar" message="¿Desea deshabilitar el PerFisica?" />
+                            <p:confirm header="Confirmar" message="¿Desea deshabilitar la Persona?" />
                         </p:commandButton>
                         <p:commandButton icon="ui-icon-check" action="#{mbPerFisica.prepareHabilitar}" rendered="#{e.admin.habilitado == 'false'}" 
                                              title="Habilitar" update="perFisicaList">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />
-                                <p:confirm header="Confirmar" message="¿Desea habilitar el PerFisica?" icon="ui-icon-alert" />
+                                <p:confirm header="Confirmar" message="¿Desea habilitar la Persona?" icon="ui-icon-alert" />
                         </p:commandButton>                          
 
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">

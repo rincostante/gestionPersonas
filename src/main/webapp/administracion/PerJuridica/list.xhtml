@@ -27,8 +27,7 @@
                              paginator="true" widgetVar="perJuridicaTable" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              rowsPerPageTemplate="5,10,15" draggableColumns="true">
                     
-                    <f:facet name="header">
-                        Draggable Columns
+                    <f:facet name="header">                     
                         Listado de #{bundle.PerJuridicaListTitle}
                         <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
                         <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbPerJuridica.prepareList}" update="perJuridicaList" style="margin-left: 10px"/>
@@ -82,16 +81,16 @@
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
                         </p:commandButton>
 
-                        <p:commandButton icon="ui-icon-trash" action="#{mbPerJuridica.prepareDesHabilitar}" rendered="#{e.admin.habilitado == 'true'}" 
+                        <p:commandButton icon="ui-icon-trash" action="#{mbPerJuridica.prepareDeshabilitar}" rendered="#{e.admin.habilitado == 'true'}" 
                                          update="perJuridicaList" title="Deshabilitar">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                            <p:confirm header="Confirmar" message="¿Desea deshabilitar el PerFisica?" />
+                            <p:confirm header="Confirmar" message="¿Desea deshabilitar la Persona Juridica?" />
                         </p:commandButton>
                         
                         <p:commandButton icon="ui-icon-check" action="#{mbPerJuridica.prepareHabilitar}" rendered="#{e.admin.habilitado == 'false'}" 
                                          title="Habilitar" update="perJuridicaList">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerJuridica.current}" />
-                            <p:confirm header="Confirmar" message="¿Desea habilitar el PerFisica?" icon="ui-icon-alert" />
+                            <p:confirm header="Confirmar" message="¿Desea habilitar la Persona Juridica?" icon="ui-icon-alert" />
                         </p:commandButton>                          
                         
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
