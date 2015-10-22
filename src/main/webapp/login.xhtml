@@ -1,33 +1,21 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition template="/WEB-INF/facelets/templates/indexTemplate.xhtml"
+<ui:composition template="/WEB-INF/facelets/templates/preTemplate.xhtml"
      xmlns="http://www.w3.org/1999/xhtml"
      xmlns:f="http://java.sun.com/jsf/core"
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns:p="http://primefaces.org/ui"
      xmlns:h="http://xmlns.jcp.org/jsf/html">
-        <ui:define name="content">
-            <br/> 
-
+     <ui:define name="content">
+        <p:growl id="mensajes" showDetail="true" life="2000" />  
         <h:form>
-        <p:growl id="mensajes" 
-                 showDetail="true" 
-                 life="2000" />            
-            <p:panel header="Inicio de sesión" 
-                     style="width:400px; position: relative; left: 35%;" 
-                     id="frmLogin">
-                <h:panelGrid columns="2" 
-                             cellpadding="5">
-                    <h:outputLabel for="username" 
-                                   value="Usuario:" 
-                                   style="text-align: left" />
-                    <p:inputText value="#{mbLogin.nombre}" 
-                                 id="username" 
-                                 required="true" 
-                                 label="username" />
-                    <h:outputLabel for="password" 
-                                   value="Clave:" 
-                                   style="text-align: left" />
+            <p:panel header="Inicio de sesión" style="position: absolute; top:40%; left:50%; width:400px; margin-left:-210px; border-color: #103B80" 
+                     id="frmLogin" styleClass="frmLogin">
+                <p:growl id="mensajes" showDetail="true" life="2000" />
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="username" value="Usuario:" style="font-size: 70%; text-align: center; color: #E6ECF9"/>
+                    <p:inputText value="#{mbLogin.nombre}" id="username" required="true" label="username" />
+                    <h:outputLabel for="password" value="Clave:" style="text-align: left" />
                     <p:password value="#{mbLogin.clave}" 
                                 id="password" 
                                 required="true" 
