@@ -141,7 +141,7 @@ public class PerJuridica implements Serializable {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-
+    
     public List<PerFisica> getRepresentantes() {
         return representantes;
     }
@@ -222,3 +222,4 @@ public class PerJuridica implements Serializable {
 
 
 }
+
