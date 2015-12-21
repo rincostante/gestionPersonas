@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
+package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,47 +23,47 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
-public class MbExpediente implements Serializable{
+public class MbPerfil implements Serializable{
     
-    private Expediente current;
-    private List<Expediente> listado = null;
-    private List<Expediente> listaFilter;    
+    private Perfil current;
+    private List<Perfil> listado = null;
+    private List<Perfil> listaFilter;    
     
     @EJB
-    private ExpedienteFacade expedienteFacade;
+    private PerfilFacade perfilFacade;
 
     private boolean iniciado;    
 
     /**
-     * Creates a new instance of MbExpediente
+     * Creates a new instance of MbPerfil
      */
-    public MbExpediente() {
+    public MbPerfil() {
     }
 
-    public Expediente getCurrent() {
+    public Perfil getCurrent() {
         return current;
     }
 
-    public void setCurrent(Expediente current) {
+    public void setCurrent(Perfil current) {
         this.current = current;
     }
 
-    public List<Expediente> getListado() {
+    public List<Perfil> getListado() {
         if (listado == null || listado.isEmpty()) {
             listado = getFacade().findAll();
         }
         return listado;
     }
 
-    public void setListado(List<Expediente> listado) {
+    public void setListado(List<Perfil> listado) {
         this.listado = listado;
     }
 
-    public List<Expediente> getListaFilter() {
+    public List<Perfil> getListaFilter() {
         return listaFilter;
     }
 
-    public void setListaFilter(List<Expediente> listaFilter) {
+    public void setListaFilter(List<Perfil> listaFilter) {
         this.listaFilter = listaFilter;
     }
 
@@ -116,7 +116,7 @@ public class MbExpediente implements Serializable{
      * @return acción para el formulario de nuevo
      */
     public String prepareCreate() {
-        current = new Expediente();
+        current = new Perfil();
         return "new";
     }   
     
@@ -140,7 +140,7 @@ public class MbExpediente implements Serializable{
             recreateModel();
         }else{
             //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteNonDeletable"));
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerfilNonDeletable"));
         }
         return "view";
     }    
@@ -183,10 +183,10 @@ public class MbExpediente implements Serializable{
     public String create() {     
         try {
             getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteCreated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerfilCreated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteCreatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerfilCreatedErrorOccured"));
             return null;
         }
     }
@@ -195,10 +195,10 @@ public class MbExpediente implements Serializable{
     public String update() {
         try {
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteUpdated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerfilUpdated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteUpdatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerfilUpdatedErrorOccured"));
             return null;
         }
     }    
@@ -214,9 +214,9 @@ public class MbExpediente implements Serializable{
      * @return La entidad gestionada
      */
 
-    public Expediente getSelected() {
+    public Perfil getSelected() {
         if (current == null) {
-            current = new Expediente();
+            current = new Perfil();
         }
         return current;
     } 
@@ -225,8 +225,8 @@ public class MbExpediente implements Serializable{
      * @param id equivalente al id de la entidad persistida
      * @return la entidad correspondiente
      */
-    public Expediente getExpediente(java.lang.Long id) {
-        return expedienteFacade.find(id);
+    public Perfil getPerfil(java.lang.Long id) {
+        return perfilFacade.find(id);
     }  
     
     
@@ -236,13 +236,13 @@ public class MbExpediente implements Serializable{
     /**
      * @return el Facade
      */
-    private ExpedienteFacade getFacade() {
-        return expedienteFacade;
+    private PerfilFacade getFacade() {
+        return perfilFacade;
     }    
     
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((String)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateExpedienteExistente")));
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerfilExistente")));
         }
     }    
     
@@ -252,9 +252,9 @@ public class MbExpediente implements Serializable{
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerfilDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerfilDeletedErrorOccured"));
         }
     }    
     
@@ -262,17 +262,17 @@ public class MbExpediente implements Serializable{
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
-    @FacesConverter(forClass = Expediente.class)
-    public static class ExpedienteControllerConverter implements Converter {
+    @FacesConverter(forClass = Perfil.class)
+    public static class PerfilControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbExpediente controller = (MbExpediente) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbExpediente");
-            return controller.getExpediente(getKey(value));
+            MbPerfil controller = (MbPerfil) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbPerfil");
+            return controller.getPerfil(getKey(value));
         }
 
         
@@ -299,11 +299,11 @@ public class MbExpediente implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof Expediente) {
-                Expediente o = (Expediente) object;
+            if (object instanceof Perfil) {
+                Perfil o = (Perfil) object;
                 return getStringKey(o.getId());
            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Expediente.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Perfil.class.getName());
             }
         }
     }            

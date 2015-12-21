@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
+package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,47 +23,47 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
-public class MbTipoEstablecimiento implements Serializable{
+public class MbExpediente implements Serializable{
     
-    private TipoEstablecimiento current;
-    private List<TipoEstablecimiento> listado = null;
-    private List<TipoEstablecimiento> listaFilter;    
+    private Expediente current;
+    private List<Expediente> listado = null;
+    private List<Expediente> listaFilter;    
     
     @EJB
-    private TipoEstablecimientoFacade tipoEstablecimientoFacade;
+    private ExpedienteFacade expedienteFacade;
 
     private boolean iniciado;    
 
     /**
-     * Creates a new instance of MbTipoEstablecimiento
+     * Creates a new instance of MbExpediente
      */
-    public MbTipoEstablecimiento() {
+    public MbExpediente() {
     }
 
-    public TipoEstablecimiento getCurrent() {
+    public Expediente getCurrent() {
         return current;
     }
 
-    public void setCurrent(TipoEstablecimiento current) {
+    public void setCurrent(Expediente current) {
         this.current = current;
     }
 
-    public List<TipoEstablecimiento> getListado() {
+    public List<Expediente> getListado() {
         if (listado == null || listado.isEmpty()) {
             listado = getFacade().findAll();
         }
         return listado;
     }
 
-    public void setListado(List<TipoEstablecimiento> listado) {
+    public void setListado(List<Expediente> listado) {
         this.listado = listado;
     }
 
-    public List<TipoEstablecimiento> getListaFilter() {
+    public List<Expediente> getListaFilter() {
         return listaFilter;
     }
 
-    public void setListaFilter(List<TipoEstablecimiento> listaFilter) {
+    public void setListaFilter(List<Expediente> listaFilter) {
         this.listaFilter = listaFilter;
     }
 
@@ -116,7 +116,7 @@ public class MbTipoEstablecimiento implements Serializable{
      * @return acción para el formulario de nuevo
      */
     public String prepareCreate() {
-        current = new TipoEstablecimiento();
+        current = new Expediente();
         return "new";
     }   
     
@@ -140,7 +140,7 @@ public class MbTipoEstablecimiento implements Serializable{
             recreateModel();
         }else{
             //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoNonDeletable"));
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteNonDeletable"));
         }
         return "view";
     }    
@@ -183,10 +183,10 @@ public class MbTipoEstablecimiento implements Serializable{
     public String create() {     
         try {
             getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoCreated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteCreated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoCreatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteCreatedErrorOccured"));
             return null;
         }
     }
@@ -195,10 +195,10 @@ public class MbTipoEstablecimiento implements Serializable{
     public String update() {
         try {
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoUpdated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteUpdated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoUpdatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteUpdatedErrorOccured"));
             return null;
         }
     }    
@@ -214,9 +214,9 @@ public class MbTipoEstablecimiento implements Serializable{
      * @return La entidad gestionada
      */
 
-    public TipoEstablecimiento getSelected() {
+    public Expediente getSelected() {
         if (current == null) {
-            current = new TipoEstablecimiento();
+            current = new Expediente();
         }
         return current;
     } 
@@ -225,8 +225,8 @@ public class MbTipoEstablecimiento implements Serializable{
      * @param id equivalente al id de la entidad persistida
      * @return la entidad correspondiente
      */
-    public TipoEstablecimiento getTipoEstablecimiento(java.lang.Long id) {
-        return tipoEstablecimientoFacade.find(id);
+    public Expediente getExpediente(java.lang.Long id) {
+        return expedienteFacade.find(id);
     }  
     
     
@@ -236,13 +236,13 @@ public class MbTipoEstablecimiento implements Serializable{
     /**
      * @return el Facade
      */
-    private TipoEstablecimientoFacade getFacade() {
-        return tipoEstablecimientoFacade;
+    private ExpedienteFacade getFacade() {
+        return expedienteFacade;
     }    
     
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((String)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateTipoEstablecimientoExistente")));
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateExpedienteExistente")));
         }
     }    
     
@@ -252,9 +252,9 @@ public class MbTipoEstablecimiento implements Serializable{
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ExpedienteDeletedErrorOccured"));
         }
     }    
     
@@ -262,17 +262,17 @@ public class MbTipoEstablecimiento implements Serializable{
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
-    @FacesConverter(forClass = TipoEstablecimiento.class)
-    public static class TipoEstablecimientoControllerConverter implements Converter {
+    @FacesConverter(forClass = Expediente.class)
+    public static class ExpedienteControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbTipoEstablecimiento controller = (MbTipoEstablecimiento) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbTipoEstablecimiento");
-            return controller.getTipoEstablecimiento(getKey(value));
+            MbExpediente controller = (MbExpediente) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbExpediente");
+            return controller.getExpediente(getKey(value));
         }
 
         
@@ -299,11 +299,11 @@ public class MbTipoEstablecimiento implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof TipoEstablecimiento) {
-                TipoEstablecimiento o = (TipoEstablecimiento) object;
+            if (object instanceof Expediente) {
+                Expediente o = (Expediente) object;
                 return getStringKey(o.getId());
            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + TipoEstablecimiento.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Expediente.class.getName());
             }
         }
     }            

@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
+package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,47 +23,47 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
-public class MbDomicilio implements Serializable{
+public class MbTipoEstablecimiento implements Serializable{
     
-    private Domicilio current;
-    private List<Domicilio> listado = null;
-    private List<Domicilio> listaFilter;    
+    private TipoEstablecimiento current;
+    private List<TipoEstablecimiento> listado = null;
+    private List<TipoEstablecimiento> listaFilter;    
     
     @EJB
-    private DomicilioFacade domicilioFacade;
+    private TipoEstablecimientoFacade tipoEstablecimientoFacade;
 
     private boolean iniciado;    
 
     /**
-     * Creates a new instance of MbDomicilio
+     * Creates a new instance of MbTipoEstablecimiento
      */
-    public MbDomicilio() {
+    public MbTipoEstablecimiento() {
     }
 
-    public Domicilio getCurrent() {
+    public TipoEstablecimiento getCurrent() {
         return current;
     }
 
-    public void setCurrent(Domicilio current) {
+    public void setCurrent(TipoEstablecimiento current) {
         this.current = current;
     }
 
-    public List<Domicilio> getListado() {
+    public List<TipoEstablecimiento> getListado() {
         if (listado == null || listado.isEmpty()) {
             listado = getFacade().findAll();
         }
         return listado;
     }
 
-    public void setListado(List<Domicilio> listado) {
+    public void setListado(List<TipoEstablecimiento> listado) {
         this.listado = listado;
     }
 
-    public List<Domicilio> getListaFilter() {
+    public List<TipoEstablecimiento> getListaFilter() {
         return listaFilter;
     }
 
-    public void setListaFilter(List<Domicilio> listaFilter) {
+    public void setListaFilter(List<TipoEstablecimiento> listaFilter) {
         this.listaFilter = listaFilter;
     }
 
@@ -116,7 +116,7 @@ public class MbDomicilio implements Serializable{
      * @return acción para el formulario de nuevo
      */
     public String prepareCreate() {
-        current = new Domicilio();
+        current = new TipoEstablecimiento();
         return "new";
     }   
     
@@ -140,7 +140,7 @@ public class MbDomicilio implements Serializable{
             recreateModel();
         }else{
             //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioNonDeletable"));
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoNonDeletable"));
         }
         return "view";
     }    
@@ -183,10 +183,10 @@ public class MbDomicilio implements Serializable{
     public String create() {     
         try {
             getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioCreated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoCreated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioCreatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoCreatedErrorOccured"));
             return null;
         }
     }
@@ -195,10 +195,10 @@ public class MbDomicilio implements Serializable{
     public String update() {
         try {
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioUpdated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoUpdated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioUpdatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoUpdatedErrorOccured"));
             return null;
         }
     }    
@@ -214,9 +214,9 @@ public class MbDomicilio implements Serializable{
      * @return La entidad gestionada
      */
 
-    public Domicilio getSelected() {
+    public TipoEstablecimiento getSelected() {
         if (current == null) {
-            current = new Domicilio();
+            current = new TipoEstablecimiento();
         }
         return current;
     } 
@@ -225,8 +225,8 @@ public class MbDomicilio implements Serializable{
      * @param id equivalente al id de la entidad persistida
      * @return la entidad correspondiente
      */
-    public Domicilio getDomicilio(java.lang.Long id) {
-        return domicilioFacade.find(id);
+    public TipoEstablecimiento getTipoEstablecimiento(java.lang.Long id) {
+        return tipoEstablecimientoFacade.find(id);
     }  
     
     
@@ -236,13 +236,13 @@ public class MbDomicilio implements Serializable{
     /**
      * @return el Facade
      */
-    private DomicilioFacade getFacade() {
-        return domicilioFacade;
+    private TipoEstablecimientoFacade getFacade() {
+        return tipoEstablecimientoFacade;
     }    
     
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((String)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateDomicilioExistente")));
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateTipoEstablecimientoExistente")));
         }
     }    
     
@@ -252,9 +252,9 @@ public class MbDomicilio implements Serializable{
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoEstablecimientoDeletedErrorOccured"));
         }
     }    
     
@@ -262,17 +262,17 @@ public class MbDomicilio implements Serializable{
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
-    @FacesConverter(forClass = Domicilio.class)
-    public static class DomicilioControllerConverter implements Converter {
+    @FacesConverter(forClass = TipoEstablecimiento.class)
+    public static class TipoEstablecimientoControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbDomicilio controller = (MbDomicilio) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbDomicilio");
-            return controller.getDomicilio(getKey(value));
+            MbTipoEstablecimiento controller = (MbTipoEstablecimiento) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbTipoEstablecimiento");
+            return controller.getTipoEstablecimiento(getKey(value));
         }
 
         
@@ -299,11 +299,11 @@ public class MbDomicilio implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof Domicilio) {
-                Domicilio o = (Domicilio) object;
+            if (object instanceof TipoEstablecimiento) {
+                TipoEstablecimiento o = (TipoEstablecimiento) object;
                 return getStringKey(o.getId());
            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Domicilio.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + TipoEstablecimiento.class.getName());
             }
         }
     }            

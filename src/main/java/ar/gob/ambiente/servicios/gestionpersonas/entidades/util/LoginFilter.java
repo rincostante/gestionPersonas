@@ -6,7 +6,7 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.entidades.util;
 
-import ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin;
+import ar.gob.ambiente.servicios.gestionpersonas.mb.MbLogin;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;

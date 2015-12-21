@@ -23,68 +23,68 @@
     
     <managed-bean>
         <managed-bean-name>mbLogin</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbLogin</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbLogin</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbUsuario</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbUsuario</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbUsuario</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbActividad</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbActividad</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbActividad</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbDomicilio</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbDomicilio</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbDomicilio</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbEspecialidad</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbEspecialidad</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbEspecialidad</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbEstablecimiento</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbEstablecimiento</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbEstablecimiento</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
 
     <managed-bean>
         <managed-bean-name>mbEstado</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbEstado</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbEstado</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbExpediente</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbExpediente</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbExpediente</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbPerfil</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbPerfil</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbPerfil</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbTipoEstablecimiento</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbTipoEstablecimiento</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbTipoEstablecimiento</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbTipoPersonaJuridica</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbTipoPersonaJuridica</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbTipoPersonaJuridica</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbPerJuridica</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbPerJuridica</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbPerJuridica</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
         <managed-bean-name>mbPerFisica</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.managedBeans.MbPerFisica</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbPerFisica</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
 </faces-config>

@@ -4,31 +4,29 @@
 * and open the template in the editor.
 */
 
-package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
+package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.AdminEntidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Especialidad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.EstablecimientoFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -42,63 +40,60 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import javax.faces.context.ExternalContext;
+import javax.faces.event.ValueChangeEvent;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.RowEditEvent;
 
 /**
 *
 * @author rodriguezn
 */
-public class MbPerFisica implements Serializable{
+public class MbEstablecimiento implements Serializable{
     
-    private PerFisica current;
+    private Establecimiento current;
+    
     private Domicilio domicilio;
-    private Expediente expediente;
-    
-    private List<PerFisica> listPerFisica;
+    private List<Domicilio> listaDomicilios;    
     private Domicilio domVinc;
-    
-    private List<Expediente> expVinc;
-    
+    private List<Establecimiento> listEstablecimiento;
+    private List<Establecimiento> listaFilter;
+
     @EJB
-    private PerFisicaFacade perFisicaFacade;
+    private EstablecimientoFacade establecimientoFacade;
     @EJB
     private PerJuridicaFacade perJuridicaFacade;
-    @EJB
-    private ExpedienteFacade expedienteFacade;
-    @EJB
-    private EspecialidadFacade especialidadFacade;
     @EJB
     private EstadoFacade estadoFacade;
     @EJB
     private DomicilioFacade domicilioFacade;
     @EJB
-    private PerfilFacade perfilFacade;
+    private TipoEstablecimientoFacade tipoEstablecimientoFacade;
     @EJB
     private ActividadFacade actividadFacade;
     
-    private PerFisica perFisicaSelected;
+    private Establecimiento establecimientoSelected;
     private MbLogin login;
     private Usuario usLogeado;
     
     private boolean iniciado;
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
-    private List<Especialidad> listaEspecialidad;
     private List<PerJuridica> listaPerJuridica;
     private List<Estado> listaEstado;
-    private List<Perfil> listaPerfil;
+    private List<TipoEstablecimiento> listaTipoEstablecimiento;
     private List<Actividad> listaActividad;
+    private int perJuridica;
     
     /**
-     * Creates a new instance of MbPerFisica
+     * Creates a new instance of MbEstablecimiento
      */
-    public MbPerFisica() {
+    public MbEstablecimiento() {
     }
     
     /****************************
      * Métodos de inicialización
      ****************************/
     /**
-     * Método que se ejecuta luego de perFisicada la clase e inicializa los datos del usuario
+     * Método que se ejecuta luego de establecimientoda la clase e inicializa los datos del usuario
      */
     @PostConstruct
     public void init(){
@@ -132,12 +127,30 @@ public class MbPerFisica implements Serializable{
      ****** Getters y Setters *******
      * @return 
      ********************************/
-    public PerFisica getCurrent() {
+    
+    public int getPerJuridica() {
+        return perJuridica;
+    }
+
+    public void setPerJuridica(int perJuridica) {
+        this.perJuridica = perJuridica;
+    }
+
+    
+    public Establecimiento getCurrent() {
         return current;
     }
 
-    public void setCurrent(PerFisica current) {
+    public void setCurrent(Establecimiento current) {
         this.current = current;
+    }
+
+    public List<Actividad> getListaActividad() {
+        return listaActividad;
+    }
+
+    public void setListaActividad(List<Actividad> listaActividad) {
+        this.listaActividad = listaActividad;
     }
 
     public Domicilio getDomicilio() {
@@ -148,23 +161,23 @@ public class MbPerFisica implements Serializable{
         this.domicilio = domicilio;
     }
 
-    public Expediente getExpediente() {
-        return expediente;
+    public List<Domicilio> getListaDomicilios() {
+        return listaDomicilios;
     }
 
-    public void setExpediente(Expediente expediente) {
-        this.expediente = expediente;
+    public void setListaDomicilios(List<Domicilio> listaDomicilios) {
+        this.listaDomicilios = listaDomicilios;
     }
 
-    public List<PerFisica> getListPerFisica() {
-        if(listPerFisica == null){
-            listPerFisica = getFacade().findAll();
+    public List<Establecimiento> getListEstablecimiento() {
+        if(listEstablecimiento == null){
+            listEstablecimiento = getFacade().findAll();
         }
-        return listPerFisica;
+        return listEstablecimiento;
     }
 
-    public void setListPerFisica(List<PerFisica> listPerFisica) {
-        this.listPerFisica = listPerFisica;
+    public void setListEstablecimiento(List<Establecimiento> listEstablecimiento) {
+        this.listEstablecimiento = listEstablecimiento;
     }
 
     public Domicilio getDomVinc() {
@@ -175,20 +188,48 @@ public class MbPerFisica implements Serializable{
         this.domVinc = domVinc;
     }
 
-    public List<Expediente> getExpVinc() {
-        return expVinc;
+    public List<Establecimiento> getListaFilter() {
+        return listaFilter;
     }
 
-    public void setExpVinc(List<Expediente> expVinc) {
-        this.expVinc = expVinc;
+    public void setListaFilter(List<Establecimiento> listaFilter) {
+        this.listaFilter = listaFilter;
     }
 
-    public PerFisica getPerFisicaSelected() {
-        return perFisicaSelected;
+    public EstablecimientoFacade getEstablecimientoFacade() {
+        return establecimientoFacade;
     }
 
-    public void setPerFisicaSelected(PerFisica perFisicaSelected) {
-        this.perFisicaSelected = perFisicaSelected;
+    public void setEstablecimientoFacade(EstablecimientoFacade establecimientoFacade) {
+        this.establecimientoFacade = establecimientoFacade;
+    }
+
+    public PerJuridicaFacade getPerJuridicaFacade() {
+        return perJuridicaFacade;
+    }
+
+    public void setPerJuridicaFacade(PerJuridicaFacade perJuridicaFacade) {
+        this.perJuridicaFacade = perJuridicaFacade;
+    }
+
+    public EstadoFacade getEstadoFacade() {
+        return estadoFacade;
+    }
+
+    public void setEstadoFacade(EstadoFacade estadoFacade) {
+        this.estadoFacade = estadoFacade;
+    }
+
+    public DomicilioFacade getDomicilioFacade() {
+        return domicilioFacade;
+    }
+
+    public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
+        this.domicilioFacade = domicilioFacade;
+    }
+
+    public void setEstablecimientoSelected(Establecimiento establecimientoSelected) {
+        this.establecimientoSelected = establecimientoSelected;
     }
 
     public MbLogin getLogin() {
@@ -215,14 +256,6 @@ public class MbPerFisica implements Serializable{
         this.iniciado = iniciado;
     }
 
-    public List<Especialidad> getListaEspecialidad() {
-        return listaEspecialidad;
-    }
-
-    public void setListaEspecialidad(List<Especialidad> listaEspecialidad) {
-        this.listaEspecialidad = listaEspecialidad;
-    }
-
     public List<PerJuridica> getListaPerJuridica() {
         return listaPerJuridica;
     }
@@ -239,95 +272,27 @@ public class MbPerFisica implements Serializable{
         this.listaEstado = listaEstado;
     }
 
-    public List<Perfil> getListaPerfil() {
-        return listaPerfil;
+    public List<TipoEstablecimiento> getListaTipoEstablecimiento() {
+        return listaTipoEstablecimiento;
     }
 
-    public void setListaPerfil(List<Perfil> listaPerfil) {
-        this.listaPerfil = listaPerfil;
+    public void setListaTipoEstablecimiento(List<TipoEstablecimiento> listaTipoEstablecimiento) {
+        this.listaTipoEstablecimiento = listaTipoEstablecimiento;
     }
 
-    public List<Actividad> getListaActividad() {
-        return listaActividad;
+    public TipoEstablecimientoFacade getTipoEstablecimientoFacade() {
+        return tipoEstablecimientoFacade;
     }
 
-    public void setListaActividad(List<Actividad> listaActividad) {
-        this.listaActividad = listaActividad;
-    }
-
-    public PerFisicaFacade getPerFisicaFacade() {
-        return perFisicaFacade;
-    }
-
-    public void setPerFisicaFacade(PerFisicaFacade perFisicaFacade) {
-        this.perFisicaFacade = perFisicaFacade;
-    }
-
-    public PerJuridicaFacade getPerJuridicaFacade() {
-        return perJuridicaFacade;
-    }
-
-    public void setPerJuridicaFacade(PerJuridicaFacade perJuridicaFacade) {
-        this.perJuridicaFacade = perJuridicaFacade;
-    }
-
-    public ExpedienteFacade getExpedienteFacade() {
-        return expedienteFacade;
-    }
-
-    public void setExpedienteFacade(ExpedienteFacade expedienteFacade) {
-        this.expedienteFacade = expedienteFacade;
-    }
-
-    public EspecialidadFacade getEspecialidadFacade() {
-        return especialidadFacade;
-    }
-
-    public void setEspecialidadFacade(EspecialidadFacade especialidadFacade) {
-        this.especialidadFacade = especialidadFacade;
-    }
-
-    public EstadoFacade getEstadoFacade() {
-        return estadoFacade;
-    }
-
-    public void setEstadoFacade(EstadoFacade estadoFacade) {
-        this.estadoFacade = estadoFacade;
-    }
-
-    public DomicilioFacade getDomicilioFacade() {
-        return domicilioFacade;
-    }
-
-    public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
-        this.domicilioFacade = domicilioFacade;
-    }
-
-    public PerfilFacade getPerfilFacade() {
-        return perfilFacade;
-    }
-
-    public void setPerfilFacade(PerfilFacade perfilFacade) {
-        this.perfilFacade = perfilFacade;
-    }
-
-    public ActividadFacade getActividadFacade() {
-        return actividadFacade;
-    }
-
-    public void setActividadFacade(ActividadFacade actividadFacade) {
-        this.actividadFacade = actividadFacade;
-    }
- 
-    /********************************
-     ** Métodos para el datamodel **
-     ********************************/
-    public PerFisica getSelected() {
+    /**
+     * @return La entidad gestionada
+     */
+    public Establecimiento getSelected() {
         if (current == null) {
-            current = new PerFisica();
+            current = new Establecimiento();
         }
         return current;
-    }   
+    } 
     
     /*******************************
      ** Métodos de inicialización **
@@ -340,7 +305,7 @@ public class MbPerFisica implements Serializable{
         iniciado = true;
         recreateModel();
         return "list";
-    }
+    } 
 
     /**
      * @return acción para el detalle de la entidad
@@ -356,14 +321,12 @@ public class MbPerFisica implements Serializable{
      */
     public String prepareCreate() {
         //Se instancia current
-        current = new PerFisica();      
-        //Inicializamos la creacion de expediente y domicilio
-        expediente = new Expediente();
+        current = new Establecimiento();      
+        //Inicializamos la creacion de domicilio
         domicilio = new Domicilio();
-        listaPerfil = perfilFacade.findAll();
+        listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
         listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
-        listaEspecialidad = especialidadFacade.findAll();
         return "new";
     }
     
@@ -372,11 +335,10 @@ public class MbPerFisica implements Serializable{
      */
     public String prepareEdit() {
         domVinc = current.getDomicilio();
-        //expVinc = current.getExpediente();
-        listaPerfil = perfilFacade.findAll();
+        listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
         listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
-        listaEspecialidad = especialidadFacade.findAll();
+        //expVinc = current.getExpediente();
         return "edit";
     }
            
@@ -385,48 +347,75 @@ public class MbPerFisica implements Serializable{
         return "/faces/index";
     }
     
-   /**
-     * @return mensaje que notifica la actualizacion de estado
-     */    
-    public String habilitar() {
-        current.getAdmin().setHabilitado(true);
-        update();        
-        recreateModel();
-        return "view";
-    } 
-    
-    public String deshabilitar() {
-        if (getFacade().noTieneDependencias(current.getId())){
-            current.getAdmin().setHabilitado(false);
-            update();        
+    /**
+     * Método que verifica que el Cargo que se quiere eliminar no esté siento utilizado por otra entidad
+     * @return 
+     */
+    public String prepareDestroy(){
+        boolean libre = getFacade().noTieneDependencias(current.getId());
+
+        if (libre){
+            // Elimina
+            performDestroyDomicilio();
+            performDestroy();
             recreateModel();
-        }
-        else{
-            //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DeshabilitarError"));            
+        }else{
+            //No Elimina 
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoNonDeletable"));
         }
         return "view";
-    } 
+    }     
     
     /**
      * 
+     * @return 
      */
-    public void prepareHabilitar(){
-        update = 2;
-        update();        
+    public String prepareHabilitar(){
+       // current = establecimientoSelected;
+        try{
+            // Actualización de datos de administración de la entidad
+            Date date = new Date(System.currentTimeMillis());
+            current.getAdmin().setFechaModif(date);
+            current.getAdmin().setUsModif(usLogeado);
+            current.getAdmin().setHabilitado(true);
+            current.getAdmin().setUsBaja(null);
+            current.getAdmin().setFechaBaja(null);
+            
+            // Actualizo
+            getFacade().edit(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Establecimiento Habilitado"));
+            domVinc = current.getDomicilio();
+            //expVinc = current.getExpediente();
+            return "view";
+        }catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstablecimientoHabilitadoErrorOccured"));
+            return null; 
+        }
     }
     
-    /**
-     * 
-     */
-    public void prepareDesHabilitar(){
-        update = 1;
-        update();        
-    }   
+    
+
 
     /*************************
     ** Métodos de operación **
     **************************/
+    
+        /**
+     * Método para guardar los domicilio creados en el listaDomicilios que irán en la nueva persona fisica
+     */
+    public void createDomicilio(){
+            // se agregan los datos del AdminEntidad
+            Date date = new Date(System.currentTimeMillis());
+            AdminEntidad admEnt = new AdminEntidad();
+            admEnt.setFechaAlta(date);
+            admEnt.setHabilitado(true);
+            admEnt.setUsAlta(usLogeado);
+            current.setAdmin(admEnt);
+            //reseteo la domicilio
+            domicilio = null;
+            domicilio = new Domicilio();
+    }
+           
     /**
      * Método que inserta una nueva instancia en la base de datos, previamente genera una entidad de administración
      * con los datos necesarios y luego se la asigna al persona fisica
@@ -440,36 +429,39 @@ public class MbPerFisica implements Serializable{
         admEnt.setHabilitado(true);
         admEnt.setUsAlta(usLogeado);
         current.setAdmin(admEnt);
-        //Asigno expediente
-        current.setExpediente(expediente);
         //Asigno domicilio
         current.setDomicilio(domicilio);
 
         //current.setExpedientes(listExpedientes);
         //current.setDomicilios(listaDomicilios);
-        //getFacade().create(current);
-        //return "view";
-        if(current.getNombre().isEmpty()){
+        getFacade().create(current);
+        return "view";
+    
+       /* if(current.getNombre().isEmpty()){
             JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
             return null;
         }else{
             try {
                 if(getFacade().noExiste(current.getDni())){
+
                     // Inserción
                     getFacade().create(current);
-                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreated"));
+
+                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoCreated"));
                    // recreateModel();
                     return "view";
+
                 }else{
-                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerFisicaExistente"));
+                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreateEstablecimientoExistente"));
                     return null;
                 }
             } 
             catch (Exception e) {
-                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreatedErrorOccured"));
+                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstablecimientoCreatedErrorOccured"));
                 return null;
             }
-        }  
+        }
+        */
     }
 
     /**
@@ -479,7 +471,7 @@ public class MbPerFisica implements Serializable{
      */
     public String update() {    
         boolean edito;
-        PerFisica perFisica;
+        Establecimiento establecimiento;
         Date date = new Date(System.currentTimeMillis());
 
         // actualizamos según el valor de update
@@ -492,7 +484,7 @@ public class MbPerFisica implements Serializable{
             current.getAdmin().setFechaModif(date);
             current.getAdmin().setUsModif(usLogeado);
             current.getAdmin().setHabilitado(true);
-            current.getAdmin().setFechaBaja(null);
+           current.getAdmin().setFechaBaja(null);
             current.getAdmin().setUsBaja(usLogeado);
         }
         if(update == 0){
@@ -502,11 +494,11 @@ public class MbPerFisica implements Serializable{
         // acualizo según la operación seleccionada
         try {
             if(update == 0){
-                perFisica = getFacade().getExistente(current.getActividad());
-                if(perFisica == null){
+                establecimiento = getFacade().getExistente(current.getDomicilio(), current.getActividad());
+                if(establecimiento == null){
                     edito = true;  
                 }else{
-                    edito = perFisica.getId().equals(current.getId());
+                    edito = establecimiento.getId().equals(current.getId());
                 }
                 if(edito){
                     // Actualización de datos de administración de la entidad
@@ -515,29 +507,53 @@ public class MbPerFisica implements Serializable{
 
                     // Actualizo
                     getFacade().edit(current);
-                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdated"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ha sido actualizado"));
                     return "view";
                 }else{
-                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaExistente"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ya Existe"));
                     return null; 
                     }
                 
             }else if(update == 1){
                 getFacade().edit(current);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Deshabilitado"));
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoDeshabilitado"));
                 return "view";
             }else{
                 getFacade().edit(current);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Habilitado"));
+                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoHabilitado"));
                 return "view";
             }
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdatedErrorOccured"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Existe un error en la edición"));
             return null;
         }
     } 
-
     
+    /**
+     * @return mensaje que notifica el borrado
+     */    
+    public String destroyDomicilio() {
+    //current = domicilioSelected;
+        performDestroyDomicilio();
+        recreateModel();
+        return "view";
+    }
+    /**
+     * @return mensaje que notifica el borrado
+     */    
+    public String destroy() {
+        performDestroy();
+        recreateModel();
+        return "view";
+    }
+  
+    /**
+     * Método para mantener en memoria la app y permitir la carga de nuevas instancias
+     * @param event
+     */
+    public void appChangeListener(ValueChangeEvent event) {
+        perJuridica = (int) event.getNewValue();
+    }      
     /*************************
      ** Métodos de selección **
      **************************/ 
@@ -545,7 +561,7 @@ public class MbPerFisica implements Serializable{
      * @param id equivalente al id de la entidad persistida
      * @return la entidad correspondiente
      */
-    public PerFisica getPerFisica(java.lang.Long id) {
+    public Establecimiento getEstablecimiento(java.lang.Long id) {
         return getFacade().find(id);
     }  
     
@@ -556,21 +572,11 @@ public class MbPerFisica implements Serializable{
     public String cleanUp(){
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(true);
-        session.removeAttribute("mbPerFisica");
+        session.removeAttribute("mbEstablecimiento");
 
         return "inicio";
     }  
-    
-    
-    /**
-     * Método para mostrar los Expedientes vinculados
-     */
-    public void verExpedientes(){
-        expediente = current.getExpediente();
-        Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 950);
-        RequestContext.getCurrentInstance().openDialog("", options, null);
-    }      
+         
         /**
      * Método para mostrar las Domicilios vinculados
      */
@@ -603,12 +609,11 @@ public class MbPerFisica implements Serializable{
      * @throws ValidatorException 
      */
     public void validarUpdate(FacesContext arg0, UIComponent arg1, Object arg2){
-        if(!current.getNombre().equals((String)arg2)){
+        if(!current.getDomicilio().equals((String)arg2)){
             validarExistente(arg2);
         }
     }    
  
-   
     
     /*********************
     ** Métodos privados **
@@ -616,19 +621,14 @@ public class MbPerFisica implements Serializable{
     /**
      * @return el Facade
      */
-    private PerFisicaFacade getFacade() {
-        return perFisicaFacade;
+    private EstablecimientoFacade getFacade() {
+        return establecimientoFacade;
     }
 
-    private void validarExpedienteExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExisteExpediente(null, expediente)){ 
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateInstanciaExistente")));
-        }
-    } 
-            
+        
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((long)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerFisicaExistente")));
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateEstablecimientoExistente")));
         }
     }  
     
@@ -636,42 +636,35 @@ public class MbPerFisica implements Serializable{
      * Restea la entidad
      */
     private void recreateModel() {
-        listPerFisica.clear();
-        listPerFisica = null;  
+        listEstablecimiento.clear();
+        listEstablecimiento = null;
+
+        if(listaDomicilios != null){
+            listaDomicilios.clear();
+            listaDomicilios =null;
+        }   
     } 
     
-        /**
-     * Método para validar si una instacia ya existe en el list que las guarda en memoria
+    
+    /**
+     * Opera el borrado del domicilio
      */
-    private boolean compararDomicilio(Domicilio dom){
-      boolean retorno = false;
-     /**   Iterator domIt = listaDomicilios.iterator();
-        while(domIt.hasNext()){
-            Domicilio domicilio = (Domicilio)domIt.next();
-            if(domicilio.getCalle().equals(dom.getCalle())
-                    && domicilio.getNumero().equals(dom.getNumero())){
-                retorno = true;
-            }
-        }*/
-        return retorno;
-    }
+    private void performDestroyDomicilio() {
+        try {
+            // Actualización de datos de administración de la instancia
+            Date date = new Date(System.currentTimeMillis());
+            current.getAdmin().setFechaBaja(date);
+            current.getAdmin().setUsBaja(usLogeado);
+            current.getAdmin().setHabilitado(false);
+            
+            // elimino la instancia
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioDeleted"));
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioDeletedErrorOccured"));
+        }
+    }  
     
-    
-     //Método para validar si una instacia ya existe en el list que las guarda en memoria
-     
-    private boolean compararExpediente(Expediente exp){
-        boolean retorno = false;
-     /**   Iterator expIt = listExpedientes.iterator();
-        while(expIt.hasNext()){
-            Expediente expediente = (Expediente)expIt.next();
-            if(expediente.getNumero().equals(exp.getNumero()))
-                    && expediente.getAnio().equals(exp.getAnio())){
-                retorno = true;
-            }
-        }*/
-        return retorno;
-    }
-
     /**
      * Opera el borrado de la entidad
      */
@@ -684,27 +677,46 @@ public class MbPerFisica implements Serializable{
             current.getAdmin().setHabilitado(false);
             
             // Deshabilito la entidad
-            //getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeleted"));
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstablecimientoDeletedErrorOccured"));
         }
     }      
+
+     /**
+     * @return mensaje que notifica la actualizacion de estado
+      */    
+   public void habilitar() {
+        update = 2;
+        update();        
+        recreateModel();
+    } 
+
+    /**
+     * @return mensaje que notifica la actualizacion de estado
+      */  
+    public void deshabilitar() {
+          update = 1;
+          update();        
+          recreateModel();
+       }
+     
     
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
-    @FacesConverter(forClass = PerFisica.class)
-    public static class PerFisicaControllerConverter implements Converter {
+    @FacesConverter(forClass = Establecimiento.class)
+    public static class EstablecimientoControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbPerFisica controller = (MbPerFisica) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbPerFisica");
-            return controller.getPerFisica(getKey(value));
+            MbEstablecimiento controller = (MbEstablecimiento) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbEstablecimiento");
+            return controller.getEstablecimiento(getKey(value));
         }
 
         
@@ -731,14 +743,13 @@ public class MbPerFisica implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof PerFisica) {
-                PerFisica o = (PerFisica) object;
+            if (object instanceof Establecimiento) {
+                Establecimiento o = (Establecimiento) object;
                 return getStringKey(o.getId());
             } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + PerFisica.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Establecimiento.class.getName());
             }
         }
     }        
 }
-
 

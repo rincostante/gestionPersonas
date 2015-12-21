@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
+package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,47 +23,47 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
-public class MbPerfil implements Serializable{
+public class MbDomicilio implements Serializable{
     
-    private Perfil current;
-    private List<Perfil> listado = null;
-    private List<Perfil> listaFilter;    
+    private Domicilio current;
+    private List<Domicilio> listado = null;
+    private List<Domicilio> listaFilter;    
     
     @EJB
-    private PerfilFacade perfilFacade;
+    private DomicilioFacade domicilioFacade;
 
     private boolean iniciado;    
 
     /**
-     * Creates a new instance of MbPerfil
+     * Creates a new instance of MbDomicilio
      */
-    public MbPerfil() {
+    public MbDomicilio() {
     }
 
-    public Perfil getCurrent() {
+    public Domicilio getCurrent() {
         return current;
     }
 
-    public void setCurrent(Perfil current) {
+    public void setCurrent(Domicilio current) {
         this.current = current;
     }
 
-    public List<Perfil> getListado() {
+    public List<Domicilio> getListado() {
         if (listado == null || listado.isEmpty()) {
             listado = getFacade().findAll();
         }
         return listado;
     }
 
-    public void setListado(List<Perfil> listado) {
+    public void setListado(List<Domicilio> listado) {
         this.listado = listado;
     }
 
-    public List<Perfil> getListaFilter() {
+    public List<Domicilio> getListaFilter() {
         return listaFilter;
     }
 
-    public void setListaFilter(List<Perfil> listaFilter) {
+    public void setListaFilter(List<Domicilio> listaFilter) {
         this.listaFilter = listaFilter;
     }
 
@@ -116,7 +116,7 @@ public class MbPerfil implements Serializable{
      * @return acción para el formulario de nuevo
      */
     public String prepareCreate() {
-        current = new Perfil();
+        current = new Domicilio();
         return "new";
     }   
     
@@ -140,7 +140,7 @@ public class MbPerfil implements Serializable{
             recreateModel();
         }else{
             //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerfilNonDeletable"));
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioNonDeletable"));
         }
         return "view";
     }    
@@ -183,10 +183,10 @@ public class MbPerfil implements Serializable{
     public String create() {     
         try {
             getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerfilCreated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioCreated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerfilCreatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioCreatedErrorOccured"));
             return null;
         }
     }
@@ -195,10 +195,10 @@ public class MbPerfil implements Serializable{
     public String update() {
         try {
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerfilUpdated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioUpdated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerfilUpdatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioUpdatedErrorOccured"));
             return null;
         }
     }    
@@ -214,9 +214,9 @@ public class MbPerfil implements Serializable{
      * @return La entidad gestionada
      */
 
-    public Perfil getSelected() {
+    public Domicilio getSelected() {
         if (current == null) {
-            current = new Perfil();
+            current = new Domicilio();
         }
         return current;
     } 
@@ -225,8 +225,8 @@ public class MbPerfil implements Serializable{
      * @param id equivalente al id de la entidad persistida
      * @return la entidad correspondiente
      */
-    public Perfil getPerfil(java.lang.Long id) {
-        return perfilFacade.find(id);
+    public Domicilio getDomicilio(java.lang.Long id) {
+        return domicilioFacade.find(id);
     }  
     
     
@@ -236,13 +236,13 @@ public class MbPerfil implements Serializable{
     /**
      * @return el Facade
      */
-    private PerfilFacade getFacade() {
-        return perfilFacade;
+    private DomicilioFacade getFacade() {
+        return domicilioFacade;
     }    
     
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((String)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerfilExistente")));
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateDomicilioExistente")));
         }
     }    
     
@@ -252,9 +252,9 @@ public class MbPerfil implements Serializable{
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerfilDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerfilDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioDeletedErrorOccured"));
         }
     }    
     
@@ -262,17 +262,17 @@ public class MbPerfil implements Serializable{
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
-    @FacesConverter(forClass = Perfil.class)
-    public static class PerfilControllerConverter implements Converter {
+    @FacesConverter(forClass = Domicilio.class)
+    public static class DomicilioControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbPerfil controller = (MbPerfil) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbPerfil");
-            return controller.getPerfil(getKey(value));
+            MbDomicilio controller = (MbDomicilio) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbDomicilio");
+            return controller.getDomicilio(getKey(value));
         }
 
         
@@ -299,11 +299,11 @@ public class MbPerfil implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof Perfil) {
-                Perfil o = (Perfil) object;
+            if (object instanceof Domicilio) {
+                Domicilio o = (Domicilio) object;
                 return getStringKey(o.getId());
            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Perfil.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Domicilio.class.getName());
             }
         }
     }            

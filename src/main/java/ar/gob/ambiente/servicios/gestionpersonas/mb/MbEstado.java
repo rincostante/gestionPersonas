@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
+package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Especialidad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,47 +23,47 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
-public class MbEspecialidad implements Serializable{
+public class MbEstado implements Serializable{
     
-    private Especialidad current;
-    private List<Especialidad> listado = null;
-    private List<Especialidad> listaFilter;    
+    private Estado current;
+    private List<Estado> listado = null;
+    private List<Estado> listaFilter;    
     
     @EJB
-    private EspecialidadFacade especialidadFacade;
+    private EstadoFacade estadoFacade;
 
     private boolean iniciado;    
 
     /**
-     * Creates a new instance of MbEspecialidad
+     * Creates a new instance of MbEstado
      */
-    public MbEspecialidad() {
+    public MbEstado() {
     }
 
-    public Especialidad getCurrent() {
+    public Estado getCurrent() {
         return current;
     }
 
-    public void setCurrent(Especialidad current) {
+    public void setCurrent(Estado current) {
         this.current = current;
     }
 
-    public List<Especialidad> getListado() {
+    public List<Estado> getListado() {
         if (listado == null || listado.isEmpty()) {
             listado = getFacade().findAll();
         }
         return listado;
     }
 
-    public void setListado(List<Especialidad> listado) {
+    public void setListado(List<Estado> listado) {
         this.listado = listado;
     }
 
-    public List<Especialidad> getListaFilter() {
+    public List<Estado> getListaFilter() {
         return listaFilter;
     }
 
-    public void setListaFilter(List<Especialidad> listaFilter) {
+    public void setListaFilter(List<Estado> listaFilter) {
         this.listaFilter = listaFilter;
     }
 
@@ -116,7 +116,7 @@ public class MbEspecialidad implements Serializable{
      * @return acción para el formulario de nuevo
      */
     public String prepareCreate() {
-        current = new Especialidad();
+        current = new Estado();
         return "new";
     }   
     
@@ -140,7 +140,7 @@ public class MbEspecialidad implements Serializable{
             recreateModel();
         }else{
             //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EspecialidadNonDeletable"));
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstadoNonDeletable"));
         }
         return "view";
     }    
@@ -183,10 +183,10 @@ public class MbEspecialidad implements Serializable{
     public String create() {     
         try {
             getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EspecialidadCreated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstadoCreated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EspecialidadCreatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstadoCreatedErrorOccured"));
             return null;
         }
     }
@@ -195,10 +195,10 @@ public class MbEspecialidad implements Serializable{
     public String update() {
         try {
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EspecialidadUpdated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstadoUpdated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EspecialidadUpdatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstadoUpdatedErrorOccured"));
             return null;
         }
     }    
@@ -214,9 +214,9 @@ public class MbEspecialidad implements Serializable{
      * @return La entidad gestionada
      */
 
-    public Especialidad getSelected() {
+    public Estado getSelected() {
         if (current == null) {
-            current = new Especialidad();
+            current = new Estado();
         }
         return current;
     } 
@@ -225,8 +225,8 @@ public class MbEspecialidad implements Serializable{
      * @param id equivalente al id de la entidad persistida
      * @return la entidad correspondiente
      */
-    public Especialidad getEspecialidad(java.lang.Long id) {
-        return especialidadFacade.find(id);
+    public Estado getEstado(java.lang.Long id) {
+        return estadoFacade.find(id);
     }  
     
     
@@ -236,13 +236,13 @@ public class MbEspecialidad implements Serializable{
     /**
      * @return el Facade
      */
-    private EspecialidadFacade getFacade() {
-        return especialidadFacade;
+    private EstadoFacade getFacade() {
+        return estadoFacade;
     }    
     
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((String)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateEspecialidadExistente")));
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateEstadoExistente")));
         }
     }    
     
@@ -252,9 +252,9 @@ public class MbEspecialidad implements Serializable{
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EspecialidadDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstadoDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EspecialidadDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstadoDeletedErrorOccured"));
         }
     }    
     
@@ -262,17 +262,17 @@ public class MbEspecialidad implements Serializable{
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
-    @FacesConverter(forClass = Especialidad.class)
-    public static class EspecialidadControllerConverter implements Converter {
+    @FacesConverter(forClass = Estado.class)
+    public static class EstadoControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbEspecialidad controller = (MbEspecialidad) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbEspecialidad");
-            return controller.getEspecialidad(getKey(value));
+            MbEstado controller = (MbEstado) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbEstado");
+            return controller.getEstado(getKey(value));
         }
 
         
@@ -299,12 +299,13 @@ public class MbEspecialidad implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof Especialidad) {
-                Especialidad o = (Especialidad) object;
+            if (object instanceof Estado) {
+                Estado o = (Estado) object;
                 return getStringKey(o.getId());
            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Especialidad.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Estado.class.getName());
             }
         }
     }            
 }
+

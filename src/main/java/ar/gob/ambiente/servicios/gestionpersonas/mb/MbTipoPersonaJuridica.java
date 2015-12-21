@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
+package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,47 +23,47 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
-public class MbEstado implements Serializable{
+public class MbTipoPersonaJuridica implements Serializable{
     
-    private Estado current;
-    private List<Estado> listado = null;
-    private List<Estado> listaFilter;    
+    private TipoPersonaJuridica current;
+    private List<TipoPersonaJuridica> listado = null;
+    private List<TipoPersonaJuridica> listaFilter;    
     
     @EJB
-    private EstadoFacade estadoFacade;
+    private TipoPersonaJuridicaFacade tipoPersonaJuridicaFacade;
 
     private boolean iniciado;    
 
     /**
-     * Creates a new instance of MbEstado
+     * Creates a new instance of MbTipoPersonaJuridica
      */
-    public MbEstado() {
+    public MbTipoPersonaJuridica() {
     }
 
-    public Estado getCurrent() {
+    public TipoPersonaJuridica getCurrent() {
         return current;
     }
 
-    public void setCurrent(Estado current) {
+    public void setCurrent(TipoPersonaJuridica current) {
         this.current = current;
     }
 
-    public List<Estado> getListado() {
+    public List<TipoPersonaJuridica> getListado() {
         if (listado == null || listado.isEmpty()) {
             listado = getFacade().findAll();
         }
         return listado;
     }
 
-    public void setListado(List<Estado> listado) {
+    public void setListado(List<TipoPersonaJuridica> listado) {
         this.listado = listado;
     }
 
-    public List<Estado> getListaFilter() {
+    public List<TipoPersonaJuridica> getListaFilter() {
         return listaFilter;
     }
 
-    public void setListaFilter(List<Estado> listaFilter) {
+    public void setListaFilter(List<TipoPersonaJuridica> listaFilter) {
         this.listaFilter = listaFilter;
     }
 
@@ -116,7 +116,7 @@ public class MbEstado implements Serializable{
      * @return acción para el formulario de nuevo
      */
     public String prepareCreate() {
-        current = new Estado();
+        current = new TipoPersonaJuridica();
         return "new";
     }   
     
@@ -140,7 +140,7 @@ public class MbEstado implements Serializable{
             recreateModel();
         }else{
             //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstadoNonDeletable"));
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("TipoPersonaJuridicaNonDeletable"));
         }
         return "view";
     }    
@@ -183,10 +183,10 @@ public class MbEstado implements Serializable{
     public String create() {     
         try {
             getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstadoCreated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoPersonaJuridicaCreated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstadoCreatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoPersonaJuridicaCreatedErrorOccured"));
             return null;
         }
     }
@@ -195,10 +195,10 @@ public class MbEstado implements Serializable{
     public String update() {
         try {
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstadoUpdated"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoPersonaJuridicaUpdated"));
             return "view";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstadoUpdatedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoPersonaJuridicaUpdatedErrorOccured"));
             return null;
         }
     }    
@@ -214,9 +214,9 @@ public class MbEstado implements Serializable{
      * @return La entidad gestionada
      */
 
-    public Estado getSelected() {
+    public TipoPersonaJuridica getSelected() {
         if (current == null) {
-            current = new Estado();
+            current = new TipoPersonaJuridica();
         }
         return current;
     } 
@@ -225,8 +225,8 @@ public class MbEstado implements Serializable{
      * @param id equivalente al id de la entidad persistida
      * @return la entidad correspondiente
      */
-    public Estado getEstado(java.lang.Long id) {
-        return estadoFacade.find(id);
+    public TipoPersonaJuridica getTipoPersonaJuridica(java.lang.Long id) {
+        return tipoPersonaJuridicaFacade.find(id);
     }  
     
     
@@ -236,13 +236,13 @@ public class MbEstado implements Serializable{
     /**
      * @return el Facade
      */
-    private EstadoFacade getFacade() {
-        return estadoFacade;
+    private TipoPersonaJuridicaFacade getFacade() {
+        return tipoPersonaJuridicaFacade;
     }    
     
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((String)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateEstadoExistente")));
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateTipoPersonaJuridicaExistente")));
         }
     }    
     
@@ -252,9 +252,9 @@ public class MbEstado implements Serializable{
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstadoDeleted"));
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("TipoPersonaJuridicaDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstadoDeletedErrorOccured"));
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("TipoPersonaJuridicaDeletedErrorOccured"));
         }
     }    
     
@@ -262,17 +262,17 @@ public class MbEstado implements Serializable{
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **
     *********************************************************************/
-    @FacesConverter(forClass = Estado.class)
-    public static class EstadoControllerConverter implements Converter {
+    @FacesConverter(forClass = TipoPersonaJuridica.class)
+    public static class TipoPersonaJuridicaControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MbEstado controller = (MbEstado) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "mbEstado");
-            return controller.getEstado(getKey(value));
+            MbTipoPersonaJuridica controller = (MbTipoPersonaJuridica) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "mbTipoPersonaJuridica");
+            return controller.getTipoPersonaJuridica(getKey(value));
         }
 
         
@@ -299,13 +299,12 @@ public class MbEstado implements Serializable{
             if (object == null) {
                 return null;
             }
-            if (object instanceof Estado) {
-                Estado o = (Estado) object;
+            if (object instanceof TipoPersonaJuridica) {
+                TipoPersonaJuridica o = (TipoPersonaJuridica) object;
                 return getStringKey(o.getId());
            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Estado.class.getName());
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + TipoPersonaJuridica.class.getName());
             }
         }
     }            
 }
-
