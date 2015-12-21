@@ -6,15 +6,10 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.managedBeans;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-
 /**
  *
  * @author rodriguezn
  */
-@ManagedBean(name = "mbUsuario1")
-@RequestScoped
 public class MbUsuario {
 
     /**
