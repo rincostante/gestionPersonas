@@ -24,7 +24,7 @@ import org.primefaces.context.RequestContext;
 
 /**
 *
-* @author rodriguezn
+* @author carmendariz
 */
 public class MbLogin implements Serializable{
     
@@ -227,4 +227,3 @@ public class MbLogin implements Serializable{
     }
 
 }
-
