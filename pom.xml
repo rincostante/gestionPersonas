@@ -97,6 +97,16 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>          
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omnifaces</artifactId>
+            <version>2.1-RC1</version>
+        </dependency> 
     </dependencies>
 
     <build>
@@ -119,6 +129,16 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webResources>
+                        <resource>
+                            <directory>src</directory>
+                            <targetPath>WEB-INF</targetPath>
+                            <includes>
+                                <include>jax-ws-catalog.xml</include>
+                                <include>wsdl/**</include>
+                            </includes>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
             <plugin>
@@ -145,6 +165,72 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.jax-ws-commons</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>localhost_8080/AccesoAppWebService/AccesoAppWebService.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>ar.gob.ambiente.servicios.gestionpersonas.wsClient.accesoApp</packageName>
+                            <wsdlLocation>http://localhost:8080/AccesoAppWebService/AccesoAppWebService?WSDL</wsdlLocation>
+                            <staleFile>${project.build.directory}/jaxws/stale/AccesoAppWebService.stale</staleFile>
+                        </configuration>
+                        <id>wsimport-generate-AccesoAppWebService</id>
+                        <phase>generate-sources</phase>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados</packageName>
+                            <wsdlLocation>http://localhost:8080/CentrosPobladosWebService/CentrosPobladosWebService?WSDL</wsdlLocation>
+                            <staleFile>${project.build.directory}/jaxws/stale/CentrosPobladosWebService.stale</staleFile>
+                        </configuration>
+                        <id>wsimport-generate-CentrosPobladosWebService</id>
+                        <phase>generate-sources</phase>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>localhost_8080/CuitAfipWs/CuitAfipWs.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit</packageName>
+                            <wsdlLocation>http://localhost:8080/CuitAfipWs/CuitAfipWs?WSDL</wsdlLocation>
+                            <staleFile>${project.build.directory}/jaxws/stale/CuitAfipWs.stale</staleFile>
+                        </configuration>
+                        <id>wsimport-generate-CuitAfipWs</id>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.xml</groupId>
+                        <artifactId>webservices-api</artifactId>
+                        <version>2.0</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <sourceDestDir>${project.build.directory}/generated-sources/jaxws-wsimport</sourceDestDir>
+                    <xnocompile>true</xnocompile>
+                    <verbose>true</verbose>
+                    <extension>true</extension>
+                    <catalog>${basedir}/src/jax-ws-catalog.xml</catalog>
+                </configuration>
             </plugin>
         </plugins>
     </build>

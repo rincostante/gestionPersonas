@@ -7,11 +7,17 @@
 package ar.gob.ambiente.servicios.gestionpersonas.entidades;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,6 +36,29 @@ public class Rol implements Serializable {
     @NotNull(message = "El campo nombre no puede quedar nulo")
     @Size(message = "El campo nombre debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String nombre;
+    
+    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name="admin_id")
+    private AdminEntidad admin;
+    
+    @OneToMany(mappedBy="rol")
+    private List<Usuario> usuarios;    
+
+    public AdminEntidad getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(AdminEntidad admin) {
+        this.admin = admin;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
     
     public Long getId() {
         return id;

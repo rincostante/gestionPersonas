@@ -108,6 +108,20 @@ public class RolFacade extends AbstractFacade<Rol> {
         result = q.getResultList();
         return result;
     }   
-    }
+
+   /**
+     * Método que devuelve un LIST con las entidades HABILITADAS
+     * @return: True o False
+     */
+    public List<Rol> getActivos(){
+        em = getEntityManager();        
+        List<Rol> result;
+        String queryString = "SELECT rol FROM Rol rol " 
+                + "WHERE rol.admin.habilitado = true";                   
+        Query q = em.createQuery(queryString);
+        result = q.getResultList();
+        return result;
+    }      
+}
     
 

@@ -42,13 +42,21 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import javax.faces.context.ExternalContext;
+import javax.xml.ws.WebServiceRef;
 import org.primefaces.context.RequestContext;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfipWs_Service;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfipWs;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfip;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 *
 * @author rodriguezn
 */
 public class MbPerFisica implements Serializable{
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CuitAfipWs/CuitAfipWs.wsdl")
+    private CuitAfipWs_Service service;
     
     private PerFisica current;
     private Domicilio domicilio;
@@ -87,6 +95,9 @@ public class MbPerFisica implements Serializable{
     private List<Estado> listaEstado;
     private List<Perfil> listaPerfil;
     private List<Actividad> listaActividad;
+    private CuitAfip personaAfip;
+    private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
+    private Long cuit;
     
     /**
      * Creates a new instance of MbPerFisica
@@ -130,8 +141,23 @@ public class MbPerFisica implements Serializable{
     
     /********************************
      ****** Getters y Setters *******
-     * @return 
      ********************************/
+    public Long getCuit() {
+        return cuit;
+    }
+
+    public void setCuit(Long cuit) {
+        this.cuit = cuit;
+    }
+
+    public CuitAfip getPersonaAfip() {
+        return personaAfip;
+    }
+
+    public void setPersonaAfip(CuitAfip personaAfip) {
+        this.personaAfip = personaAfip;
+    }
+
     public PerFisica getCurrent() {
         return current;
     }
@@ -456,7 +482,7 @@ public class MbPerFisica implements Serializable{
             try {
                 if(getFacade().noExiste(current.getDni())){
                     // Inserción
-                    getFacade().create(current);
+                    //getFacade().create(current);
                     JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreated"));
                    // recreateModel();
                     return "view";
@@ -607,7 +633,46 @@ public class MbPerFisica implements Serializable{
             validarExistente(arg2);
         }
     }    
- 
+    
+    /**
+     * Método para abrir el diálogo para validar cuit 
+     */
+    public void prepareValidarCuit(){
+        // seteo el objeto que recibirá los resultados de la validación
+        personaAfip = new CuitAfip();
+        cuit = Long.valueOf(0);
+        
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 700);
+        options.put("contentHeight", 250);
+        RequestContext.getCurrentInstance().openDialog("dlgValidarCuit", options, null);
+    }
+    
+    
+    
+    /**
+     * Método que consume el servicio de validación de cuit
+     * Recibe un cuit y retorna los datos de la persona asociada, en caso de ser válido.
+     * Los datos recibidos los guarda en el campo personaAfip para mostrarlo al usuario.
+     */
+    public void validarCuit(){
+        
+        try { 
+            CuitAfipWs port = service.getCuitAfipWsPort();
+            personaAfip = port.verPersona(cuit);
+            
+            // Si valida seteo los datos correspondientes de la persona
+            current.setCuitCuil(personaAfip.getPejID());
+            current.setApellido(personaAfip.getPejRazonSocial());
+            
+            JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"), ex.getMessage()});
+        }
+    }    
    
     
     /*********************
@@ -638,6 +703,7 @@ public class MbPerFisica implements Serializable{
     private void recreateModel() {
         listPerFisica.clear();
         listPerFisica = null;  
+        cuit = Long.valueOf(0);
     } 
     
         /**
@@ -690,6 +756,7 @@ public class MbPerFisica implements Serializable{
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeletedErrorOccured"));
         }
     }      
+    
     
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **

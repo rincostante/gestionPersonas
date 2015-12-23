@@ -11,14 +11,7 @@
         <resource-bundle>
             <base-name>/Bundle</base-name>
             <var>bundle</var>
-        </resource-bundle>
-        
-        <navigation-rule>
-            <navigation-case>
-                <from-outcome>inicio</from-outcome>
-            <to-view-id>http://localhost:8080/gestionPersonas/faces/index.xhtml</to-view-id>
-            </navigation-case>
-        </navigation-rule>    
+        </resource-bundle>  
     </application>
     
     <managed-bean>
@@ -87,4 +80,9 @@
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbPerFisica</managed-bean-class>
     
         <managed-bean-scope>session</managed-bean-scope></managed-bean>
+    <managed-bean>
+        <managed-bean-name>mbRol</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbRol</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>        
 </faces-config>

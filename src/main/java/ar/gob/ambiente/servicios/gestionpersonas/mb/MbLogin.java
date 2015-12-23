@@ -7,6 +7,7 @@
 package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.CriptPass;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.UsuarioFacade;
 import java.io.IOException;
 import java.io.Serializable;
@@ -14,13 +15,13 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
-import org.primefaces.context.RequestContext;
+import org.omnifaces.util.Faces;
 
 /**
 *
@@ -75,20 +76,27 @@ public class MbLogin implements Serializable{
                 }
             }
         }else{
-            usLogeado = usuarioFacade.getUsuario("rodriguezn");
-            ambito = usLogeado.getRol().getNombre();
-            iniciado = true;
+            // obtengo el nombre del usuario logeado de la cookie correspondiente
+            String nomUsuario;
+            String valueEnc = Faces.getRequestCookie(ResourceBundle.getBundle("/Bundle").getString("nameCookieUser"));
             
-            /*
-            if(usuarioFacade.getUsuario(FacesContext.getCurrentInstance().getExternalContext().getRemoteUser()) != null){
-                usLogeado = usuarioFacade.getUsuario(FacesContext.getCurrentInstance().getExternalContext().getRemoteUser());
-                ambito = usLogeado.getRol().getNombre();
-                iniciado = true;
-            }else{
-                FacesContext fc=FacesContext.getCurrentInstance();
-                fc.getExternalContext().redirect(ResourceBundle.getBundle("/Bundle").getString("logError"));
-            }
-            */
+            try {
+                // desencripto el nombre
+                nomUsuario = CriptPass.desencriptar(valueEnc);
+                
+                // obtebtengo el usuario correspondiente al nombre desencriptado
+                if(usuarioFacade.getUsuario(nomUsuario) != null){
+                    usLogeado = usuarioFacade.getUsuario(nomUsuario);
+                    ambito = usLogeado.getRol().getNombre();
+                    iniciado = true;
+                }else{
+                    // si no tengo un usuario registrado en la aplicación para este nombre, redirecciono a la vista de error de acceso
+                    FacesContext fc=FacesContext.getCurrentInstance();
+                    fc.getExternalContext().redirect(ResourceBundle.getBundle("/Bundle").getString("logError"));
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(MbLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }        
         }
     }      
 
@@ -171,7 +179,7 @@ public class MbLogin implements Serializable{
     public void setAmbito(String rol) {
         this.ambito = rol;
     }
-    
+/*    
     public void login(ActionEvent actionEvent){
         RequestContext context = RequestContext.getCurrentInstance();
         FacesMessage msg = null;
@@ -201,11 +209,13 @@ public class MbLogin implements Serializable{
             context.addCallbackParam("view", ResourceBundle.getBundle("/Bundle").getString("RutaAplicacion"));
         }
     }
+*/    
     
      /**
      * Método para revocar la sesión del MB
      * @return 
      */
+/*    
     public String cleanUp(){
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(true);
@@ -213,7 +223,7 @@ public class MbLogin implements Serializable{
    
         return "inicio";
     }      
-    
+*/    
     
     
     public void logout(){
@@ -221,9 +231,9 @@ public class MbLogin implements Serializable{
         session.invalidate();
         iniciado = false;
     }  
-    
+/*    
     private boolean validarInt(){
         return "admin".equals(nombre) && "admin".equals(clave);
     }
-
+*/
 }

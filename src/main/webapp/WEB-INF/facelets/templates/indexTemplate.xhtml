@@ -63,7 +63,8 @@
                         </p:submenu> 
                         
                         <f:facet name="options">
-                            <p:outputLabel value="Usuario: #{request.remoteUser}" style="margin-right:10px" />
+                            <p:outputLabel value="Usuario: #{mbLogin.usLogeado.nombreCompleto}" style="margin-right:10px" />
+                            <p:commandButton value="App" icon="ui-icon-home" actionListener="#{mbLogin.logout}" oncomplete="home(xhr, status, args)" style="margin-right:10px" />
                             <p:commandButton value="Cerrar sesión" icon="ui-icon-extlink" actionListener="#{mbLogin.logout}" oncomplete="logout(xhr, status, args)" />
                         </f:facet>   
                     </p:menubar>
@@ -81,9 +82,15 @@
         //<![CDATA[
         function logout(xhr, status, args){
             setTimeout(function(){
-                window.location = 'https://localhost:8181/cas/logout';
+                window.location = '/gestionAplicaciones/faces/logout.xhtml';
             }, 500);
         }
+        
+        function home(xhr, status, args){
+            setTimeout(function(){
+                window.location = '/gestionAplicaciones';
+            }, 500);
+        }          
         //]]>
     </script>      
     

@@ -36,15 +36,13 @@ public class Usuario implements Serializable {
     @Size(message = "El campo nombre debe tener entre 1 y 50 caracteres", min = 1, max = 50)
     private String nombre;
     
-     /**
-     * Campo de texto que indica la clave de acceso del usuario
+    /**
+     * Campo de texto que indica el nombre del usuario
      */        
-    @Column (nullable=false, length=50, unique=true)
+    @Column (nullable=false, length=100)
     @NotNull(message = "{entidades.fieldNotNullError}")
-    @Size(message = "{endidades.stringSizeError}", min = 1, max = 50)
-    private String clave; 
-    
-    private int idPersona;
+    @Size(message = "{endidades.stringSizeError}", min = 1, max = 100)
+    private String nombreCompleto;   
     
     @ManyToOne /*(fetch=FetchType.LAZY)*/
     @JoinColumn(name="rol_id")
@@ -52,7 +50,7 @@ public class Usuario implements Serializable {
 
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @NotNull(message = "{entidades.objectNotNullError}") 
-    private AdminEntidad adminentidad;
+    private AdminEntidad admin;
     
     public Long getId() {
         return id;
@@ -70,22 +68,6 @@ public class Usuario implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
-
-    public int getIdPersona() {
-        return idPersona;
-    }
-
-    public void setIdPersona(int idPersona) {
-        this.idPersona = idPersona;
-    }
-
     public Rol getRol() {
         return rol;
     }
@@ -94,13 +76,22 @@ public class Usuario implements Serializable {
         this.rol = rol;
     }
 
-    public AdminEntidad getAdminentidad() {
-        return adminentidad;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public void setAdminentidad(AdminEntidad adminentidad) {
-        this.adminentidad = adminentidad;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
+
+    public AdminEntidad getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(AdminEntidad admin) {
+        this.admin = admin;
+    }
+    
 
     @Override
     public int hashCode() {

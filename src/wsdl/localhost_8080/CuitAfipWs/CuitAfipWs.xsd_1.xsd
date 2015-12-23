@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.3 (tags/2.3-7528; 2013-04-29T19:34:10+0000) JAXWS-RI/2.2.8 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://srvafip.servicios.ambiente.gob.ar/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://srvafip.servicios.ambiente.gob.ar/">
+
+<xs:element name="cuitAfip" type="tns:cuitAfip"/>
+
+<xs:element name="verPersona" type="tns:verPersona"/>
+
+<xs:element name="verPersonaResponse" type="tns:verPersonaResponse"/>
+
+<xs:complexType name="verPersona">
+<xs:sequence>
+<xs:element name="cuit" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verPersonaResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:cuitAfip" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cuitAfip">
+<xs:sequence>
+<xs:element name="pejAM" type="xs:string" minOccurs="0"/>
+<xs:element name="pejEM" type="xs:string" minOccurs="0"/>
+<xs:element name="pejFecReg" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="pejGA" type="xs:string" minOccurs="0"/>
+<xs:element name="pejID" type="xs:long" minOccurs="0"/>
+<xs:element name="pejIS" type="xs:string" minOccurs="0"/>
+<xs:element name="pejIVA" type="xs:string" minOccurs="0"/>
+<xs:element name="pejMO" type="xs:string" minOccurs="0"/>
+<xs:element name="pejRazonSocial" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
