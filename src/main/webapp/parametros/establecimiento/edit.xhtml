@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/WEB-INF/facelets/templates/indexTemplate.xhtml">
+        <ui:define name="content">
+            <h:form id="frmEdit">
+                <p:panel id="pnEdit" header="#{bundle.EstablecimientoEditTitle}" style="margin-bottom:10px;">
+                    
+                    <p:messages id="messages" />
+                                        
+                    <h:panelGrid columns="2">
+                  
+                        <p:outputLabel value="Id Persona Jurídica: " for="perJuridica"/>
+                        <p:inputText id="perJuridica" value="#{mbEstablecimiento.selected.perJuridica}" required="false"/>
+
+                        <p:outputLabel value="Tipo de establecimiento" for="tipo"/>
+                        <p:selectOneMenu id="tipo" value="#{mbEstablecimiento.selected.tipo.nombre}" required="true">
+                            <f:selectItem itemLabel="Seleccione el Tipo" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{mbEstablecimiento.listEstablecimiento}" var="tipo" itemLabel="#{tipo.tipo.nombre}" itemValue="#{tipo.tipo.nombre}"/>
+                        </p:selectOneMenu> 
+
+                         <p:outputLabel value="Actividad" for="actividad"/>
+                         <p:selectOneMenu id="actividad" value="#{mbEstablecimiento.selected.actividad.nombre}" required="true">
+                            <f:selectItem itemLabel="Seleccione la Actividad" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{mbEstablecimiento.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad.nombre}"/>
+                        </p:selectOneMenu> 
+
+                        <p:outputLabel value="Estado" for="estado"/>
+                        <p:selectOneMenu id="estado" value="#{mbEstablecimiento.selected.estado.nombre}" >
+                              <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                              <f:selectItems value="#{mbEstablecimiento.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.nombre}"/>
+                        </p:selectOneMenu>   
+
+                        <p:outputLabel value="#{bundle.CreateEstablecimientoLabel_correoElectronico}" for="correo"/>
+                        <p:inputText id="correo" value="#{mbEstablecimiento.selected.correoElectronico}" required="false"/>    
+
+                        <p:outputLabel value="Telefono" for="telefono"/>
+                        <p:inputText id="telefono" value="#{mbEstablecimiento.selected.telefono}" required="false"/>
+
+                    </h:panelGrid>
+            </p:panel>
+
+            
+            <p:panel id="inNew" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">
+                <h:panelGrid columns="2">
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
+                <p:inputText id="calle" value="#{mbEstablecimiento.domVinc.calle}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}" for="numero_dom"/>
+                <p:inputText id="numero_dom" value="#{mbEstablecimiento.domVinc.numero}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_numero}" required="true"/>
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}" for="piso"/>
+                <p:inputText id="piso" value="#{mbEstablecimiento.domVinc.piso}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_piso}" required="true"/>
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}" for="dpto"/>
+                <p:inputText id="dpto" value="#{mbEstablecimiento.domVinc.dpto}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_dpto}" required="true"/>                         
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_idLocalidad}" for="idLocalidad"/>
+                <p:inputText id="idLocalidad" value="#{mbEstablecimiento.domVinc.idLocalidad}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_idLocalidad}" required="true"/>  
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_localidad}" for="localidad"/>
+                <p:inputText id="localidad" value="#{mbEstablecimiento.domVinc.localidad}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_localidad}" required="true"/>  
+
+
+                <p:outputLabel value="#{bundle.CreateDomicilioLabel_provincia}" for="provincia"/>
+                <p:inputText id="provincia" value="#{mbEstablecimiento.domVinc.provincia}" 
+                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_provincia}" required="true"/> 
+                </h:panelGrid>
+            </p:panel>
+
+
+
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbEstablecimiento.update}" update="pnEdit"/>
+                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: next">
+                        <p:ajax update="pnEdit" resetValues="true" /></p:commandButton>
+                    <p:commandButton icon="ui-icon-refresh" action="#{mbEstablecimiento.prepareList}" value="Volver" ajax="false"/>
+                </f:facet>
+            </p:toolbar>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
