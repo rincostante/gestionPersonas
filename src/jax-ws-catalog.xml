@@ -2,8 +2,8 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="http://localhost:8080/AccesoAppWebService/AccesoAppWebService?WSDL" uri="wsdl/localhost_8080/AccesoAppWebService/AccesoAppWebService.wsdl"/>
     <system systemId="http://localhost:8080/AccesoAppWebService/AccesoAppWebService?xsd=1" uri="wsdl/localhost_8080/AccesoAppWebService/AccesoAppWebService.xsd_1.xsd"/>
-    <system systemId="http://localhost:8080/CentrosPobladosWebService/CentrosPobladosWebService?WSDL" uri="wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl"/>
-    <system systemId="http://localhost:8080/CentrosPobladosWebService/CentrosPobladosWebService?xsd=1" uri="wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/CuitAfipWs/CuitAfipWs?WSDL" uri="wsdl/localhost_8080/CuitAfipWs/CuitAfipWs.wsdl"/>
     <system systemId="http://localhost:8080/CuitAfipWs/CuitAfipWs?xsd=1" uri="wsdl/localhost_8080/CuitAfipWs/CuitAfipWs.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/CentrosPobladosWebService/CentrosPobladosWebService?WSDL" uri="wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl"/>
+    <system systemId="http://localhost:8080/CentrosPobladosWebService/CentrosPobladosWebService?xsd=1" uri="wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.xsd_1.xsd"/>
 </catalog>

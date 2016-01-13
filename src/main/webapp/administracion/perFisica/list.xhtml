@@ -16,7 +16,6 @@
                     <h:panelGroup>
                         <h:panelGrid columns="4" id="pnBotones">
                             <p:commandButton icon="ui-icon-newwin" value="Agregar Nuevo" action="#{mbPerFisica.prepareCreate}"/>
-                            <p:commandButton icon="ui-icon-refresh" value="Refrescar Listado" action="#{mbPerFisica.prepareList}" update="perFisicaList"/>
                         </h:panelGrid>
                     </h:panelGroup>
                 </p:panel>      
@@ -34,25 +33,25 @@
                         <p:columnToggler datasource="perFisicaList" trigger="toggler" />
                     </f:facet>
                     
-                    <p:column headerText="Expediente"  filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente.numero} / #{e.expediente.anio}">
-                         <p:outputLabel value="#{e.expediente.numero} / #{e.expediente.anio}"/>
-                    </p:column>
-                    
-                    <p:column headerText="Apellido"  filterMatchMode="contains" sortBy="#{e.apellido}" filterBy="#{e.apellido}">
-                         <p:outputLabel value="#{e.apellido}"/>
-                    </p:column>
-
                     <p:column headerText="Nombre"  filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
                         <p:outputLabel value="#{e.nombre}"/>
                     </p:column>
-
-                    <p:column headerText="Dni"  filterMatchMode="contains" sortBy="#{e.dni}" filterBy="#{e.dni}">
-                        <p:outputLabel value="#{e.dni}"/>
+                    
+                    <p:column headerText="CUIT"  filterMatchMode="contains" sortBy="#{e.cuitCuil}" filterBy="#{e.cuitCuil}">
+                        <p:outputLabel value="#{e.cuitCuil}"/>
+                    </p:column>
+                    
+                    <p:column headerText="e-mail"  filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
+                        <p:outputLabel value="#{e.correoElectronico}"/>
                     </p:column>
 
                     <p:column headerText="Telefono"  filterMatchMode="contains" sortBy="#{e.cel}" filterBy="#{e.cel}">
                         <p:outputLabel value="#{e.cel}"/>
                     </p:column> 
+                    
+                    <p:column headerText="Expediente"  filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente.numero} / #{e.expediente.anio}">
+                         <p:outputLabel value="#{e.expediente.numero} / #{e.expediente.anio}"/>
+                    </p:column>
 
                     <p:column filterBy="#{e.admin.habilitado}" headerText="Estado" filterMatchMode="equals">
                         <f:facet name="filter">
@@ -66,7 +65,7 @@
                         <h:outputText value="#{e.admin.habilitado ? 'Habilitado': 'Deshabilitado'}" />
                     </p:column>                    
 
-                    <p:column headerText="Acciones" style="width:140px">
+                    <p:column headerText="Acciones" style="width:110px">
                         <p:growl id="messages" showDetail="true" />
                         <p:commandButton icon="ui-icon-zoomin" action="#{mbPerFisica.prepareView}" title="Ver detalle">
                             <f:setPropertyActionListener value="#{e}" target="#{mbPerFisica.current}" />

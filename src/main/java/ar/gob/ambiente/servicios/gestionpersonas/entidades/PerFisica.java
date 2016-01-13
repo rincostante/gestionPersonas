@@ -39,15 +39,9 @@ public class PerFisica implements Serializable {
     @JoinColumn(name="expediente_id")
     private Expediente expediente; 
         
-    @Column (nullable=false, length=50, unique=true)
-    @NotNull(message = "El campo instrumento Solicitante no puede quedar nulo")
-    @Size(message = "El campo instrumento Solicitante debe tener entre 1 y 50 caracteres", min = 1, max = 50)
+    @Column (nullable=true, length=50)
+    @Size(message = "El campo instrumento Solicitante debe tener un máximo de 50 caracteres", max = 50)
     private String instrumentoSolicitante;
-    
-    @Column (nullable=false, length=50, unique=true)
-    @NotNull(message = "El campo Apellido no puede quedar nulo")
-    @Size(message = "El campo Apellido debe tener entre 1 y 50 caracteres", min = 1, max = 50)
-    private String apellido;  
         
     @Column (nullable=false, length=50, unique=true)
     @NotNull(message = "El campo Nombre no puede quedar nulo")
@@ -57,8 +51,7 @@ public class PerFisica implements Serializable {
     /**
      * Campo de tipo entero que indica el DNI
      */
-    @Column (nullable=false)
-    @NotNull(message = "{entidades.fieldNotNullError}")
+    @Column (nullable=true)
     private long dni; 
     
      /**
@@ -97,7 +90,7 @@ public class PerFisica implements Serializable {
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="adminentidad_id")
     private AdminEntidad admin; 
-   
+
     /**
     * Constructor
     */
@@ -159,14 +152,6 @@ public class PerFisica implements Serializable {
 
     public void setInstrumentoSolicitante(String instrumentoSolicitante) {
         this.instrumentoSolicitante = instrumentoSolicitante;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public String getNombre() {

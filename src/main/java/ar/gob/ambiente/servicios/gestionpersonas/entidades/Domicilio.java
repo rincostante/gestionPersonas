@@ -32,15 +32,26 @@ public class Domicilio implements Serializable {
     private String calle; 
     
     @Column (nullable=false, length=50, unique=true)
-    @NotNull(message = "El campo Calle no puede quedar nulo")
+    @NotNull(message = "El campo Número no puede quedar nulo")
     @Size(message = "El campo Calle debe tener entre 1 y 10 caracteres", min = 1, max = 10)
-    private String numero;  
+    private String numero;
     
     private String piso;   
     private String dpto;  
-    private int idLocalidad;   
+    
+    // campos relativos al centro poblado
+    private String provincia;  
+    private String departamento;
     private String localidad; 
-    private String provincia;   
+    private Long idLocalidad;   
+
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
+    } 
     
     public Long getId() {
         return id;
@@ -82,11 +93,11 @@ public class Domicilio implements Serializable {
         this.dpto = dpto;
     }
 
-    public int getIdLocalidad() {
+    public Long getIdLocalidad() {
         return idLocalidad;
     }
 
-    public void setIdLocalidad(int idLocalidad) {
+    public void setIdLocalidad(Long idLocalidad) {
         this.idLocalidad = idLocalidad;
     }
 
@@ -130,9 +141,4 @@ public class Domicilio implements Serializable {
     public String toString() {
         return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Domicilio[ id=" + id + " ]";
     }
-
-    public Object getNombre() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

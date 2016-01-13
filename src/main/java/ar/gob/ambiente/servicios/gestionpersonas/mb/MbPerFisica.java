@@ -16,6 +16,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.EntidadServicio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
@@ -25,6 +26,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentroPoblado;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Enumeration;
@@ -47,6 +49,11 @@ import org.primefaces.context.RequestContext;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfipWs_Service;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfipWs;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfip;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentrosPobladosWebService_Service;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentrosPobladosWebService;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Provincia;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Departamento;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,8 +62,10 @@ import java.util.logging.Logger;
 * @author rodriguezn
 */
 public class MbPerFisica implements Serializable{
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl")
+    private CentrosPobladosWebService_Service srvCentrosPob;
     @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CuitAfipWs/CuitAfipWs.wsdl")
-    private CuitAfipWs_Service service;
+    private CuitAfipWs_Service srvCuitAfip;
     
     private PerFisica current;
     private Domicilio domicilio;
@@ -98,6 +107,14 @@ public class MbPerFisica implements Serializable{
     private CuitAfip personaAfip;
     private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
     private Long cuit;
+    
+    // listados provistos por el servicio de centros poblados
+    private List<EntidadServicio> listProvincias;
+    private EntidadServicio provSelected;
+    private List<EntidadServicio> listDepartamentos;
+    private EntidadServicio deptoSelected;
+    private List<EntidadServicio> listLocalidades;
+    private EntidadServicio localSelected;
     
     /**
      * Creates a new instance of MbPerFisica
@@ -142,6 +159,54 @@ public class MbPerFisica implements Serializable{
     /********************************
      ****** Getters y Setters *******
      ********************************/
+    public List<EntidadServicio> getListProvincias() {
+        return listProvincias;
+    }
+
+    public void setListProvincias(List<EntidadServicio> listProvincias) {
+        this.listProvincias = listProvincias;
+    }
+
+    public EntidadServicio getProvSelected() {
+        return provSelected;
+    }
+
+    public void setProvSelected(EntidadServicio provSelected) {
+        this.provSelected = provSelected;
+    }
+
+    public EntidadServicio getLocalSelected() {
+        return localSelected;
+    }
+
+    public void setLocalSelected(EntidadServicio localSelected) {
+        this.localSelected = localSelected;
+    }
+
+    public EntidadServicio getDeptoSelected() {
+        return deptoSelected;
+    }
+
+    public void setDeptoSelected(EntidadServicio deptoSelected) {
+        this.deptoSelected = deptoSelected;
+    }
+
+    public List<EntidadServicio> getListDepartamentos() {
+        return listDepartamentos;
+    }
+
+    public void setListDeptSrv(List<EntidadServicio> listDepartamentos) {
+        this.listDepartamentos = listDepartamentos;
+    }
+
+    public List<EntidadServicio> getListCentrosSrv() {
+        return listLocalidades;
+    }
+
+    public void setListCentrosSrv(List<EntidadServicio> listCentrosSrv) {
+        this.listLocalidades = listCentrosSrv;
+    }
+
     public Long getCuit() {
         return cuit;
     }
@@ -381,6 +446,7 @@ public class MbPerFisica implements Serializable{
      * @return acción para el formulario de nuevo
      */
     public String prepareCreate() {
+        limpiarEntitadesSrv();
         //Se instancia current
         current = new PerFisica();      
         //Inicializamos la creacion de expediente y domicilio
@@ -390,6 +456,9 @@ public class MbPerFisica implements Serializable{
         listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
         listaEspecialidad = especialidadFacade.findAll();
+        
+        // cargo el listado de Provincias
+        getProvinciasSrv();
         return "new";
     }
     
@@ -403,6 +472,7 @@ public class MbPerFisica implements Serializable{
         listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
         listaEspecialidad = especialidadFacade.findAll();
+        cargarEntidadesSrv();
         return "edit";
     }
            
@@ -468,23 +538,29 @@ public class MbPerFisica implements Serializable{
         current.setAdmin(admEnt);
         //Asigno expediente
         current.setExpediente(expediente);
+        
+        //Actualizo domicilio
+        if(localSelected != null){
+            domicilio.setIdLocalidad(localSelected.getId());
+            domicilio.setLocalidad(localSelected.getNombre());
+        }
+
+        domicilio.setDepartamento(deptoSelected.getNombre());
+        domicilio.setProvincia(provSelected.getNombre());
+        
         //Asigno domicilio
         current.setDomicilio(domicilio);
 
-        //current.setExpedientes(listExpedientes);
-        //current.setDomicilios(listaDomicilios);
-        //getFacade().create(current);
-        //return "view";
         if(current.getNombre().isEmpty()){
             JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
             return null;
         }else{
             try {
-                if(getFacade().noExiste(current.getDni())){
+                if(getFacade().noExiste(current.getCuitCuil())){
                     // Inserción
-                    //getFacade().create(current);
+                    getFacade().create(current);
                     JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreated"));
-                   // recreateModel();
+                    //recreateModel();
                     return "view";
                 }else{
                     JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerFisicaExistente"));
@@ -528,7 +604,7 @@ public class MbPerFisica implements Serializable{
         // acualizo según la operación seleccionada
         try {
             if(update == 0){
-                perFisica = getFacade().getExistente(current.getActividad());
+                perFisica = getFacade().getExistente(current.getCuitCuil());
                 if(perFisica == null){
                     edito = true;  
                 }else{
@@ -574,18 +650,28 @@ public class MbPerFisica implements Serializable{
     public PerFisica getPerFisica(java.lang.Long id) {
         return getFacade().find(id);
     }  
+
+    /**
+     * Método para actualizar el listado de departamentos según la provincia seleccionada
+     */    
+    public void provinciaChangeListener(){     
+        getDepartamentosSrv(provSelected.getId());
+    }   
+    
+    public void pruebaChanceListener(){
+        System.out.println("Pasó el listener!");
+        EntidadServicio prueba = provSelected;
+        
+        System.out.println("La entidad seleccionada es: " + provSelected.getNombre());
+        System.out.println("Y su id es: " + provSelected.getId());
+    }  
     
     /**
-     * Método para revocar la sesión del MB
-     * @return 
-     */
-    public String cleanUp(){
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-                .getExternalContext().getSession(true);
-        session.removeAttribute("mbPerFisica");
-
-        return "inicio";
-    }  
+     * Método para actualizar el listado de localidades según el departamento seleccionado
+     */    
+    public void deptoChangeListener(){
+        getLocalidadesSrv(deptoSelected.getId());
+    }       
     
     
     /**
@@ -647,8 +733,7 @@ public class MbPerFisica implements Serializable{
         options.put("contentHeight", 250);
         RequestContext.getCurrentInstance().openDialog("dlgValidarCuit", options, null);
     }
-    
-    
+
     
     /**
      * Método que consume el servicio de validación de cuit
@@ -656,14 +741,13 @@ public class MbPerFisica implements Serializable{
      * Los datos recibidos los guarda en el campo personaAfip para mostrarlo al usuario.
      */
     public void validarCuit(){
-        
         try { 
-            CuitAfipWs port = service.getCuitAfipWsPort();
+            CuitAfipWs port = srvCuitAfip.getCuitAfipWsPort();
             personaAfip = port.verPersona(cuit);
             
             // Si valida seteo los datos correspondientes de la persona
             current.setCuitCuil(personaAfip.getPejID());
-            current.setApellido(personaAfip.getPejRazonSocial());
+            current.setNombre(personaAfip.getPejRazonSocial());
             
             JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
         } catch (Exception ex) {
@@ -673,6 +757,31 @@ public class MbPerFisica implements Serializable{
             logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"), ex.getMessage()});
         }
     }    
+    
+    /**
+     * Método para limpiar los datos AFIP seleccionado
+     */
+    public void limpiarCuit(){
+        personaAfip = null;
+        personaAfip = new CuitAfip();
+        current.setNombre("");
+        current.setCuitCuil(Long.valueOf(0));
+    }
+    
+    /**
+     * Método para limpiar todo el formulario new
+     */
+    public void limpiarForm(){
+        limpiarCuit();
+        limpiarEntitadesSrv();
+    }
+    
+    /**
+     * Método para limpiar todo el formulario edit
+     */
+    public void limpiarFormEdit(){
+        cargarEntidadesSrv();
+    }
    
     
     /*********************
@@ -684,12 +793,6 @@ public class MbPerFisica implements Serializable{
     private PerFisicaFacade getFacade() {
         return perFisicaFacade;
     }
-
-    private void validarExpedienteExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExisteExpediente(null, expediente)){ 
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateInstanciaExistente")));
-        }
-    } 
             
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((long)arg2)){
@@ -705,38 +808,89 @@ public class MbPerFisica implements Serializable{
         listPerFisica = null;  
         cuit = Long.valueOf(0);
     } 
-    
-        /**
-     * Método para validar si una instacia ya existe en el list que las guarda en memoria
+        
+    /**
+     * Método para poblar el listado de provincias del servicio de centros poblados
      */
-    private boolean compararDomicilio(Domicilio dom){
-      boolean retorno = false;
-     /**   Iterator domIt = listaDomicilios.iterator();
-        while(domIt.hasNext()){
-            Domicilio domicilio = (Domicilio)domIt.next();
-            if(domicilio.getCalle().equals(dom.getCalle())
-                    && domicilio.getNumero().equals(dom.getNumero())){
-                retorno = true;
+    private void getProvinciasSrv(){
+        EntidadServicio provincia;
+        List<Provincia> listSrv;
+        try {
+            CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
+            
+            // lleno el listado de provincias
+            listSrv = port.verProvincias();
+            
+            // lleno el list con las provincias como un objeto Entidad Servicio
+            listProvincias = new ArrayList<>();
+
+            for(Provincia prov : listSrv){
+                provincia = new EntidadServicio(prov.getId(), prov.getNombre());
+                listProvincias.add(provincia);
+                //provincia = null;
             }
-        }*/
-        return retorno;
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"), ex.getMessage()});
+        }
     }
     
-    
-     //Método para validar si una instacia ya existe en el list que las guarda en memoria
-     
-    private boolean compararExpediente(Expediente exp){
-        boolean retorno = false;
-     /**   Iterator expIt = listExpedientes.iterator();
-        while(expIt.hasNext()){
-            Expediente expediente = (Expediente)expIt.next();
-            if(expediente.getNumero().equals(exp.getNumero()))
-                    && expediente.getAnio().equals(exp.getAnio())){
-                retorno = true;
+    /**
+     * Método para poblar el listado de departamentos del servicio de centros poblados
+     */
+    private void getDepartamentosSrv(Long idProv){
+        EntidadServicio depto;
+        List<Departamento> listSrv;
+        try { 
+            CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
+            listSrv = port.buscarDeptosPorProvincia(idProv);
+            
+            // lleno el list con los Departamentos como un objeto Entidad Servicio
+            listDepartamentos = new ArrayList<>();
+            
+            for(Departamento dpt : listSrv){
+                depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
+                listDepartamentos.add(depto);
+                //depto = null;
             }
-        }*/
-        return retorno;
+            
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetDeptosError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetDeptosError"), ex.getMessage()});
+        }
     }
+    
+    /**
+     * Método para poblar el listado de Localidades del servicio de centros poblados
+     */
+    private void getLocalidadesSrv(Long idDepto){
+        EntidadServicio local;
+        List<CentroPoblado> listSrv;
+        try { 
+            CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
+            listSrv = port.buscarCentrosPorDepto(idDepto);
+            
+            // lleno el list con los Departamentos como un objeto Entidad Servicio
+            listLocalidades = new ArrayList<>();
+            
+            for(CentroPoblado loc : listSrv){
+                local = new EntidadServicio(loc.getId(), loc.getNombre());
+                listLocalidades.add(local);
+                //local = null;
+            }
+            
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetLocalError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetLocalError"), ex.getMessage()});
+        }
+    }    
+
 
     /**
      * Opera el borrado de la entidad
@@ -757,10 +911,81 @@ public class MbPerFisica implements Serializable{
         }
     }      
     
+    /**
+     * Método para limpiar las entidades del servicio
+     */
+    private void limpiarEntitadesSrv(){
+        if(provSelected != null){
+            provSelected = null;
+        }
+        if(deptoSelected != null){
+            deptoSelected = null;
+        }
+        if(localSelected != null){
+            localSelected = null;
+        }
+    }
     
-    /********************************************************************
-    ** Converter. Se debe actualizar la entidad y el facade respectivo **
-    *********************************************************************/
+    /**
+     * Método para cargar entidades de servicio y los listados, para actualizar la Persona
+     */
+    private void cargarEntidadesSrv(){
+        CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
+        CentroPoblado cp;
+        List<Provincia> listProv;
+        List<Departamento> listDeptos;
+        List<CentroPoblado> listLocal;
+        EntidadServicio provincia;
+        EntidadServicio depto;
+        EntidadServicio local;
+        
+        try{
+            // obtengo el CentroPoblado a partir del idLocalidad del domicilio de la Persona y seteo la EntidadServicio correspondiente
+            cp = port.buscarCentroPoblado(current.getDomicilio().getIdLocalidad());
+            localSelected = new EntidadServicio(cp.getId(), cp.getNombre());
+
+            // del CentroPoblado obtengo el Departamento y seteo la EntidadServicio correspondiente
+            deptoSelected = new EntidadServicio(cp.getDepartamento().getId(), cp.getDepartamento().getNombre());
+
+            // del Departamento del CentroPoblado obtengo la Provincia y seteo la EntidadServicio correspondiente
+            provSelected = new EntidadServicio(cp.getDepartamento().getProvincia().getId(), cp.getDepartamento().getProvincia().getNombre());
+
+            // cargo el listado de Provincias
+            listProv = port.verProvincias();
+            listProvincias = new ArrayList<>();
+            for(Provincia prov : listProv){
+                provincia = new EntidadServicio(prov.getId(), prov.getNombre());
+                listProvincias.add(provincia);                    
+            }
+            
+            // lleno los Departamentos según la provincia que tiene asignada la persona
+            listDeptos = port.buscarDeptosPorProvincia(provSelected.getId());
+            listDepartamentos = new ArrayList<>();
+            for(Departamento dpt : listDeptos){
+                depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
+                listDepartamentos.add(depto);
+            }
+            
+            // lleno las Localidades según el Departamento que tiene asignado la persona
+            listLocal = port.buscarCentrosPorDepto(deptoSelected.getId());
+            listLocalidades = new ArrayList<>();
+            for(CentroPoblado loc : listLocal){
+                local = new EntidadServicio(loc.getId(), loc.getNombre());
+                listLocalidades.add(local);
+            }
+            
+        }catch(Exception ex){
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"), ex.getMessage()});
+        }
+    }
+    
+    
+    /******************************************************************************
+    ** Converter. Se debe actualizar la entidad principal y el facade respectivo **
+    *******************************************************************************/
     @FacesConverter(forClass = PerFisica.class)
     public static class PerFisicaControllerConverter implements Converter {
 
@@ -805,7 +1030,7 @@ public class MbPerFisica implements Serializable{
                 throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + PerFisica.class.getName());
             }
         }
-    }        
+    }       
 }
 
 

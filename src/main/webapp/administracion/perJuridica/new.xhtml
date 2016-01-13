@@ -49,6 +49,7 @@
                         <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" >
                             <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
                             <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                            <p:ajax listener="#{mbPerJuridica.pruebaChangeListener}"/>
                         </p:selectOneMenu>   
        
                         <p:outputLabel value="#{bundle.EspecialidadViewTitle}" for="especialidad"/>

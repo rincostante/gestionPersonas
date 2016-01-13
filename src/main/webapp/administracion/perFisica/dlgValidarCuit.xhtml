@@ -34,7 +34,7 @@
             <p:toolbar>
                 <f:facet name="left">
                     <p:commandButton icon="ui-icon-check" value="Validar" action="#{mbPerFisica.validarCuit}" update="pnNew"/>
-                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
+                    <p:commandButton icon="ui-icon-cancel" actionListener="#{mbPerFisica.limpiarCuit}" update="nombre" value="Limpiar" style="float: right">
                         <p:ajax update="pnNew" resetValues="true" />
                     </p:commandButton>
                 </f:facet>

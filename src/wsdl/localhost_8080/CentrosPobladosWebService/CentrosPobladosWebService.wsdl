@@ -4,11 +4,23 @@
 <xsd:import namespace="http://ws.gestionterritorial.servicios.ambiente.gob.ar/" schemaLocation="http://localhost:8080/CentrosPobladosWebService/CentrosPobladosWebService?xsd=1"/>
 </xsd:schema>
 </types>
+<message name="verProvincias">
+<part name="parameters" element="tns:verProvincias"/>
+</message>
+<message name="verProvinciasResponse">
+<part name="parameters" element="tns:verProvinciasResponse"/>
+</message>
 <message name="verEspecifRegion">
 <part name="parameters" element="tns:verEspecifRegion"/>
 </message>
 <message name="verEspecifRegionResponse">
 <part name="parameters" element="tns:verEspecifRegionResponse"/>
+</message>
+<message name="buscarCentrosPorDepto">
+<part name="parameters" element="tns:buscarCentrosPorDepto"/>
+</message>
+<message name="buscarCentrosPorDeptoResponse">
+<part name="parameters" element="tns:buscarCentrosPorDeptoResponse"/>
 </message>
 <message name="buscarDeptosPorProvincia">
 <part name="parameters" element="tns:buscarDeptosPorProvincia"/>
@@ -76,16 +88,18 @@
 <message name="buscarProvinciasPorRegionResponse">
 <part name="parameters" element="tns:buscarProvinciasPorRegionResponse"/>
 </message>
-<message name="verProvincias">
-<part name="parameters" element="tns:verProvincias"/>
-</message>
-<message name="verProvinciasResponse">
-<part name="parameters" element="tns:verProvinciasResponse"/>
-</message>
 <portType name="CentrosPobladosWebService">
+<operation name="verProvincias">
+<input wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/verProvinciasRequest" message="tns:verProvincias"/>
+<output wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/verProvinciasResponse" message="tns:verProvinciasResponse"/>
+</operation>
 <operation name="verEspecifRegion">
 <input wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/verEspecifRegionRequest" message="tns:verEspecifRegion"/>
 <output wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/verEspecifRegionResponse" message="tns:verEspecifRegionResponse"/>
+</operation>
+<operation name="buscarCentrosPorDepto">
+<input wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/buscarCentrosPorDeptoRequest" message="tns:buscarCentrosPorDepto"/>
+<output wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/buscarCentrosPorDeptoResponse" message="tns:buscarCentrosPorDeptoResponse"/>
 </operation>
 <operation name="buscarDeptosPorProvincia">
 <input wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/buscarDeptosPorProvinciaRequest" message="tns:buscarDeptosPorProvincia"/>
@@ -131,14 +145,28 @@
 <input wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/buscarProvinciasPorRegionRequest" message="tns:buscarProvinciasPorRegion"/>
 <output wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/buscarProvinciasPorRegionResponse" message="tns:buscarProvinciasPorRegionResponse"/>
 </operation>
-<operation name="verProvincias">
-<input wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/verProvinciasRequest" message="tns:verProvincias"/>
-<output wsam:Action="http://ws.gestionterritorial.servicios.ambiente.gob.ar/CentrosPobladosWebService/verProvinciasResponse" message="tns:verProvinciasResponse"/>
-</operation>
 </portType>
 <binding name="CentrosPobladosWebServicePortBinding" type="tns:CentrosPobladosWebService">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<operation name="verProvincias">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="verEspecifRegion">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="buscarCentrosPorDepto">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -238,15 +266,6 @@
 </output>
 </operation>
 <operation name="buscarProvinciasPorRegion">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="verProvincias">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

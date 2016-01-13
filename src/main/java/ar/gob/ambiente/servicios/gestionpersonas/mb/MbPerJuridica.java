@@ -49,6 +49,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import javax.faces.context.ExternalContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
@@ -981,6 +982,12 @@ public class MbPerJuridica implements Serializable{
             establecimientos =null;
         }   
     }        
+    
+    
+    public void pruebaChangeListener(AjaxBehaviorEvent event){
+        System.out.println("cambió");
+    }    
+    
 
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **

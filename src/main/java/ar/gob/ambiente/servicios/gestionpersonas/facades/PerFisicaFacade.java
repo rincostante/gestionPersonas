@@ -34,33 +34,17 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
     }
         /**
      * Método para validad que no exista una Persona Fisica con ese perfil
-     * @param dni
+     * @param cuitCuil
      * @return 
      */
-    public boolean noExiste(long dni){
+    public boolean noExiste(long cuitCuil){
         em = getEntityManager();
         String queryString = "SELECT pf FROM PerFisica pf "
-                + "WHERE pf.dni = :dni";
+                + "WHERE pf.cuitCuil = :cuitCuil";
         Query q = em.createQuery(queryString)
-                .setParameter("dni", dni);
+                .setParameter("cuitCuil", cuitCuil);
         return q.getResultList().isEmpty();
     }    
-    
-        /**
-     * Metodo que verifica si ya existe la entidad.
-     * @param 
-     * @return: devuelve True o False
-     */
-    public boolean noExisteExpediente(String nombre, Expediente expediente){
-        em = getEntityManager();
-        String queryString = "SELECT act FROM Expediente act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.expediente = :expediente";
-        Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("expediente", expediente);
-        return q.getResultList().isEmpty();
-    }  
     
     /**
      * Método que verifica si la entidad tiene dependencia (Hijos) en estado HABILITADO
@@ -76,18 +60,6 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
                 .setParameter("idParam", id);
         return q.getResultList().isEmpty();
     } 
-     
-    /**
-     * Metodo para el autocompletado de la búsqueda por nombre
-     * @return 
-     */  
-    public List<String> getNombres(){
-        em = getEntityManager();
-        String queryString = "SELECT pf.nombre FROM PerFisica pf "
-                + "WHERE us.adminentidad.habilitado = true";
-        Query q = em.createQuery(queryString);
-        return q.getResultList();
-    }
     
    /**
      * Método que devuelve un LIST con las entidades HABILITADAS
@@ -103,7 +75,18 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
         return result;
     } 
 
-    public PerFisica getExistente(Actividad actividad) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public PerFisica getExistente(long cuitCuil) {
+        em = getEntityManager();
+        List<PerFisica> result;
+        String queryString = "SELECT pf FROM PerFisica pf "
+                + "WHERE pf.cuitCuil = :cuitCuil";
+        Query q = em.createQuery(queryString)
+                .setParameter("cuitCuil", cuitCuil);
+        result = q.getResultList();
+        if(result.isEmpty()){
+            return null;
+        }else{
+            return result.get(0);
+        }
     }
 }

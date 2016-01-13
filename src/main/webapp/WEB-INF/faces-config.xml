@@ -84,5 +84,10 @@
         <managed-bean-name>mbRol</managed-bean-name>
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbRol</managed-bean-class>
     
-        <managed-bean-scope>session</managed-bean-scope></managed-bean>        
+        <managed-bean-scope>session</managed-bean-scope></managed-bean>
+    <managed-bean>
+        <managed-bean-name>selectItemsBean</managed-bean-name>
+        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.SelectItemsBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
 </faces-config>
