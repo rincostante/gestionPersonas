@@ -13,93 +13,69 @@
         <br/>
         <h:form id="frmPerJuridicaView">
             <p:panel id="pnView" header="#{bundle.PerJuridicaViewTitle}" style="margin-bottom:10px;">
-                    <p:messages id="messages"/>
-   
-            <p:panel id="pnNew1" header="#{bundle.ExpedienteViewTitle}" style="margin-bottom:10px;">
-                    <h:panelGrid columns="2">           
-                        <h:outputLabel  value="#{bundle.CreateExpedienteLabel_numero}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.expediente.numero}" title="#{bundle.CreateExpedienteLabel_numero}"/>
-                        
-                        <h:outputLabel  value="#{bundle.CreateExpedienteLabel_anio}"/>
-                        <h:outputLabel  value="#{mbPerJuridica.selected.expediente.anio}" title="#{bundle.CreateExpedienteLabel_anio}"/>      
-                    </h:panelGrid>
-            </p:panel>
+                <p:messages id="messages"/>
                     
-            <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
-                <h:panelGrid columns="2">                                   
-                    <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>
-                    <h:outputLabel value=" #{mbPerJuridica.selected.razonSocial}" title="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>                 
-                        
-                    <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
-                    <h:outputLabel value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
-                                        
-                    <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_correoElectronico}"/>
-                    <h:outputLabel value=" #{mbPerJuridica.selected.correoElectronico}"/>
-                                        
-                    <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_telefono}"/>
-                    <h:outputLabel value=" #{mbPerJuridica.selected.telefono}"/>                       
-                    <h:outputLabel value="#{bundle.EstadoViewTitle} "/>
+                <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
+                    <h:panelGrid columns="2">                                   
+                        <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>
+                        <h:outputLabel value=" #{mbPerJuridica.selected.razonSocial}" title="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>                 
 
-                    <h:outputText value="#{mbPerJuridica.selected.estado.nombre}" 
-                                  title="#{bundle.EstadoViewTitle}"/>
+                        <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
+                        <h:outputLabel value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
 
-                    <h:outputLabel value="#{bundle.EspecialidadViewTitle} "/>
-                    <h:outputText value="#{mbPerJuridica.selected.especialidad.nombre}" 
-                                  title="#{bundle.EspecialidadViewTitle}"/>
-            
-                    <h:outputLabel value="#{bundle.LabelUsuarioAlta}"/>
-                    <h:outputText value="#{mbPerJuridica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
+                        <h:outputText value="#{mbPerJuridica.selected.estado.nombre}" 
+                                      title="#{bundle.EstadoViewTitle}"/>
 
-                    <h:outputLabel value="#{bundle.LabelFechaAlta}"/>
-                    <h:outputText value="#{mbPerJuridica.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
+                        <h:outputLabel value="#{bundle.LabelUsuarioAlta}"/>
+                        <h:outputText value="#{mbPerJuridica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
 
-                    <h:outputLabel value="#{bundle.LabelUsuarioModif}"/>
-                    <h:outputText value="#{mbPerJuridica.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
+                        <h:outputLabel value="#{bundle.LabelFechaAlta}"/>
+                        <h:outputText value="#{mbPerJuridica.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
 
-                    <h:outputLabel value="#{bundle.LabelFechaModif}"/>
-                    <h:outputText value="#{mbPerJuridica.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
+                        <h:outputLabel value="#{bundle.LabelUsuarioModif}"/>
+                        <h:outputText value="#{mbPerJuridica.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
 
-                    <h:outputLabel value="#{bundle.LabelUsuario}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
-                    <h:outputText value="#{mbPerJuridica.selected.admin.usBaja.nombre}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
-                                  title="#{bundle.LabelUsuario}"/>                        
+                        <h:outputLabel value="#{bundle.LabelFechaModif}"/>
+                        <h:outputText value="#{mbPerJuridica.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
 
-                    <h:outputLabel value="#{bundle.LabelFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
-                    <h:outputText value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
-                                  title="#{bundle.LabelFechaBaja}"/>             
-             
-                </h:panelGrid>
-                
-                <h:panelGrid>
-                        <h:form id="form">    
-                            <p:panel id="pnNew" header="#{bundle.EstablecimientosAsociados}" style="margin-bottom: 10px">
-                            <p:growl id="msgs" showDetail="true" />
-                            <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="est"  style="font-weight: normal; font-size: 80%">
-                                <p:tab title="#{est.domicilio.calle} Nro: #{est.domicilio.numero} - #{est.domicilio.localidad} / #{est.domicilio.provincia}">
-                                        <h:panelGrid columns="2" cellpadding="5">
-                                            <h:outputLabel value="Tipo"/>
-                                            <h:outputText value="#{est.tipo.nombre}"/>    
-                                            
-                                            <h:outputLabel value="Actividad"/>
-                                            <h:outputText value="#{est.actividad.nombre}"/>   
-                                            
-                                            <h:outputLabel value="Estado"/>
-                                            <h:outputText value="#{est.estado.nombre}"/>       
-                                            
-                                            <h:outputLabel value="Email"/>
-                                            <h:outputText value="#{est.correoElectronico}"/>    
-                                            
-                                            <h:outputLabel value="Telefono"/>
-                                            <h:outputText value="#{est.telefono}"/>                                              
-                                            
-                                       </h:panelGrid>    
-                                    </p:tab>
-                                </p:accordionPanel>
-                            </p:panel>
-                        </h:form>
+                        <h:outputLabel value="#{bundle.LabelUsuario}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
+                        <h:outputText value="#{mbPerJuridica.selected.admin.usBaja.nombre}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
+                                      title="#{bundle.LabelUsuario}"/>                        
 
-                        
-                </h:panelGrid>          
-            </p:panel>
+                        <h:outputLabel value="#{bundle.LabelFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
+                        <h:outputText value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
+                                      title="#{bundle.LabelFechaBaja}"/>             
+
+                    </h:panelGrid>
+
+                    <h:panelGrid>
+                            <h:form id="form">    
+                                <p:panel id="pnNew" header="#{bundle.EstablecimientosAsociados}" style="margin-bottom: 10px">
+                                <p:growl id="msgs" showDetail="true" />
+                                <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="est"  style="font-weight: normal; font-size: 80%">
+                                    <p:tab title="#{est.domicilio.calle} Nro: #{est.domicilio.numero} - #{est.domicilio.localidad} / #{est.domicilio.provincia}">
+                                            <h:panelGrid columns="2" cellpadding="5">
+                                                <h:outputLabel value="Tipo"/>
+                                                <h:outputText value="#{est.tipo.nombre}"/>    
+
+                                                <h:outputLabel value="Estado"/>
+                                                <h:outputText value="#{est.estado.nombre}"/>       
+
+                                                <h:outputLabel value="Email"/>
+                                                <h:outputText value="#{est.correoElectronico}"/>    
+
+                                                <h:outputLabel value="Telefono"/>
+                                                <h:outputText value="#{est.telefono}"/>                                              
+
+                                           </h:panelGrid>    
+                                        </p:tab>
+                                    </p:accordionPanel>
+                                </p:panel>
+                            </h:form>
+
+
+                    </h:panelGrid>          
+                </p:panel>
                 <p:toolbar>
                     <f:facet name="right">
                         <p:commandButton icon="ui-icon-refresh" action="#{mbPerJuridica.prepareList}" value="Volver" ajax="false"/>
@@ -108,7 +84,6 @@
             
                 <p:dialog style="font-size: 80%; max-width:75%" header="Listado de Establecimientos Asociados" widgetVar="Establecimientos"  minHeight="40" showEffect="fade" 
                           hideEffect="fade">
-
 
                 </p:dialog>
             </p:panel>

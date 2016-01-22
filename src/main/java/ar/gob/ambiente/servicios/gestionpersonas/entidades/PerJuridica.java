@@ -17,24 +17,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author rodriguezn
  */
-@XmlRootElement(name = "perJuridica")
+
 @Entity
-@Table(name = "perJuridica")
 public class PerJuridica implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -55,43 +50,50 @@ public class PerJuridica implements Serializable {
     @JoinColumn(name="tipoPersonaJuridica_id")
     private TipoPersonaJuridica tipoPersonaJuridica;
     
-    private String correoElectronico;
-    private String telefono;
-    
-    @ManyToMany
-    @JoinTable(
-          name = "perJuridicasXperFisicas", 
-          joinColumns = @JoinColumn(name = "perJuridica_id"),
-          inverseJoinColumns = @JoinColumn(name = "perFisica_fk")
-    ) 
-    private List<PerFisica> representantes;
-    
     /**
      * Campo de tipo Array que contiene el conjunto de los establecimientos que contiene esta Persona Jurídica
      */     
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name="perjuridica_id")
+    @OneToMany(mappedBy="perJuridica")
     private List<Establecimiento> establecimientos;
     
-    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name="expediente_id")
-    private Expediente expediente;
+    /**
+     * Campo de tipo Array que contiene el conjunto de las diferentes Establecimientos que alguna vez estuvieron vinculados a 
+     * esta Persona Jurídica. Si bien el listado traerá todos las reasignaciones en el get, habrá que filtrar solo aquellas cuyo
+     * flag "activa" sea falso, dado que los que es verdadero, están vinculados actualmente.
+     */     
+    @OneToMany(mappedBy="perJuridica")
+    private List<Establecimiento> establecimientosCedidos;
+    
+    private Long idAplicacion; 
     
     @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="estado_id")
     private Estado estado;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="especialidad_id")
-    private Especialidad especialidad;
    
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="adminentidad_id")
     private AdminEntidad admin; 
 
     public PerJuridica() {
-        representantes = new ArrayList();
         establecimientos = new ArrayList();
+        establecimientosCedidos = new ArrayList();
+    }
+
+    public Long getIdAplicacion() {
+        return idAplicacion;
+    }
+
+    public void setIdAplicacion(Long idAplicacion) {
+        this.idAplicacion = idAplicacion;
+    }
+
+    @XmlTransient
+    public List<Establecimiento> getEstablecimientosCedidos() {
+        return establecimientosCedidos;
+    }
+
+    public void setEstablecimientosCedidos(List<Establecimiento> establecimientosCedidos) {
+        this.establecimientosCedidos = establecimientosCedidos;
     }
 
     public Long getId() {
@@ -126,30 +128,6 @@ public class PerJuridica implements Serializable {
         this.tipoPersonaJuridica = tipoPersonaJuridica;
     }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
-    }
-
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-    
-    public List<PerFisica> getRepresentantes() {
-        return representantes;
-    }
-
-    public void setRepresentantes(List<PerFisica> representantes) {
-        this.representantes = representantes;
-    }
-
     @XmlTransient
     public List<Establecimiento> getEstablecimientos() {
         return establecimientos;
@@ -158,14 +136,6 @@ public class PerJuridica implements Serializable {
     public void setEstablecimientos(List<Establecimiento> establecimientos) {
         this.establecimientos = establecimientos;
     }
-    
-    public Expediente getExpediente() {
-        return expediente;
-    }
-
-    public void setExpediente(Expediente expediente) {
-        this.expediente = expediente;
-    }
 
     public Estado getEstado() {
         return estado;
@@ -173,14 +143,6 @@ public class PerJuridica implements Serializable {
 
     public void setEstado(Estado estado) {
         this.estado = estado;
-    }
-
-    public Especialidad getEspecialidad() {
-        return especialidad;
-    }
-
-    public void setEspecialidad(Especialidad especialidad) {
-        this.especialidad = especialidad;
     }
 
     public AdminEntidad getAdmin() {
@@ -215,11 +177,5 @@ public class PerJuridica implements Serializable {
     public String toString() {
         return "ar.gob.ambiente.servicios.gestionPersonas.entidades.PerJuridica[ id=" + id + " ]";
     }
-
-    public void setDomicilio(Domicilio domicilio) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
 }
 

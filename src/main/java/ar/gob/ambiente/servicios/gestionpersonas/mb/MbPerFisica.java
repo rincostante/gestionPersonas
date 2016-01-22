@@ -6,26 +6,19 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.AdminEntidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Especialidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.EntidadServicio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentroPoblado;
 import java.io.Serializable;
 import java.util.Date;
@@ -79,19 +72,11 @@ public class MbPerFisica implements Serializable{
     @EJB
     private PerFisicaFacade perFisicaFacade;
     @EJB
-    private PerJuridicaFacade perJuridicaFacade;
-    @EJB
     private ExpedienteFacade expedienteFacade;
-    @EJB
-    private EspecialidadFacade especialidadFacade;
     @EJB
     private EstadoFacade estadoFacade;
     @EJB
     private DomicilioFacade domicilioFacade;
-    @EJB
-    private PerfilFacade perfilFacade;
-    @EJB
-    private ActividadFacade actividadFacade;
     
     private PerFisica perFisicaSelected;
     private MbLogin login;
@@ -99,11 +84,8 @@ public class MbPerFisica implements Serializable{
     
     private boolean iniciado;
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
-    private List<Especialidad> listaEspecialidad;
     private List<PerJuridica> listaPerJuridica;
     private List<Estado> listaEstado;
-    private List<Perfil> listaPerfil;
-    private List<Actividad> listaActividad;
     private CuitAfip personaAfip;
     private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
     private Long cuit;
@@ -306,14 +288,6 @@ public class MbPerFisica implements Serializable{
         this.iniciado = iniciado;
     }
 
-    public List<Especialidad> getListaEspecialidad() {
-        return listaEspecialidad;
-    }
-
-    public void setListaEspecialidad(List<Especialidad> listaEspecialidad) {
-        this.listaEspecialidad = listaEspecialidad;
-    }
-
     public List<PerJuridica> getListaPerJuridica() {
         return listaPerJuridica;
     }
@@ -330,22 +304,6 @@ public class MbPerFisica implements Serializable{
         this.listaEstado = listaEstado;
     }
 
-    public List<Perfil> getListaPerfil() {
-        return listaPerfil;
-    }
-
-    public void setListaPerfil(List<Perfil> listaPerfil) {
-        this.listaPerfil = listaPerfil;
-    }
-
-    public List<Actividad> getListaActividad() {
-        return listaActividad;
-    }
-
-    public void setListaActividad(List<Actividad> listaActividad) {
-        this.listaActividad = listaActividad;
-    }
-
     public PerFisicaFacade getPerFisicaFacade() {
         return perFisicaFacade;
     }
@@ -354,28 +312,12 @@ public class MbPerFisica implements Serializable{
         this.perFisicaFacade = perFisicaFacade;
     }
 
-    public PerJuridicaFacade getPerJuridicaFacade() {
-        return perJuridicaFacade;
-    }
-
-    public void setPerJuridicaFacade(PerJuridicaFacade perJuridicaFacade) {
-        this.perJuridicaFacade = perJuridicaFacade;
-    }
-
     public ExpedienteFacade getExpedienteFacade() {
         return expedienteFacade;
     }
 
     public void setExpedienteFacade(ExpedienteFacade expedienteFacade) {
         this.expedienteFacade = expedienteFacade;
-    }
-
-    public EspecialidadFacade getEspecialidadFacade() {
-        return especialidadFacade;
-    }
-
-    public void setEspecialidadFacade(EspecialidadFacade especialidadFacade) {
-        this.especialidadFacade = especialidadFacade;
     }
 
     public EstadoFacade getEstadoFacade() {
@@ -393,22 +335,7 @@ public class MbPerFisica implements Serializable{
     public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
         this.domicilioFacade = domicilioFacade;
     }
-
-    public PerfilFacade getPerfilFacade() {
-        return perfilFacade;
-    }
-
-    public void setPerfilFacade(PerfilFacade perfilFacade) {
-        this.perfilFacade = perfilFacade;
-    }
-
-    public ActividadFacade getActividadFacade() {
-        return actividadFacade;
-    }
-
-    public void setActividadFacade(ActividadFacade actividadFacade) {
-        this.actividadFacade = actividadFacade;
-    }
+    
  
     /********************************
      ** Métodos para el datamodel **
@@ -452,10 +379,7 @@ public class MbPerFisica implements Serializable{
         //Inicializamos la creacion de expediente y domicilio
         expediente = new Expediente();
         domicilio = new Domicilio();
-        listaPerfil = perfilFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
-        listaEspecialidad = especialidadFacade.findAll();
         
         // cargo el listado de Provincias
         getProvinciasSrv();
@@ -467,11 +391,7 @@ public class MbPerFisica implements Serializable{
      */
     public String prepareEdit() {
         domVinc = current.getDomicilio();
-        //expVinc = current.getExpediente();
-        listaPerfil = perfilFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
-        listaEspecialidad = especialidadFacade.findAll();
         cargarEntidadesSrv();
         return "edit";
     }
@@ -551,7 +471,7 @@ public class MbPerFisica implements Serializable{
         //Asigno domicilio
         current.setDomicilio(domicilio);
 
-        if(current.getNombre().isEmpty()){
+        if(current.getNombreCompleto().isEmpty()){
             JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
             return null;
         }else{
@@ -715,7 +635,7 @@ public class MbPerFisica implements Serializable{
      * @throws ValidatorException 
      */
     public void validarUpdate(FacesContext arg0, UIComponent arg1, Object arg2){
-        if(!current.getNombre().equals((String)arg2)){
+        if(!current.getNombreCompleto().equals((String)arg2)){
             validarExistente(arg2);
         }
     }    
@@ -747,7 +667,7 @@ public class MbPerFisica implements Serializable{
             
             // Si valida seteo los datos correspondientes de la persona
             current.setCuitCuil(personaAfip.getPejID());
-            current.setNombre(personaAfip.getPejRazonSocial());
+            current.setNombreCompleto(personaAfip.getPejRazonSocial());
             
             JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
         } catch (Exception ex) {
@@ -764,7 +684,7 @@ public class MbPerFisica implements Serializable{
     public void limpiarCuit(){
         personaAfip = null;
         personaAfip = new CuitAfip();
-        current.setNombre("");
+        current.setNombreCompleto("");
         current.setCuitCuil(Long.valueOf(0));
     }
     

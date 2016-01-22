@@ -30,32 +30,18 @@
                 <h:panelGrid columns="2">            
 
                  <h:outputLabel  value="#{bundle.LabelNombre}: "/>
-                 <h:outputText   value=" #{mbPerFisica.selected.nombre}" title="#{bundle.LabelNombre}"/>
+                 <h:outputText   value=" #{mbPerFisica.selected.nombreCompleto}" title="#{bundle.LabelNombre}"/>
 
                  <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_cuitCuil}: "/>
                  <h:outputLabel  value=" #{mbPerFisica.selected.cuitCuil}" title="#{bundle.CreatePerFisicaLabel_cuitCuil}"/>
 
                  <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_correoElectronico}: "/>
-                 <h:outputLabel  value=" #{mbPerFisica.selected.correoElectronico}" title="#{bundle.CreatePerFisicaLabel_correoElectronico}"/>
-
-                 <h:outputLabel  value="#{bundle.CreatePerFisicaLabel_cel}: "/>
-                 <h:outputLabel  value=" #{mbPerFisica.selected.cel}" title="#{bundle.CreatePerFisicaTitle_cel}"/>                       
-
-                 <h:outputLabel value="#{bundle.PerfilViewTitle}: "/>
-                 <h:outputText  value="#{mbPerFisica.selected.perfil.nombre}" 
-                                title="#{bundle.PerfilViewTitle}"/>
-
-                 <h:outputLabel value="#{bundle.ActividadViewTitle}: "/>
-                 <h:outputText  value="#{mbPerFisica.selected.actividad.nombre}" 
-                                title="#{bundle.ActividadViewTitle}"/>
+                 <h:outputLabel  value=" #{mbPerFisica.selected.correoElectronico}" title="#{bundle.CreatePerFisicaLabel_correoElectronico}"/>          
 
                  <h:outputLabel value="#{bundle.EstadoViewTitle}: "/>
                  <h:outputText  value="#{mbPerFisica.selected.estado.nombre}" 
                                 title="#{bundle.EstadoViewTitle}"/>
 
-                 <h:outputLabel value="#{bundle.EspecialidadViewTitle}: "/>
-                 <h:outputText  value="#{mbPerFisica.selected.especialidad.nombre}" 
-                                title="#{bundle.EspecialidadViewTitle}"/>
              </h:panelGrid>
              </p:panel>
                     

@@ -32,11 +32,7 @@
                         <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
                         <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbPerJuridica.prepareList}" update="perJuridicaList" style="margin-left: 10px"/>
                         <p:columnToggler datasource="perJuridicaList" trigger="toggler" />
-                    </f:facet>
-                    
-                    <p:column headerText="Expediente"  filterMatchMode="contains" sortBy="#{e.expediente}" filterBy="#{e.expediente.numero} / #{e.expediente.anio}">
-                         <p:outputLabel value="#{e.expediente.numero} / #{e.expediente.anio}"/>
-                    </p:column>                    
+                    </f:facet>             
                
                     <p:column headerText="Razon Social" filterMatchMode="contains" sortBy="#{e.razonSocial}" filterBy="#{e.razonSocial}">
                         <p:outputLabel value="#{e.razonSocial}"/>
@@ -49,14 +45,6 @@
                     <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{e.tipoPersonaJuridica.nombre}" filterBy="#{e.tipoPersonaJuridica.nombre}">
                         <p:outputLabel value="#{e.tipoPersonaJuridica.nombre}"/>
                     </p:column>
-                
-                    <p:column headerText="E-Mail" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
-                        <p:outputLabel value="#{e.correoElectronico}"/>
-                    </p:column>
-                
-                    <p:column headerText="Telefono" filterMatchMode="contains" sortBy="#{e.telefono}" filterBy="#{e.telefono}">
-                        <p:outputLabel value="#{e.telefono}"/>
-                    </p:column> 
                     
                     <p:column filterBy="#{e.admin.habilitado}" headerText="Estado" filterMatchMode="equals">
                         <f:facet name="filter">

@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -65,6 +66,7 @@ public class Estado implements Serializable {
         this.nombre = nombre;
     }
 
+    @XmlTransient
     public List<PerFisica> getPerFisicas() {
         return perFisicas;
     }
@@ -73,6 +75,7 @@ public class Estado implements Serializable {
         this.perFisicas = perFisicas;
     }
 
+    @XmlTransient
     public List<PerJuridica> getPerJuridicas() {
         return perJuridicas;
     }
@@ -81,6 +84,7 @@ public class Estado implements Serializable {
         this.perJuridicas = perJuridicas;
     }
 
+    @XmlTransient
     public List<Establecimiento> getEstablecimientos() {
         return establecimientos;
     }

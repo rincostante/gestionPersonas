@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -57,6 +58,7 @@ public class TipoEstablecimiento implements Serializable {
         this.nombre = nombre;
     }
 
+    @XmlTransient
     public List<Establecimiento> getEstablecimientos() {
         return establecimientos;
     }
@@ -88,10 +90,5 @@ public class TipoEstablecimiento implements Serializable {
     @Override
     public String toString() {
         return "ar.gob.ambiente.servicios.gestionPersonas.entidades.TipoEstablecimiento[ id=" + id + " ]";
-    }
-
-    public List<TipoEstablecimiento> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    }    
 }

@@ -6,8 +6,6 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.facades;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import java.util.List;
 import javax.ejb.Stateless;

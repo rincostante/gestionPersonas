@@ -56,11 +56,6 @@
     
         <managed-bean-scope>session</managed-bean-scope></managed-bean>
     <managed-bean>
-        <managed-bean-name>mbPerfil</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbPerfil</managed-bean-class>
-    
-        <managed-bean-scope>session</managed-bean-scope></managed-bean>
-    <managed-bean>
         <managed-bean-name>mbTipoEstablecimiento</managed-bean-name>
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbTipoEstablecimiento</managed-bean-class>
     
@@ -85,9 +80,4 @@
         <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.MbRol</managed-bean-class>
     
         <managed-bean-scope>session</managed-bean-scope></managed-bean>
-    <managed-bean>
-        <managed-bean-name>selectItemsBean</managed-bean-name>
-        <managed-bean-class>ar.gob.ambiente.servicios.gestionpersonas.mb.SelectItemsBean</managed-bean-class>
-        <managed-bean-scope>view</managed-bean-scope>
-    </managed-bean>
 </faces-config>

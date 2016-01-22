@@ -14,9 +14,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,15 +35,14 @@ public class Actividad implements Serializable {
     @Size(message = "El campo nombre de la actividad debe tener entre 1 y 250 caracteres", min = 1, max = 250)
     private String nombre;
     
-    @OneToMany(mappedBy="actividad")
+    /**
+     * Campo de tipo array que contiene los Establecimientos con esta Actividad
+     */        
+    @ManyToMany(mappedBy="actividades")
     private List<Establecimiento> establecimientos;
-    
-    @OneToMany(mappedBy="actividad")
-    private List<PerFisica> personasFisicas;
 
     public Actividad() {
     establecimientos = new ArrayList();
-    personasFisicas = new ArrayList();
     }
 
     public Long getId() {
@@ -61,20 +61,13 @@ public class Actividad implements Serializable {
         this.nombre = nombre;
     }
 
+    @XmlTransient
     public List<Establecimiento> getEstablecimientos() {
         return establecimientos;
     }
 
     public void setEstablecimientos(List<Establecimiento> establecimientos) {
         this.establecimientos = establecimientos;
-    }
-
-    public List<PerFisica> getPersonasFisicas() {
-        return personasFisicas;
-    }
-
-    public void setPersonasFisicas(List<PerFisica> personasFisicas) {
-        this.personasFisicas = personasFisicas;
     }
     
     @Override

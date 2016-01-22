@@ -17,11 +17,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -39,20 +39,10 @@ public class PerFisica implements Serializable {
     @JoinColumn(name="expediente_id")
     private Expediente expediente; 
         
-    @Column (nullable=true, length=50)
-    @Size(message = "El campo instrumento Solicitante debe tener un máximo de 50 caracteres", max = 50)
-    private String instrumentoSolicitante;
-        
     @Column (nullable=false, length=50, unique=true)
     @NotNull(message = "El campo Nombre no puede quedar nulo")
     @Size(message = "El campo Nombre debe tener entre 1 y 50 caracteres", min = 1, max = 50)
-    private String nombre;  
-    
-    /**
-     * Campo de tipo entero que indica el DNI
-     */
-    @Column (nullable=true)
-    private long dni; 
+    private String nombreCompleto;  
     
      /**
      * Campo de tipo entero que indica el CUIT
@@ -68,24 +58,15 @@ public class PerFisica implements Serializable {
     @JoinColumn(name="domicilio_id")
     private Domicilio domicilio;
     
-    @ManyToMany(mappedBy="representantes")
-    private List<PerJuridica> perJuridica;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="perfil_id")
-    private Perfil perfil;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="actividad_id")
-    private Actividad actividad;
-    
     @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="estado_id")
     private Estado estado;
     
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="especialidad_id")
-    private Especialidad especialidad;
+    /**
+     * Campo de tipo Array que contiene el conjunto de los establecimientos que puediera tener asociado la persona
+     */     
+    @OneToMany(mappedBy="perFisica")
+    private List<Establecimiento> establecimientos;
    
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="adminentidad_id")
@@ -95,7 +76,16 @@ public class PerFisica implements Serializable {
     * Constructor
     */
     public PerFisica() {
-        perJuridica = new ArrayList();
+        establecimientos = new ArrayList();
+    }
+
+    @XmlTransient
+    public List<Establecimiento> getEstablecimientos() {
+        return establecimientos;
+    }
+
+    public void setEstablecimientos(List<Establecimiento> establecimientos) {
+        this.establecimientos = establecimientos;
     }
 
     public Long getId() {
@@ -114,22 +104,6 @@ public class PerFisica implements Serializable {
         this.expediente = expediente;
     }
 
-    public List<PerJuridica> getPerJuridica() {
-        return perJuridica;
-    }
-
-    public void setPerJuridica(List<PerJuridica> perJuridica) {
-        this.perJuridica = perJuridica;
-    }
-
-    public Actividad getActividad() {
-        return actividad;
-    }
-
-    public void setActividad(Actividad actividad) {
-        this.actividad = actividad;
-    }
-
     public Estado getEstado() {
         return estado;
     }
@@ -138,36 +112,12 @@ public class PerFisica implements Serializable {
         this.estado = estado;
     }
 
-    public Especialidad getEspecialidad() {
-        return especialidad;
+    public String getNombreCompleto() {
+        return nombreCompleto;
     }
 
-    public void setEspecialidad(Especialidad especialidad) {
-        this.especialidad = especialidad;
-    }
-
-    public String getInstrumentoSolicitante() {
-        return instrumentoSolicitante;
-    }
-
-    public void setInstrumentoSolicitante(String instrumentoSolicitante) {
-        this.instrumentoSolicitante = instrumentoSolicitante;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public long getDni() {
-        return dni;
-    }
-
-    public void setDni(long dni) {
-        this.dni = dni;
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     public long getCuitCuil() {
@@ -200,22 +150,6 @@ public class PerFisica implements Serializable {
 
     public void setDomicilio(Domicilio domicilio) {
         this.domicilio = domicilio;
-    }
-
-    public List<PerJuridica> getPerJuridicas() {
-        return perJuridica;
-    }
-
-    public void setPerJuridicas(List<PerJuridica> perJuridica) {
-        this.perJuridica = perJuridica;
-    }
-
-    public Perfil getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
     }
 
     public AdminEntidad getAdmin() {

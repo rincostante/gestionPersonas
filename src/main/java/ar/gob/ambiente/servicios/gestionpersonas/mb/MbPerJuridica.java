@@ -6,28 +6,18 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.AdminEntidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Especialidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Perfil;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.PerfilFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
 import java.io.Serializable;
@@ -61,13 +51,10 @@ import org.primefaces.event.RowEditEvent;
 public class MbPerJuridica implements Serializable{
     
     private PerJuridica current;
-    private Expediente expediente;
     private Establecimiento establecimiento;
     private Domicilio domicilio;  
     private Domicilio domVinc;
     
-    private List<Domicilio> listaDomicilios;
-    private List<Expediente> listaExpedientes;
     private List<Establecimiento> establecimientos;
     private List<Establecimiento> listaEstablecimientos;
         
@@ -75,17 +62,7 @@ public class MbPerJuridica implements Serializable{
     @EJB
     private PerJuridicaFacade perJuridicaFacade;
     @EJB
-    private PerFisicaFacade perFisicaFacade;
-    @EJB
-    private ExpedienteFacade expedienteFacade;
-    @EJB
-    private EspecialidadFacade especialidadFacade;
-    @EJB
     private EstadoFacade estadoFacade;
-    @EJB
-    private PerfilFacade perfilFacade;
-    @EJB
-    private ActividadFacade actividadFacade;
     @EJB
     private TipoPersonaJuridicaFacade tipoFacade;
     @EJB
@@ -100,14 +77,10 @@ public class MbPerJuridica implements Serializable{
     private boolean iniciado;
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
     
-    private List<Especialidad> listaEspecialidad;
     private List<PerJuridica> listaPerJuridica;
     private List<Estado> listaEstado;
-    private List<Perfil> listaPerfil;
-    private List<Actividad> listaActividad;
     private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
     private List<TipoEstablecimiento> listaTipoEstablecimiento;
-    private List<PerFisica> representantes;
 
 
     
@@ -171,28 +144,12 @@ public class MbPerJuridica implements Serializable{
         this.domicilio = domicilio;
     }
 
-    public List<Domicilio> getListaDomicilios() {
-        return listaDomicilios;
-    }
-
-    public void setListaDomicilios(List<Domicilio> listaDomicilios) {
-        this.listaDomicilios = listaDomicilios;
-    }
-
     public Domicilio getDomVinc() {
         return domVinc;
     }
 
     public void setDomVinc(Domicilio domVinc) {
         this.domVinc = domVinc;
-    }
-   
-    public List<PerFisica> getRepresentantes() {
-        return representantes;
-    }
-
-    public void setRepresentantes(List<PerFisica> representantes) {
-        this.representantes = representantes;
     }
     
     public List<Establecimiento> getEstablecimientos() {
@@ -221,28 +178,12 @@ public class MbPerJuridica implements Serializable{
         this.current = current;
     }
 
-    public Expediente getExpediente() {
-        return expediente;
-    }
-
-    public void setExpediente(Expediente expediente) {
-        this.expediente = expediente;
-    }
-
     public Establecimiento getEstablecimiento() {
         return establecimiento;
     }
 
     public void setEstablecimiento(Establecimiento establecimiento) {
         this.establecimiento = establecimiento;
-    }
-
-    public List<Expediente> getListaExpedientes() {
-        return listaExpedientes;
-    }
-
-    public void setListaExpedientes(List<Expediente> listaExpedientes) {
-        this.listaExpedientes = listaExpedientes;
     }
 
     public PerJuridicaFacade getPerJuridicaFacade() {
@@ -253,52 +194,12 @@ public class MbPerJuridica implements Serializable{
         this.perJuridicaFacade = perJuridicaFacade;
     }
 
-    public PerFisicaFacade getPerFisicaFacade() {
-        return perFisicaFacade;
-    }
-
-    public void setPerFisicaFacade(PerFisicaFacade perFisicaFacade) {
-        this.perFisicaFacade = perFisicaFacade;
-    }
-
-    public ExpedienteFacade getExpedienteFacade() {
-        return expedienteFacade;
-    }
-
-    public void setExpedienteFacade(ExpedienteFacade expedienteFacade) {
-        this.expedienteFacade = expedienteFacade;
-    }
-
-    public EspecialidadFacade getEspecialidadFacade() {
-        return especialidadFacade;
-    }
-
-    public void setEspecialidadFacade(EspecialidadFacade especialidadFacade) {
-        this.especialidadFacade = especialidadFacade;
-    }
-
     public EstadoFacade getEstadoFacade() {
        return estadoFacade;
     }
 
     public void setEstadoFacade(EstadoFacade estadoFacade) {
         this.estadoFacade = estadoFacade;
-    }
-
-    public PerfilFacade getPerfilFacade() {
-        return perfilFacade;
-    }
-
-    public void setPerfilFacade(PerfilFacade perfilFacade) {
-        this.perfilFacade = perfilFacade;
-    }
-
-    public ActividadFacade getActividadFacade() {
-        return actividadFacade;
-    }
-
-    public void setActividadFacade(ActividadFacade actividadFacade) {
-        this.actividadFacade = actividadFacade;
     }
 
     public PerJuridica getPerJuridicaSelected() {
@@ -341,14 +242,6 @@ public class MbPerJuridica implements Serializable{
         this.update = update;
     }
 
-    public List<Especialidad> getListaEspecialidad() {
-        return listaEspecialidad;
-    }
-
-    public void setListaEspecialidad(List<Especialidad> listaEspecialidad) {
-        this.listaEspecialidad = listaEspecialidad;
-    }
-
     public List<PerJuridica> getListaPerJuridica() {
             if(listaPerJuridica == null){
             listaPerJuridica = getFacade().findAll();
@@ -366,22 +259,6 @@ public class MbPerJuridica implements Serializable{
 
     public void setListaEstado(List<Estado> listaEstado) {
         this.listaEstado = listaEstado;
-    }
-
-    public List<Perfil> getListaPerfil() {
-        return listaPerfil;
-    }
-
-    public void setListaPerfil(List<Perfil> listaPerfil) {
-        this.listaPerfil = listaPerfil;
-    }
-
-    public List<Actividad> getListaActividad() {
-        return listaActividad;
-    }
-
-    public void setListaActividad(List<Actividad> listaActividad) {
-        this.listaActividad = listaActividad;
     }
 
     public TipoPersonaJuridicaFacade getTipoFacade() {
@@ -442,7 +319,6 @@ public class MbPerJuridica implements Serializable{
     public String prepareView() {
         establecimientos = current.getEstablecimientos();
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
         return "view";
     }
@@ -454,18 +330,12 @@ public class MbPerJuridica implements Serializable{
     public String prepareCreate() {
         //Se instancia current
         current = new PerJuridica();      
-        //Inicializamos la creacion de expediente y establecimiento
-        expediente = new Expediente();
+        //Inicializamos la creacion de establecimiento
         establecimiento = new Establecimiento();
         domicilio = new Domicilio();
         establecimientos = new ArrayList();
-
-        
-        listaEspecialidad = especialidadFacade.findAll();
         listaTipoPersonaJuridica = tipoFacade.findAll();
-        representantes = perFisicaFacade.findAll();
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
         return "new";
     }
@@ -480,10 +350,7 @@ public class MbPerJuridica implements Serializable{
         
         //pueblo los combos
         listaEstado = estadoFacade.findAll();
-        listaActividad = actividadFacade.findAll();
-        listaEspecialidad = especialidadFacade.findAll();
         listaTipoPersonaJuridica = tipoFacade.findAll();
-        representantes = perFisicaFacade.findAll();
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
         return "edit";
     }
@@ -528,14 +395,6 @@ public class MbPerJuridica implements Serializable{
     /*************************
     ** Métodos de operación **
     **************************/
-    /**
-     * Método para guardar los expediente desde persona Juridica
-     */
-    public void createExpediente(){
-        // reseteo la expediente
-        expediente = null;
-        expediente = new Expediente();
-    }
     
     /**
      * Agrega un Establecimiento y su domicilio
@@ -569,7 +428,6 @@ public class MbPerJuridica implements Serializable{
      */        
     public void prepareViewEstablecimiento(){
         listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
         
         Map<String,Object> options = new HashMap<>();
@@ -584,7 +442,6 @@ public class MbPerJuridica implements Serializable{
     public void prepareEditEstablecimiento() {
         current.getEstablecimientos();
         listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 1000);
@@ -620,11 +477,15 @@ public class MbPerJuridica implements Serializable{
         
         while(estaIt.hasNext()){
             Establecimiento establecimiento = (Establecimiento)estaIt.next();
+            /**********************************************************************
+             * Ver el método getActividad() de Establecimient que ahora ha cambiado
+             **********************************************************************/
+            /*
             if(establecimiento.getActividad().equals(esta.getActividad())
-           //      && establecimiento.getDomicilio().equals(esta.getDomicilio())
                     && establecimiento.getEstado().equals(esta.getEstado())){
                 retorno = true;
             }
+            */
         } 
         return retorno;
     }   
@@ -728,7 +589,11 @@ public class MbPerJuridica implements Serializable{
         //Actualizo segun la operacion seleccionada
         try{
             if(update==0){
-                esta = getEstablecimientoFacade().getExistente(establecimiento.getActividad());
+                //esta = getEstablecimientoFacade().getExistente(establecimiento.getActividad());
+                esta = null;
+                /*****************************************
+                 * Ver el método getExistente() del facade
+                 *****************************************/
                 if(esta == null){
                     edito = true;
                 }else{
@@ -777,7 +642,11 @@ public class MbPerJuridica implements Serializable{
         current.setAdmin(admEnt);
         
         //Asigno expediente
-        current.setExpediente(expediente);
+        /**
+         * Ya no hay expediente para la perJuridica, va en los Establecimientos
+         * y cada perJuridica tiene al menos un establecimento, el domicilio legal
+         */
+        //current.setExpediente(expediente);
         
         //Asigno los Establecimientos
         current.setEstablecimientos(establecimientos);
@@ -954,12 +823,6 @@ public class MbPerJuridica implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }  
-    
-    private void validarExpedienteExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExisteExpediente(null, expediente)){ 
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateInstanciaExistente")));
-        }
-    } 
             
     private void validarExistente(Object arg2) throws ValidatorException{
         if(!getFacade().noExiste((String)arg2)){
@@ -973,10 +836,7 @@ public class MbPerJuridica implements Serializable{
     private void recreateModel() {
         listaPerJuridica.clear();
         listaPerJuridica = null;
-        if(listaExpedientes != null){
-            listaExpedientes.clear();
-            listaExpedientes =null;
-        }
+
         if(establecimientos !=null){
             establecimientos.clear();
             establecimientos =null;

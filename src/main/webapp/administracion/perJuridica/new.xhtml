@@ -11,68 +11,41 @@
         </ui:define>
         <ui:define name="content">
             <h:form id="frmNew"> 
-              <p:panel id="pnNew" header="#{bundle.PerJuridicaNewTitle}" style="margin-bottom:10px;">
-                   <p:growl id="messages" />
- 
-              <p:panel id="pnNew1" header="#{bundle.ExpedienteViewTitle}" style="margin-bottom:10px;">
-                    <h:panelGrid columns="4">
-                            <p:outputLabel value="#{bundle.CreateExpedienteLabel_numero}" for="numero"/>
-                            <p:inputText id="numero" value="#{mbPerJuridica.expediente.numero}" 
-                                requiredMessage="#{bundle.CreateExpedienteRequiredMessage_numero}" required="true"/>
-              
-                            <p:outputLabel value="#{bundle.CreateExpedienteLabel_anio}" for="anio"/>
-                            <p:inputText id="anio" value="#{mbPerJuridica.expediente.anio}" requiredMessage="#{bundle.CreateExpedienteRequiredMessage_anio}" 
-                                required="true"/>  
-                    </h:panelGrid>
-              </p:panel>
-                           
-              <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
-                    <h:panelGrid columns="2">
-                        
-                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
-                        <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" 
-                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_razonSocial}" required="true"/>
-                    
-                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}" for="cuit"/>
-                        <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" 
-                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_cuit}" required="true"/>
-                        
-                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_correoElectronico}" for="correoElectronico"/>
-                        <p:inputText id="correoElectronico" value="#{mbPerJuridica.selected.correoElectronico}" 
-                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_correoElectronico}" required="true"/>
-                    
-                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_telefono}" for="telefono"/>
-                        <p:inputText id="telefono" value="#{mbPerJuridica.selected.telefono}" 
-                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_telefono}" required="true"/>
-                    
-                        <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
-                        <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" >
-                            <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
-                            <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
-                            <p:ajax listener="#{mbPerJuridica.pruebaChangeListener}"/>
-                        </p:selectOneMenu>   
-       
-                        <p:outputLabel value="#{bundle.EspecialidadViewTitle}" for="especialidad"/>
-                        <p:selectOneMenu id="especialidad" value="#{mbPerJuridica.selected.especialidad}" >
-                            <f:selectItem itemLabel="Seleccione Especialidad" itemValue="" noSelectionOption="true" />                           
-                            <f:selectItems value="#{mbPerJuridica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad}"/>
-                        </p:selectOneMenu>
-                          
-                        <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
-                        <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}" >
-                            <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
-                            <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
-                        </p:selectOneMenu>
-                                           
-                        
-                        <p:outputLabel value="Establecimientos "/>
-                        <p:commandButton value="Agregar" action="#{mbPerJuridica.prepareCreateEstablecimientos}" process="@this" />
-                        
-                     </h:panelGrid>
-                </p:panel>
-                    
-                 
-             </p:panel>            
+                <p:panel id="pnNew" header="#{bundle.PerJuridicaNewTitle}" style="margin-bottom:10px;">
+                    <p:growl id="messages" />
+
+                    <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
+                        <h:panelGrid columns="2">
+
+                            <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
+                            <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" 
+                                     requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_razonSocial}" required="true"/>
+
+                            <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}" for="cuit"/>
+                            <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" 
+                                     requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_cuit}" required="true"/>
+
+                            <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
+                            <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" >
+                                <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                                <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                                <p:ajax listener="#{mbPerJuridica.pruebaChangeListener}"/>
+                            </p:selectOneMenu>   
+
+                            <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
+                            <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}" >
+                                <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
+                                <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
+                            </p:selectOneMenu>
+
+
+                            <p:outputLabel value="Establecimientos "/>
+                            <p:commandButton value="Agregar" action="#{mbPerJuridica.prepareCreateEstablecimientos}" process="@this" />
+
+                         </h:panelGrid>
+                    </p:panel>
+    
+                </p:panel>            
                 <p:toolbar>
                     <f:facet name="left">
                         <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.create}" update="pnNew"/>

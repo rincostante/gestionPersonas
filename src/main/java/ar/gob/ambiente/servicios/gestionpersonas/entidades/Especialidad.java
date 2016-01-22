@@ -14,9 +14,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,15 +36,23 @@ public class Especialidad implements Serializable {
     @Size(message = "El campo nombre de la especialidad debe tener entre 1 y 250 caracteres", min = 1, max = 250)
     private String nombre;
     
-    @OneToMany(mappedBy="especialidad")
-    private List<PerJuridica> perJuridicas;
-    
-    @OneToMany(mappedBy="especialidad")
-    private List<PerFisica> perFisicas;
+    /**
+     * Campo de tipo array que contiene los Establecimientos con esta especialidad
+     */    
+    @ManyToMany(mappedBy = "especialidades")
+    private List<Establecimiento> establecimientos;      
 
     public Especialidad() {
-        perJuridicas = new ArrayList();
-        perFisicas = new ArrayList();
+        establecimientos = new ArrayList();
+    }
+
+    @XmlTransient
+    public List<Establecimiento> getEstablecimientos() {
+        return establecimientos;
+    }
+
+    public void setEstablecimientos(List<Establecimiento> establecimientos) {
+        this.establecimientos = establecimientos;
     }
 
     public Long getId() {
@@ -59,22 +69,6 @@ public class Especialidad implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public List<PerJuridica> getPerJuridicas() {
-        return perJuridicas;
-    }
-
-    public void setPerJuridicas(List<PerJuridica> perJuridicas) {
-        this.perJuridicas = perJuridicas;
-    }
-
-    public List<PerFisica> getPerFisicas() {
-        return perFisicas;
-    }
-
-    public void setPerFisicas(List<PerFisica> perFisicas) {
-        this.perFisicas = perFisicas;
     }
 
     @Override

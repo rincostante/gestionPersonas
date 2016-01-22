@@ -6,7 +6,6 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.facades;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -45,33 +44,6 @@ import javax.persistence.Query;
         return q.getResultList().isEmpty();
     }        
     
-    /**
-     * Método que verifica si la entidad tiene dependencia (Hijos) en estado HABILITADO
-     * @param id: ID de la entidad
-     * @return: True o False
-     */
-    public boolean noTieneDependencias(Long id){
-        em = getEntityManager();        
-        String queryString = "SELECT pj FROM PerJuridica pj " 
-                + "WHERE pj.perJuridica.id = :idParam "
-                + "AND usu.adminentidad.habilitado = true";        
-        Query q = em.createQuery(queryString)
-                .setParameter("idParam", id);
-        return q.getResultList().isEmpty();
-    } 
-     
-    /**
-     * Metodo para el autocompletado de la búsqueda por nombre
-     * @return 
-     */  
-    public List<String> getNombres(){
-        em = getEntityManager();
-        String queryString = "SELECT pj.nombre FROM PerJuridica pj "
-                + "WHERE us.adminentidad.habilitado = true";
-        Query q = em.createQuery(queryString);
-        return q.getResultList();
-    }
-    
    /**
      * Método que devuelve un LIST con las entidades HABILITADAS
      * @return: True o False
@@ -106,13 +78,4 @@ import javax.persistence.Query;
             return null;
         }
     } 
-
-    
-    public List<PerJuridica> getNombres(PerJuridica selectPerJuridica) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public boolean noExisteExpediente(Object object, Expediente expediente) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

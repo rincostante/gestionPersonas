@@ -23,12 +23,6 @@
                             <f:selectItems value="#{mbEstablecimiento.listEstablecimiento}" var="tipo" itemLabel="#{tipo.tipo.nombre}" itemValue="#{tipo.tipo.nombre}"/>
                         </p:selectOneMenu> 
 
-                         <p:outputLabel value="Actividad" for="actividad"/>
-                         <p:selectOneMenu id="actividad" value="#{mbEstablecimiento.selected.actividad.nombre}" required="true">
-                            <f:selectItem itemLabel="Seleccione la Actividad" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{mbEstablecimiento.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad.nombre}"/>
-                        </p:selectOneMenu> 
-
                         <p:outputLabel value="Estado" for="estado"/>
                         <p:selectOneMenu id="estado" value="#{mbEstablecimiento.selected.estado.nombre}" >
                               <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           

@@ -7,6 +7,8 @@
 package ar.gob.ambiente.servicios.gestionpersonas.entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,19 +16,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
 *
 * @author rodriguezn
 */
-@XmlRootElement(name = "establecimiento")
 @Entity
-@Table(name = "establecimiento")
 public class Establecimiento implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -37,13 +38,41 @@ public class Establecimiento implements Serializable {
     @JoinColumn(name="perJuridica_id")
     private PerJuridica perJuridica;
     
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="perFisica_id")
+    private PerFisica perFisica;    
+    
+    /**
+     * Campo de tipo Array que contiene el conjunto de los cambios de Razón social que pudiera haber tenido el Establecimiento
+     */     
+    @OneToMany(mappedBy="establecimiento")
+    private List<ReasignaRazonSocial> razonesSocialesAnt;
+    
     @ManyToOne (fetch=FetchType.LAZY)
     @JoinColumn(name="tipoEstablecimiento_id")
     private TipoEstablecimiento tipo;
     
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="actividad_id")
-    private Actividad actividad;
+    /**
+     * Campo de tipo Array que contiene el conjunto de las Especialidades del Establecimiento
+     */
+    @ManyToMany
+    @JoinTable(
+            name = "establecimientosXEspecialidades",
+            joinColumns = @JoinColumn(name = "establecimiento_fk"),
+            inverseJoinColumns = @JoinColumn(name = "especialidad_fk")
+    )
+    private List<Especialidad> especialidades;    
+    
+    /**
+     * Campo de tipo Array que contiene el conjunto de las Actividades del Establecimiento
+     */
+    @ManyToMany
+    @JoinTable(
+            name = "establecimientosXActividades",
+            joinColumns = @JoinColumn(name = "establecimiento_fk"),
+            inverseJoinColumns = @JoinColumn(name = "actividad_fk")
+    )
+    private List<Actividad> actividades;        
     
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="domicilio_id")
@@ -61,7 +90,51 @@ public class Establecimiento implements Serializable {
     private AdminEntidad admin;    
 
     public Establecimiento() {
+        razonesSocialesAnt = new ArrayList();
+        especialidades = new ArrayList();
+        actividades = new ArrayList();
     }  
+
+    public PerFisica getPerFisica() {
+        return perFisica;
+    }
+
+    public void setPerFisica(PerFisica perFisica) {
+        this.perFisica = perFisica;
+    }
+
+    @XmlTransient
+    public List<ReasignaRazonSocial> getRazonesSocialesAnt() {
+        // solo dejo los registros que tengan activa en false
+        for(ReasignaRazonSocial rs : razonesSocialesAnt){
+            if(rs.isActiva()){
+                razonesSocialesAnt.remove(rs);
+            }
+        }
+        return razonesSocialesAnt;
+    }
+
+    public void setRazonesSocialesAnt(List<ReasignaRazonSocial> razonesSocialesAnt) {
+        this.razonesSocialesAnt = razonesSocialesAnt;
+    }
+
+    @XmlTransient
+    public List<Especialidad> getEspecialidades() {
+        return especialidades;
+    }
+
+    public void setEspecialidades(List<Especialidad> especialidades) {
+        this.especialidades = especialidades;
+    }
+
+    @XmlTransient
+    public List<Actividad> getActividades() {
+        return actividades;
+    }
+
+    public void setActividades(List<Actividad> actividades) {
+        this.actividades = actividades;
+    }
     
     public Long getId() {
         return id;
@@ -85,14 +158,6 @@ public class Establecimiento implements Serializable {
 
     public void setTipo(TipoEstablecimiento tipo) {
         this.tipo = tipo;
-    }
-
-    public Actividad getActividad() {
-        return actividad;
-    }
-
-    public void setActividad(Actividad actividad) {
-        this.actividad = actividad;
     }
 
     public Domicilio getDomicilio() {
@@ -161,6 +226,4 @@ public class Establecimiento implements Serializable {
     public String toString() {
         return "ar.gob.ambiente.servicios.gestionPersonas.entidades.Establecimiento[ id=" + id + " ]";
     }
-
-    
 }

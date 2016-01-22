@@ -23,12 +23,6 @@
                               <f:selectItems value="#{mbPerJuridica.listaTipoEstablecimiento}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipoEstablecimiento}"/>
                         </p:selectOneMenu> 
 
-                        <p:outputLabel value="Actividad" for="actividad"/>
-                        <p:selectOneMenu id="actividad" value="#{mbPerJuridica.establecimiento.actividad}" >
-                              <f:selectItem itemLabel="Seleccione Actividad" itemValue="" noSelectionOption="true" />                           
-                              <f:selectItems value="#{mbPerJuridica.listaActividad}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}"/>
-                        </p:selectOneMenu>   
-
                         <p:outputLabel value="Estado" for="estado"/>
                         <p:selectOneMenu id="estado" value="#{mbPerJuridica.establecimiento.estado}" >
                               <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           

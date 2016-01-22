@@ -22,11 +22,9 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -42,7 +40,6 @@ import java.util.Map;
 import javax.faces.context.ExternalContext;
 import javax.faces.event.ValueChangeEvent;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.RowEditEvent;
 
 /**
 *
@@ -71,7 +68,6 @@ public class MbEstablecimiento implements Serializable{
     @EJB
     private ActividadFacade actividadFacade;
     
-    private Establecimiento establecimientoSelected;
     private MbLogin login;
     private Usuario usLogeado;
     
@@ -226,10 +222,6 @@ public class MbEstablecimiento implements Serializable{
 
     public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
         this.domicilioFacade = domicilioFacade;
-    }
-
-    public void setEstablecimientoSelected(Establecimiento establecimientoSelected) {
-        this.establecimientoSelected = establecimientoSelected;
     }
 
     public MbLogin getLogin() {
@@ -494,7 +486,11 @@ public class MbEstablecimiento implements Serializable{
         // acualizo según la operación seleccionada
         try {
             if(update == 0){
-                establecimiento = getFacade().getExistente(current.getDomicilio(), current.getActividad());
+                //establecimiento = getFacade().getExistente(current.getDomicilio(), current.getActividad());
+                /**
+                 * Modificar el método getExistente() en el facade
+                 */
+                establecimiento = null;
                 if(establecimiento == null){
                     edito = true;  
                 }else{

@@ -14,18 +14,6 @@
             <p:messages id="messages" />
 
             <p:dialog id="dlg" resizable="false" />
-
-            <p:panel id="pnNew1" header="#{bundle.ExpedienteViewTitle}" style="margin-bottom:10px;">
-                <h:panelGrid columns="4">
-                    <p:outputLabel value="#{bundle.CreateExpedienteLabel_numero}" for="numero"/>
-                    <p:inputText id="numero" value="#{mbPerJuridica.selected.expediente.numero}" 
-                        requiredMessage="#{bundle.CreateExpedienteRequiredMessage_numero}" required="true"/>
-
-                    <p:outputLabel value="#{bundle.CreateExpedienteLabel_anio}" for="anio"/>
-                        <p:inputText id="anio" value="#{mbPerJuridica.selected.expediente.anio}" requiredMessage="#{bundle.CreateExpedienteRequiredMessage_anio}" 
-                            required="true"/>  
-                </h:panelGrid>
-            </p:panel>
             
             <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
                 <h:panelGrid columns="2">
@@ -38,25 +26,11 @@
                     <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" 
                              requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_cuit}" required="true"/>
 
-                    <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_correoElectronico}" for="correoElectronico"/>
-                    <p:inputText id="correoElectronico" value="#{mbPerJuridica.selected.correoElectronico}" 
-                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_correoElectronico}" required="true"/>
-
-                    <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_telefono}" for="telefono"/>
-                    <p:inputText id="telefono" value="#{mbPerJuridica.selected.telefono}" 
-                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_telefono}" required="true"/>
-
                     <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
                     <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" >
                         <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
                         <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
                     </p:selectOneMenu>   
-
-                    <p:outputLabel value="#{bundle.EspecialidadViewTitle}" for="especialidad"/>
-                    <p:selectOneMenu id="especialidad" value="#{mbPerJuridica.selected.especialidad}" >
-                        <f:selectItem itemLabel="Seleccione Especialidad" itemValue="" noSelectionOption="true" />                           
-                        <f:selectItems value="#{mbPerJuridica.listaEspecialidad}" var="especialidad" itemLabel="#{especialidad.nombre}" itemValue="#{especialidad}"/>
-                    </p:selectOneMenu>
 
                     <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
                     <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}" >
