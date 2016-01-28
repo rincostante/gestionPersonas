@@ -30,34 +30,18 @@ public class ActividadFacade extends AbstractFacade<Actividad> {
     public ActividadFacade() {
         super(Actividad.class);
     }
-      /**
-     * Metodo que verifica si ya existe la entidad.
-     * @param aBuscar: es la cadena que buscara para ver si ya existe en la BDD
-     * @return: devuelve True o False
-     */
-    public boolean existe(String aBuscar){
-        em = getEntityManager();       
-        String queryString = "SELECT act.nombre FROM Actividad actividad "
-                + "WHERE act.nombre = :stringParam ";
-        Query q = em.createQuery(queryString)
-                .setParameter("stringParam", aBuscar);
-        return q.getResultList().isEmpty();
-    }    
     
     /**
      * Metodo que verifica si ya existe la entidad.
      * @param nombre
-     * @param depto
      * @return: devuelve True o False
      */
-    public boolean noExiste(String nombre, Actividad actividad){
+    public boolean noExiste(String nombre){
         em = getEntityManager();
         String queryString = "SELECT act FROM Actividad act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.actividad = :actividad";
+                + "WHERE act.nombre = :nombre";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("actividad", actividad);
+                .setParameter("nombre", nombre);
         return q.getResultList().isEmpty();
     }  
     
@@ -66,15 +50,13 @@ public class ActividadFacade extends AbstractFacade<Actividad> {
      * @param nombre
      * @return 
      */ 
-    public Actividad getExistente(String nombre, Actividad actividad){
+    public Actividad getExistente(String nombre){
         List<Actividad> lCp;
         em = getEntityManager();
         String queryString = "SELECT act FROM Actividad act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.actividad = :actividad";
+                + "WHERE act.nombre = :nombre";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("actividad", actividad);
+                .setParameter("nombre", nombre);
         lCp = q.getResultList();
         if(!lCp.isEmpty()){
             return lCp.get(0);
@@ -83,18 +65,6 @@ public class ActividadFacade extends AbstractFacade<Actividad> {
         }
     }    
 
-     /**
-     * Metodo para el autocompletado de la búsqueda por nombre
-     * @return 
-     */  
-
-    public List<String> getNombres(){
-        em = getEntityManager();
-        String queryString = "SELECT act.nombre FROM Actividad act ";
-        Query q = em.createQuery(queryString);
-        return q.getResultList();
-    }
-    
     /**
      * Método que verifica si la entidad tiene dependencia (Hijos) en estado HABILITADO
      * @param id: ID de la entidad
@@ -102,18 +72,23 @@ public class ActividadFacade extends AbstractFacade<Actividad> {
      */
     public boolean noTieneDependencias(Long id){
         em = getEntityManager();        
-        String queryString = "SELECT act FROM Actividad act " 
-                + "WHERE act.actividad.id = :idParam ";        
+        String queryString = "SELECT est FROM Establecimiento est "
+                + "INNER JOIN est.actividades act " 
+                + "WHERE act.id = :id";        
         Query q = em.createQuery(queryString)
-                .setParameter("idParam", id);
+                .setParameter("id", id);
         return q.getResultList().isEmpty();
     }  
-
-    public List<Actividad> getNombres(Actividad selectActividad) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public boolean noExiste(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    /**
+     * Método para ordenar las Actividades alfabéticamente
+     * @return 
+     */
+    public List<Actividad> findAllByOrder(){
+        em = getEntityManager();
+        String queryString = "SELECT act FROM Actividad act "
+                + "ORDER BY act.nombre";
+        Query q = em.createQuery(queryString);
+        return q.getResultList();
     }
 }

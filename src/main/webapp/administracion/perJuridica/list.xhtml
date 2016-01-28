@@ -32,6 +32,12 @@
                         <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
                         <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbPerJuridica.prepareList}" update="perJuridicaList" style="margin-left: 10px"/>
                         <p:columnToggler datasource="perJuridicaList" trigger="toggler" />
+                        <p:commandButton value="Excel" ajax="false">
+                            <p:dataExporter type="xls" target="perJuridicaList" fileName="ListadoPerJuridicas" />
+                        </p:commandButton>
+                        <p:commandButton value="Pdf" ajax="false">
+                            <p:dataExporter type="pdf" target="perJuridicaList" fileName="ListadoPerJuridicas" preProcessor="#{mbPerJuridica.preProcessPDF}" />
+                        </p:commandButton>
                     </f:facet>             
                
                     <p:column headerText="Razon Social" filterMatchMode="contains" sortBy="#{e.razonSocial}" filterBy="#{e.razonSocial}">
@@ -58,7 +64,7 @@
                         <h:outputText value="#{e.admin.habilitado ? 'Habilitado': 'Deshabilitado'}" />
                     </p:column>                    
 
-                    <p:column headerText="Acciones" style="width:140px">
+                    <p:column headerText="Acciones" style="width:110px">
                         <p:growl id="messages" showDetail="true" />
                         
                         <p:commandButton icon="ui-icon-zoomin" action="#{mbPerJuridica.prepareView}" title="Ver detalle">

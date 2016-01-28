@@ -31,13 +31,19 @@
                         <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
                         <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbPerFisica.prepareList}" update="perFisicaList" style="margin-left: 10px"/>
                         <p:columnToggler datasource="perFisicaList" trigger="toggler" />
+                        <p:commandButton value="Excel" ajax="false">
+                            <p:dataExporter type="xls" target="perFisicaList" fileName="ListadoPerFisicas" />
+                        </p:commandButton>
+                        <p:commandButton value="Pdf" ajax="false">
+                            <p:dataExporter type="pdf" target="perFisicaList" fileName="ListadoPerFisicas" preProcessor="#{mbPerFisica.preProcessPDF}" />
+                        </p:commandButton>
                     </f:facet>
                     
                     <p:column headerText="Nombre"  filterMatchMode="contains" sortBy="#{e.nombreCompleto}" filterBy="#{e.nombreCompleto}">
                         <p:outputLabel value="#{e.nombreCompleto}"/>
                     </p:column>
                     
-                    <p:column headerText="CUIT"  filterMatchMode="contains" sortBy="#{e.cuitCuil}" filterBy="#{e.cuitCuil}">
+                    <p:column headerText="CUIT/CUIL"  filterMatchMode="contains" sortBy="#{e.cuitCuil}" filterBy="#{e.cuitCuil}">
                         <p:outputLabel value="#{e.cuitCuil}"/>
                     </p:column>
                     

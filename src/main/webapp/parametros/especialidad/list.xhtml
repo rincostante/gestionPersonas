@@ -31,15 +31,19 @@
 
                 <f:facet name="header"> 
                     #{bundle.EspecialidadListTitle}  
-                    <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
-                    <p:columnToggler datasource="especialidadList" trigger="toggler" />
+                    <p:commandButton value="Excel" ajax="false">
+                        <p:dataExporter type="xls" target="especialidadList" fileName="ListadoEspecialidades" />
+                    </p:commandButton>
+                    <p:commandButton value="Pdf" ajax="false">
+                        <p:dataExporter type="pdf" target="especialidadList" fileName="ListadoEspecialidades" />
+                    </p:commandButton>
                 </f:facet>
 
                 <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
                     <p:outputLabel value="#{e.nombre}"/>
                 </p:column>
 
-                <p:column headerText="Acciones" style="width:140px">
+                <p:column headerText="Acciones" style="width:110px" exportable="false">
                     <p:growl id="messages" showDetail="true" />                           
                     <p:commandButton icon="ui-icon-zoomin" action="#{mbEspecialidad.prepareView}" title="Ver Detalle">
                         <f:setPropertyActionListener value="#{e}" target="#{mbEspecialidad.current}" />  
@@ -49,10 +53,15 @@
                         <f:setPropertyActionListener value="#{e}" target="#{mbEspecialidad.current}" /> 
                     </p:commandButton>             
 
+                    <p:commandButton icon="ui-icon-trash" action="#{mbEspecialidad.prepareDestroy}" title="Eliminar" >
+                        <f:setPropertyActionListener value="#{e}" target="#{mbEspecialidad.current}" /> 
+                        <p:confirm header="Confirmar" message="¿Desea eliminar la Especialidad seleccionada?" icon="ui-icon-alert" />
+                    </p:commandButton>  
+
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                    </p:confirmDialog>      
+                    </p:confirmDialog>         
                 </p:column>                
             </p:dataTable>
         </h:form>

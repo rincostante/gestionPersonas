@@ -10,21 +10,39 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.AdminEntidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Especialidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.EntidadServicio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
-import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.EspecialidadFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.ReasignaRazonSocialFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentroPoblado;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentrosPobladosWebService;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentrosPobladosWebService_Service;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Departamento;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Provincia;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -37,8 +55,11 @@ import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.context.ExternalContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.xml.ws.WebServiceRef;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -46,27 +67,38 @@ import org.primefaces.context.RequestContext;
 * @author rodriguezn
 */
 public class MbEstablecimiento implements Serializable{
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl")
+    private CentrosPobladosWebService_Service srvCentrosPob;    
+    private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
     
-    private Establecimiento current;
-    
+    private Establecimiento current;    
     private Domicilio domicilio;
-    private List<Domicilio> listaDomicilios;    
     private Domicilio domVinc;
-    private List<Establecimiento> listEstablecimiento;
-    private List<Establecimiento> listaFilter;
+    private List<Establecimiento> listado;
+    private List<Establecimiento> listadoFilter;
+    
+    private boolean esFisica;
+    private boolean esJuridica;    
 
     @EJB
     private EstablecimientoFacade establecimientoFacade;
     @EJB
     private PerJuridicaFacade perJuridicaFacade;
     @EJB
-    private EstadoFacade estadoFacade;
+    private PerFisicaFacade perFisicaFacade;    
     @EJB
-    private DomicilioFacade domicilioFacade;
+    private EstadoFacade estadoFacade;
     @EJB
     private TipoEstablecimientoFacade tipoEstablecimientoFacade;
     @EJB
     private ActividadFacade actividadFacade;
+    @EJB
+    private ReasignaRazonSocialFacade reasignaFacade;
+    @EJB
+    private EspecialidadFacade espFacade;
+    @EJB
+    private ExpedienteFacade expFacade;
+
     
     private MbLogin login;
     private Usuario usLogeado;
@@ -74,10 +106,26 @@ public class MbEstablecimiento implements Serializable{
     private boolean iniciado;
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
     private List<PerJuridica> listaPerJuridica;
+    private List<PerFisica> listaPerFisica;
     private List<Estado> listaEstado;
     private List<TipoEstablecimiento> listaTipoEstablecimiento;
-    private List<Actividad> listaActividad;
-    private int perJuridica;
+    private List<Expediente> listaExpedientes;
+    private Expediente expediente;
+    
+    // listados provistos por el servicio de centros poblados
+    private List<EntidadServicio> listProvincias;
+    private EntidadServicio provSelected;
+    private List<EntidadServicio> listDepartamentos;
+    private EntidadServicio deptoSelected;
+    private List<EntidadServicio> listLocalidades;
+    private EntidadServicio localSelected;    
+    
+    // campos para los agregados múltiples
+    private List<Especialidad> listEspDisp;
+    private List<Especialidad> listEspFilter;
+    private List<Actividad> listActDisp;
+    private List<Actividad> listActFilter;
+    private boolean asignaDisp; 
     
     /**
      * Creates a new instance of MbEstablecimiento
@@ -121,15 +169,124 @@ public class MbEstablecimiento implements Serializable{
     
     /********************************
      ****** Getters y Setters *******
-     * @return 
      ********************************/
-    
-    public int getPerJuridica() {
-        return perJuridica;
+    public boolean isEsFisica() {
+        return esFisica;
     }
 
-    public void setPerJuridica(int perJuridica) {
-        this.perJuridica = perJuridica;
+    public void setEsFisica(boolean esFisica) {
+        this.esFisica = esFisica;
+    }
+
+    public boolean isEsJuridica() {
+        return esJuridica;
+    }
+
+    public void setEsJuridica(boolean esJuridica) {
+        this.esJuridica = esJuridica;
+    }
+    
+    public boolean isAsignaDisp() {
+        return asignaDisp;
+    }
+    
+    public List<Especialidad> getListEspDisp() {
+        return listEspDisp;
+    }
+
+    public void setListEspDisp(List<Especialidad> listEspDisp) {
+        this.listEspDisp = listEspDisp;
+    }
+
+    public List<Especialidad> getListEspFilter() {
+        return listEspFilter;
+    }
+
+    public void setListEspFilter(List<Especialidad> listEspFilter) {
+        this.listEspFilter = listEspFilter;
+    }
+
+    public List<Actividad> getListActDisp() {
+        return listActDisp;
+    }
+
+    public void setListActDisp(List<Actividad> listActDisp) {
+        this.listActDisp = listActDisp;
+    }
+
+    public List<Actividad> getListActFilter() {
+        return listActFilter;
+    }
+
+    public void setListActFilter(List<Actividad> listActFilter) {
+        this.listActFilter = listActFilter;
+    }
+    
+    public EntidadServicio getProvSelected() {
+        return provSelected;
+    }
+
+    public void setProvSelected(EntidadServicio provSelected) {
+        this.provSelected = provSelected;
+    }
+
+    public EntidadServicio getDeptoSelected() {
+        return deptoSelected;
+    }
+
+    public void setDeptoSelected(EntidadServicio deptoSelected) {
+        this.deptoSelected = deptoSelected;
+    }
+
+    public EntidadServicio getLocalSelected() {
+        return localSelected;
+    }
+
+    public void setLocalSelected(EntidadServicio localSelected) {
+        this.localSelected = localSelected;
+    }
+
+    
+    public List<EntidadServicio> getListProvincias() {
+        return listProvincias;
+    }
+
+    public void setListProvincias(List<EntidadServicio> listProvincias) {
+        this.listProvincias = listProvincias;
+    }
+
+    public List<EntidadServicio> getListDepartamentos() {
+        return listDepartamentos;
+    }
+
+    public void setListDepartamentos(List<EntidadServicio> listDepartamentos) {
+        this.listDepartamentos = listDepartamentos;
+    }
+
+    public List<EntidadServicio> getListLocalidades() {
+        return listLocalidades;
+    }
+
+    public void setListLocalidades(List<EntidadServicio> listLocalidades) {
+        this.listLocalidades = listLocalidades;
+    }
+
+    
+    public Expediente getExpediente() {
+        return expediente;
+    }
+
+    public void setExpediente(Expediente expediente) {
+        this.expediente = expediente;
+    }
+
+    
+    public List<PerFisica> getListaPerFisica() {
+        return listaPerFisica;
+    }
+
+    public void setListaPerFisica(List<PerFisica> listaPerFisica) {
+        this.listaPerFisica = listaPerFisica;
     }
 
     
@@ -137,16 +294,16 @@ public class MbEstablecimiento implements Serializable{
         return current;
     }
 
+    public List<Expediente> getListaExpedientes() {
+        return listaExpedientes;
+    }
+
+    public void setListaExpedientes(List<Expediente> listaExpedientes) {
+        this.listaExpedientes = listaExpedientes;
+    }
+
     public void setCurrent(Establecimiento current) {
         this.current = current;
-    }
-
-    public List<Actividad> getListaActividad() {
-        return listaActividad;
-    }
-
-    public void setListaActividad(List<Actividad> listaActividad) {
-        this.listaActividad = listaActividad;
     }
 
     public Domicilio getDomicilio() {
@@ -157,23 +314,11 @@ public class MbEstablecimiento implements Serializable{
         this.domicilio = domicilio;
     }
 
-    public List<Domicilio> getListaDomicilios() {
-        return listaDomicilios;
-    }
-
-    public void setListaDomicilios(List<Domicilio> listaDomicilios) {
-        this.listaDomicilios = listaDomicilios;
-    }
-
-    public List<Establecimiento> getListEstablecimiento() {
-        if(listEstablecimiento == null){
-            listEstablecimiento = getFacade().findAll();
+    public List<Establecimiento> getListado() {
+        if(listado == null){
+            listado = getFacade().findAll();
         }
-        return listEstablecimiento;
-    }
-
-    public void setListEstablecimiento(List<Establecimiento> listEstablecimiento) {
-        this.listEstablecimiento = listEstablecimiento;
+        return listado;
     }
 
     public Domicilio getDomVinc() {
@@ -184,68 +329,12 @@ public class MbEstablecimiento implements Serializable{
         this.domVinc = domVinc;
     }
 
-    public List<Establecimiento> getListaFilter() {
-        return listaFilter;
+    public List<Establecimiento> getListadoFilter() {
+        return listadoFilter;
     }
 
-    public void setListaFilter(List<Establecimiento> listaFilter) {
-        this.listaFilter = listaFilter;
-    }
-
-    public EstablecimientoFacade getEstablecimientoFacade() {
-        return establecimientoFacade;
-    }
-
-    public void setEstablecimientoFacade(EstablecimientoFacade establecimientoFacade) {
-        this.establecimientoFacade = establecimientoFacade;
-    }
-
-    public PerJuridicaFacade getPerJuridicaFacade() {
-        return perJuridicaFacade;
-    }
-
-    public void setPerJuridicaFacade(PerJuridicaFacade perJuridicaFacade) {
-        this.perJuridicaFacade = perJuridicaFacade;
-    }
-
-    public EstadoFacade getEstadoFacade() {
-        return estadoFacade;
-    }
-
-    public void setEstadoFacade(EstadoFacade estadoFacade) {
-        this.estadoFacade = estadoFacade;
-    }
-
-    public DomicilioFacade getDomicilioFacade() {
-        return domicilioFacade;
-    }
-
-    public void setDomicilioFacade(DomicilioFacade domicilioFacade) {
-        this.domicilioFacade = domicilioFacade;
-    }
-
-    public MbLogin getLogin() {
-        return login;
-    }
-
-    public void setLogin(MbLogin login) {
-        this.login = login;
-    }
-
-    public Usuario getUsLogeado() {
-        return usLogeado;
-    }
-
-    public void setUsLogeado(Usuario usLogeado) {
-        this.usLogeado = usLogeado;
-    }
-
-    public boolean isIniciado() {
-        return iniciado;
-    }
-
-    public void setIniciado(boolean iniciado) {
-        this.iniciado = iniciado;
+    public void setListaFilter(List<Establecimiento> listadoFilter) {
+        this.listadoFilter = listadoFilter;
     }
 
     public List<PerJuridica> getListaPerJuridica() {
@@ -295,7 +384,8 @@ public class MbEstablecimiento implements Serializable{
      */
     public String prepareList() {
         iniciado = true;
-        recreateModel();
+        asignaDisp = false;
+        limpiarListados();
         return "list";
     } 
 
@@ -303,8 +393,8 @@ public class MbEstablecimiento implements Serializable{
      * @return acción para el detalle de la entidad
      */
     public String prepareView() {
+        asignaDisp = false;
         domVinc = current.getDomicilio();
-        //expVinc = current.getExpediente();
         return "view";
     }
 
@@ -312,13 +402,22 @@ public class MbEstablecimiento implements Serializable{
      * @return acción para el formulario de nuevo
      */
     public String prepareCreate() {
+        asignaDisp = true;
         //Se instancia current
         current = new Establecimiento();      
         //Inicializamos la creacion de domicilio
         domicilio = new Domicilio();
         listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
+        listaPerJuridica = perJuridicaFacade.findAll();
+        listaPerFisica = perFisicaFacade.findAll();
+        listaExpedientes = expFacade.findAllByOrder();
+        // cargo el listado de Provincias
+        getProvinciasSrv();    
+        // cargo los listados de los disponibles
+        cargarListadosDisp();
+        esFisica = true;
+        esJuridica = true;        
         return "new";
     }
     
@@ -326,66 +425,52 @@ public class MbEstablecimiento implements Serializable{
      * @return acción para la edición de la entidad
      */
     public String prepareEdit() {
+        asignaDisp = true;
         domVinc = current.getDomicilio();
         listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
-        listaActividad = actividadFacade.findAll();
         listaEstado = estadoFacade.findAll();
-        //expVinc = current.getExpediente();
+	if(current.getPerFisica()!= null){
+            esFisica = true;
+            esJuridica = false;
+        }else{
+            esFisica = false;
+            esJuridica = true;
+        } 
+        cargarListadosDisp();
+        cargarEntidadesSrv();
         return "edit";
     }
+    
+    /**
+     * Método que muestra el diálogo para registrar un nuevo expediente
+     */
+    public void prepareRegExp(){
+        expediente = new Expediente();
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 500);
+        RequestContext.getCurrentInstance().openDialog("dlgRegistrarExpediente", options, null);
+    }    
            
     public String prepareInicio(){
-        recreateModel();
+        limpiarListados();
         return "/faces/index";
     }
     
     /**
-     * Método que verifica que el Cargo que se quiere eliminar no esté siento utilizado por otra entidad
-     * @return 
+     * Damos valor a la variable Update
      */
-    public String prepareDestroy(){
-        boolean libre = getFacade().noTieneDependencias(current.getId());
-
-        if (libre){
-            // Elimina
-            performDestroyDomicilio();
-            performDestroy();
-            recreateModel();
-        }else{
-            //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoNonDeletable"));
-        }
-        return "view";
-    }     
+    public void prepareDeshabilitar(){
+        update = 1;
+        update();        
+    }   
     
     /**
-     * 
-     * @return 
+     * Damos valor a la variable Update
      */
-    public String prepareHabilitar(){
-       // current = establecimientoSelected;
-        try{
-            // Actualización de datos de administración de la entidad
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaModif(date);
-            current.getAdmin().setUsModif(usLogeado);
-            current.getAdmin().setHabilitado(true);
-            current.getAdmin().setUsBaja(null);
-            current.getAdmin().setFechaBaja(null);
-            
-            // Actualizo
-            getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Establecimiento Habilitado"));
-            domVinc = current.getDomicilio();
-            //expVinc = current.getExpediente();
-            return "view";
-        }catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstablecimientoHabilitadoErrorOccured"));
-            return null; 
-        }
+    public void prepareHabilitar(){
+        update = 2;
+        update();        
     }
-    
-    
 
 
     /*************************
@@ -427,6 +512,7 @@ public class MbEstablecimiento implements Serializable{
         //current.setExpedientes(listExpedientes);
         //current.setDomicilios(listaDomicilios);
         getFacade().create(current);
+        asignaDisp = false;
         return "view";
     
        /* if(current.getNombre().isEmpty()){
@@ -440,7 +526,7 @@ public class MbEstablecimiento implements Serializable{
                     getFacade().create(current);
 
                     JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoCreated"));
-                   // recreateModel();
+                   // limpiarListados();
                     return "view";
 
                 }else{
@@ -455,6 +541,35 @@ public class MbEstablecimiento implements Serializable{
         }
         */
     }
+    
+    /**
+     * Método para registrar un nuevo Expediente
+     */
+    public void createExp(){
+        if(expediente.getNumero() < 1){
+            JsfUtil.addErrorMessage("El N° del Expediente no puede ser menor a 1.");
+        }else{
+            if(expFacade.noExiste(expediente.getNumero(), expediente.getAnio())){
+                try{
+                    expFacade.create(expediente);
+                    JsfUtil.addSuccessMessage("El Expediente ya ha sido registrado, por favor cierre esta ventana, "
+                            + "actualice el listado con el botón adjunto y seleccionelo para asignarlo a la Persona Física");
+                }catch(Exception e){
+                    JsfUtil.addErrorMessage(e, "Hubo un error registrando el Expediente. " + e.getMessage());
+                }
+            }else{
+                JsfUtil.addErrorMessage("Ya existe un Expediente con el N° y año que está tratando de registrar.");
+            }
+        }
+    }    
+    
+    /**
+     * Método para actualizar el listados de expedientes
+     */
+    public void actualizarExpedientes(){
+        listaExpedientes.clear();
+        listaExpedientes = expFacade.findAllByOrder();
+    }    
 
     /**
      * Método que actualiza una nueva Instancia en la base de datos.
@@ -476,7 +591,7 @@ public class MbEstablecimiento implements Serializable{
             current.getAdmin().setFechaModif(date);
             current.getAdmin().setUsModif(usLogeado);
             current.getAdmin().setHabilitado(true);
-           current.getAdmin().setFechaBaja(null);
+            current.getAdmin().setFechaBaja(null);
             current.getAdmin().setUsBaja(usLogeado);
         }
         if(update == 0){
@@ -504,6 +619,7 @@ public class MbEstablecimiento implements Serializable{
                     // Actualizo
                     getFacade().edit(current);
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ha sido actualizado"));
+                    asignaDisp = false;
                     return "view";
                 }else{
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ya Existe"));
@@ -513,10 +629,12 @@ public class MbEstablecimiento implements Serializable{
             }else if(update == 1){
                 getFacade().edit(current);
                 JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoDeshabilitado"));
+                asignaDisp = false;
                 return "view";
             }else{
                 getFacade().edit(current);
                 JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoHabilitado"));
+                asignaDisp = false;
                 return "view";
             }
         } catch (Exception e) {
@@ -524,33 +642,57 @@ public class MbEstablecimiento implements Serializable{
             return null;
         }
     } 
+
+    /**
+     * Método para asignar una Especialidad al Establecimiento.
+     * @param esp
+     */
+    public void asignarEspecialidad(Especialidad esp){
+        current.getEspecialidades().add(esp);
+        listEspDisp.remove(esp);
+        if(listEspFilter != null){
+            listEspFilter.clear();
+        }
+    }        
     
     /**
-     * @return mensaje que notifica el borrado
-     */    
-    public String destroyDomicilio() {
-    //current = domicilioSelected;
-        performDestroyDomicilio();
-        recreateModel();
-        return "view";
-    }
-    /**
-     * @return mensaje que notifica el borrado
-     */    
-    public String destroy() {
-        performDestroy();
-        recreateModel();
-        return "view";
-    }
-  
-    /**
-     * Método para mantener en memoria la app y permitir la carga de nuevas instancias
-     * @param event
+     * Método para asignar una Actividad al Establecimiento.
+     * @param act
      */
-    public void appChangeListener(ValueChangeEvent event) {
-        perJuridica = (int) event.getNewValue();
+    public void asignarActividad(Actividad act){
+        current.getActividades().add(act);
+        listActDisp.remove(act);
+        if(listActFilter != null){
+            listActFilter.clear();
+        }
     }      
-    /*************************
+    
+    /**
+     * Método para desvincular una Especialidad al Establecimiento
+     * @param esp
+     */
+    public void quitarEspecialidad(Especialidad esp){
+        current.getEspecialidades().remove(esp);
+        listEspDisp.add(esp);
+        if(listEspFilter != null){
+            listEspFilter.clear();
+        }
+    }       
+    
+    /**
+     * Método para desvincular una Especialidad al Establecimiento
+     * @param act
+     */
+    public void quitarActividad(Actividad act){
+        current.getActividades().remove(act);
+        listActDisp.add(act);
+        if(listActFilter != null){
+            listActFilter.clear();
+        }
+    }           
+    
+    
+    /**************************
      ** Métodos de selección **
      **************************/ 
     /**
@@ -562,26 +704,59 @@ public class MbEstablecimiento implements Serializable{
     }  
     
     /**
-     * Método para revocar la sesión del MB
-     * @return 
+     * Método para ver el listado de Especialidades disponibles para asignar al Establecimiento
      */
-    public String cleanUp(){
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-                .getExternalContext().getSession(true);
-        session.removeAttribute("mbEstablecimiento");
-
-        return "inicio";
-    }  
-         
-        /**
-     * Método para mostrar las Domicilios vinculados
-     */
-    public void verDomicilios(){
-        domicilio = current.getDomicilio();
+    public void verEspDisp(){
         Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 950);
-        RequestContext.getCurrentInstance().openDialog("", options, null);
+        options.put("contentWidth", 500);
+        RequestContext.getCurrentInstance().openDialog("dlgEspDisp", options, null);
     }  
+    
+    /**
+     * Método para ver el listado de Especialidades vinculadas al Establecimiento
+     */
+    public void verEspVinc(){
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 500);
+        RequestContext.getCurrentInstance().openDialog("dlgEspVinc", options, null);
+    }     
+    
+    /**
+     * Método para ver el listado de Actividades disponibles para asignar al Establecimiento
+     */
+    public void verActDisp(){
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 500);
+        RequestContext.getCurrentInstance().openDialog("dlgActDisp", options, null);
+    }  
+    
+    /**
+     * Método para ver el listado de Actividades vinculadas al Establecimiento
+     */
+    public void verActVinc(){
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 500);
+        RequestContext.getCurrentInstance().openDialog("dlgActVinc", options, null);
+    }    
+    
+    /**
+     * Método para abrir el formulario para registrar una nueva Persona Física
+     */
+    public void addPerFisica(){
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 800);
+        RequestContext.getCurrentInstance().openDialog("dlgAddPerFisica", options, null);
+    }        
+    
+    /**
+     * Método para abrir el formulario para registrar una nueva Persona Juridica
+     */
+    public void addPerJuridica(){
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 800);
+        RequestContext.getCurrentInstance().openDialog("dlgAddPerJuridica", options, null);
+    }        
+
 
     /****************************
      * Métodos de validación
@@ -609,6 +784,19 @@ public class MbEstablecimiento implements Serializable{
             validarExistente(arg2);
         }
     }    
+    
+    /**
+     * Método para procesar el pdf
+     * @param document
+     * @throws DocumentException
+     * @throws IOException 
+     */
+    public void preProcessPDF(Object document) throws DocumentException, IOException {
+        Document pdf = (Document) document;    
+        pdf.open();
+        pdf.setPageSize(PageSize.A4.rotate());
+        pdf.newPage();
+    }        
  
     
     /*********************
@@ -631,73 +819,277 @@ public class MbEstablecimiento implements Serializable{
     /**
      * Restea la entidad
      */
-    private void recreateModel() {
-        listEstablecimiento.clear();
-        listEstablecimiento = null;
-
-        if(listaDomicilios != null){
-            listaDomicilios.clear();
-            listaDomicilios =null;
+    private void limpiarListados() {
+        if(listado != null){
+            listado.clear();
+            listado = null;
+        }     
+        if(listadoFilter != null){
+            listadoFilter.clear();
+            listadoFilter = null;
         }   
+        if(listaPerJuridica != null) listaPerJuridica.clear();
+        if(listaPerFisica != null) listaPerFisica.clear();   
+        if(listaEstado != null) listaEstado.clear();   
+        if(listaTipoEstablecimiento != null) listaTipoEstablecimiento.clear();
+        if(listaExpedientes != null) listaExpedientes.clear();
+        if(listEspDisp != null) listEspDisp.clear();
+        if(listEspFilter != null) listEspFilter.clear();
+        if(listActDisp != null) listActDisp.clear();
+        if(listActFilter != null) listActFilter.clear();
     } 
     
-    
     /**
-     * Opera el borrado del domicilio
+     * Método para poblar el listado de provincias del servicio de centros poblados
      */
-    private void performDestroyDomicilio() {
+    private void getProvinciasSrv(){
+        EntidadServicio provincia;
+        List<Provincia> listSrv;
         try {
-            // Actualización de datos de administración de la instancia
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaBaja(date);
-            current.getAdmin().setUsBaja(usLogeado);
-            current.getAdmin().setHabilitado(false);
+            CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
             
-            // elimino la instancia
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("DomicilioDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("DomicilioDeletedErrorOccured"));
+            // lleno el listado de provincias
+            listSrv = port.verProvincias();
+            
+            // lleno el list con las provincias como un objeto Entidad Servicio
+            listProvincias = new ArrayList<>();
+
+            for(Provincia prov : listSrv){
+                provincia = new EntidadServicio(prov.getId(), prov.getNombre());
+                listProvincias.add(provincia);
+                //provincia = null;
+            }
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"), ex.getMessage()});
         }
-    }  
+    }
     
     /**
-     * Opera el borrado de la entidad
+     * Método para poblar el listado de departamentos del servicio de centros poblados
      */
-    private void performDestroy() {
-        try {
-            // Actualización de datos de administración de la entidad
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaBaja(date);
-            current.getAdmin().setUsBaja(usLogeado);
-            current.getAdmin().setHabilitado(false);
+    private void getDepartamentosSrv(Long idProv){
+        EntidadServicio depto;
+        List<Departamento> listSrv;
+        try { 
+            CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
+            listSrv = port.buscarDeptosPorProvincia(idProv);
             
-            // Deshabilito la entidad
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstablecimientoDeletedErrorOccured"));
+            // lleno el list con los Departamentos como un objeto Entidad Servicio
+            listDepartamentos = new ArrayList<>();
+            
+            for(Departamento dpt : listSrv){
+                depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
+                listDepartamentos.add(depto);
+                //depto = null;
+            }
+            
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetDeptosError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetDeptosError"), ex.getMessage()});
+        }
+    }
+    
+    /**
+     * Método para poblar el listado de Localidades del servicio de centros poblados
+     */
+    private void getLocalidadesSrv(Long idDepto){
+        EntidadServicio local;
+        List<CentroPoblado> listSrv;
+        try { 
+            CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
+            listSrv = port.buscarCentrosPorDepto(idDepto);
+            
+            // lleno el list con los Departamentos como un objeto Entidad Servicio
+            listLocalidades = new ArrayList<>();
+            
+            for(CentroPoblado loc : listSrv){
+                local = new EntidadServicio(loc.getId(), loc.getNombre());
+                listLocalidades.add(local);
+                //local = null;
+            }
+            
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetLocalError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetLocalError"), ex.getMessage()});
+        }
+    }    
+    
+    
+    /**
+     * Método para limpiar las entidades del servicio
+     */
+    private void limpiarEntitadesSrv(){
+        if(provSelected != null){
+            provSelected = null;
+        }
+        if(deptoSelected != null){
+            deptoSelected = null;
+        }
+        if(localSelected != null){
+            localSelected = null;
+        }
+    }
+
+    /**
+     * Método para cargar entidades de servicio y los listados, para actualizar la Persona
+     */
+    private void cargarEntidadesSrv(){
+        CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
+        CentroPoblado cp;
+        List<Provincia> listProv;
+        List<Departamento> listDeptos;
+        List<CentroPoblado> listLocal;
+        EntidadServicio provincia;
+        EntidadServicio depto;
+        EntidadServicio local;
+        
+        try{
+            // obtengo el CentroPoblado a partir del idLocalidad del domicilio de la Persona y seteo la EntidadServicio correspondiente
+            cp = port.buscarCentroPoblado(current.getDomicilio().getIdLocalidad());
+            localSelected = new EntidadServicio(cp.getId(), cp.getNombre());
+
+            // del CentroPoblado obtengo el Departamento y seteo la EntidadServicio correspondiente
+            deptoSelected = new EntidadServicio(cp.getDepartamento().getId(), cp.getDepartamento().getNombre());
+
+            // del Departamento del CentroPoblado obtengo la Provincia y seteo la EntidadServicio correspondiente
+            provSelected = new EntidadServicio(cp.getDepartamento().getProvincia().getId(), cp.getDepartamento().getProvincia().getNombre());
+
+            // cargo el listado de Provincias
+            listProv = port.verProvincias();
+            listProvincias = new ArrayList<>();
+            for(Provincia prov : listProv){
+                provincia = new EntidadServicio(prov.getId(), prov.getNombre());
+                listProvincias.add(provincia);                    
+            }
+            
+            // lleno los Departamentos según la provincia que tiene asignada la persona
+            listDeptos = port.buscarDeptosPorProvincia(provSelected.getId());
+            listDepartamentos = new ArrayList<>();
+            for(Departamento dpt : listDeptos){
+                depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
+                listDepartamentos.add(depto);
+            }
+            
+            // lleno las Localidades según el Departamento que tiene asignado la persona
+            listLocal = port.buscarCentrosPorDepto(deptoSelected.getId());
+            listLocalidades = new ArrayList<>();
+            for(CentroPoblado loc : listLocal){
+                local = new EntidadServicio(loc.getId(), loc.getNombre());
+                listLocalidades.add(local);
+            }
+            
+        }catch(Exception ex){
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"), ex.getMessage()});
+        }
+    }    
+    
+    /**
+     * Método para llenar los listados de elementos disponibles para su asignación
+     */
+    private void cargarListadosDisp(){
+        cargarEspDisponibles();
+        cargarActDisponibles();
+    }    
+    
+    /**
+     * Mátodo para cargar los Docentes disponibles para asignarlos a una Actividad Dispuesta
+     */
+    private void cargarEspDisponibles(){
+        if(!current.getEspecialidades().isEmpty()){
+            listEspDisp = new ArrayList<>();
+            List<Especialidad> lEsp = espFacade.findAllByNombre();
+            Iterator itEsp = lEsp.listIterator();
+            while(itEsp.hasNext()){
+                Especialidad esp = (Especialidad)itEsp.next();
+                if(!current.getEspecialidades().contains(esp)){
+                    listEspDisp.add(esp);
+                }
+            }     
+        }else{
+            listEspDisp = espFacade.findAllByNombre();
+        }
+    }    
+    
+    /**
+     * Mátodo para cargar los Docentes disponibles para asignarlos a una Actividad Dispuesta
+     */
+    private void cargarActDisponibles(){
+        if(!current.getActividades().isEmpty()){
+            listActDisp = new ArrayList<>();
+            List<Actividad> lAct = actividadFacade.findAllByNombre();
+            Iterator itAct = lAct.listIterator();
+            while(itAct.hasNext()){
+                Actividad act = (Actividad)itAct.next();
+                if(!current.getActividades().contains(act)){
+                    listActDisp.add(act);
+                }
+            }     
+        }else{
+            listActDisp = actividadFacade.findAllByNombre();
         }
     }      
+    
 
-     /**
-     * @return mensaje que notifica la actualizacion de estado
-      */    
-   public void habilitar() {
-        update = 2;
-        update();        
-        recreateModel();
-    } 
-
+    /*********************
+    ** Desencadenadores **
+    **********************/    
+    
     /**
-     * @return mensaje que notifica la actualizacion de estado
-      */  
-    public void deshabilitar() {
-          update = 1;
-          update();        
-          recreateModel();
-       }
-     
+     * Método para actualizar el combo de búsqueda de razón social en personas físicas
+     * @param event
+     */
+    public void fisicaChangeListener(ValueChangeEvent event){
+        PerFisica perFis = (PerFisica)event.getNewValue();
+        if(perFis != null){
+            esFisica = false;
+            esJuridica = true;
+        }else{
+            current.setPerFisica(null);
+            esFisica = true;
+            esJuridica = false;
+        }
+    }
+    
+    /**
+     * Método para actualizar el combo de búsqueda de razón social en personas jurídicas
+     * @param event
+     */
+    public void juridicaChangeListener(ValueChangeEvent event){
+        PerJuridica perJur = (PerJuridica)event.getNewValue();
+        if(perJur != null){
+            esFisica = true;
+            esJuridica = false;
+        }else{
+            current.setPerJuridica(null);
+            esFisica = false;
+            esJuridica = true;
+        }
+    }
+    
+    /**
+     * Método para actualizar el listado de departamentos según la provincia seleccionada
+     */    
+    public void provinciaChangeListener(){     
+        getDepartamentosSrv(provSelected.getId());
+    }   
+    
+    /**
+     * Método para actualizar el listado de localidades según el departamento seleccionado
+     */    
+    public void deptoChangeListener(){
+        getLocalidadesSrv(deptoSelected.getId());
+    }     
+        
     
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **

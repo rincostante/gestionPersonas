@@ -21,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -85,15 +86,34 @@ public class Establecimiento implements Serializable {
     @JoinColumn(name="estado_id")
     private Estado estado;
     
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="expediente_id")
+    private Expediente expediente;    
+    
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="adminentidad_id")
     private AdminEntidad admin;    
+    
+    // campos para mostrar en los listados según esté vinculado a una persona física o jurídica
+    @Transient
+    private String strRazonSocial;      
+    
+    @Transient
+    private String strCuit;       
 
     public Establecimiento() {
         razonesSocialesAnt = new ArrayList();
         especialidades = new ArrayList();
         actividades = new ArrayList();
     }  
+
+    public Expediente getExpediente() {
+        return expediente;
+    }
+
+    public void setExpediente(Expediente expediente) {
+        this.expediente = expediente;
+    }
 
     public PerFisica getPerFisica() {
         return perFisica;
@@ -202,6 +222,22 @@ public class Establecimiento implements Serializable {
         this.admin = admin;
     }
 
+    public String getStrRazonSocial() {
+        if(perFisica != null){
+            return perFisica.getNombreCompleto();
+        }else{
+            return perJuridica.getRazonSocial();
+        }
+    }
+
+    public String getStrCuit() {
+        if(perFisica != null){
+            return String.valueOf(perFisica.getCuitCuil());
+        }else{
+            return String.valueOf(perJuridica.getCuit());
+        }
+    }    
+    
     @Override
     public int hashCode() {
         int hash = 0;

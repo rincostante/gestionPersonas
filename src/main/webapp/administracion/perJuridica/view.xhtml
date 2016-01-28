@@ -15,65 +15,77 @@
             <p:panel id="pnView" header="#{bundle.PerJuridicaViewTitle}" style="margin-bottom:10px;">
                 <p:messages id="messages"/>
                     
-                <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
+                <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;" toggleable="true">
                     <h:panelGrid columns="2">                                   
-                        <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>
+                        <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}: "/>
                         <h:outputLabel value=" #{mbPerJuridica.selected.razonSocial}" title="#{bundle.CreatePerJuridicaLabel_RazonSocial}"/>                 
 
-                        <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}"/>
+                        <h:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}: "/>
                         <h:outputLabel value=" #{mbPerJuridica.selected.cuit}" title="#{bundle.CreatePerJuridicaLabel_cuit}"/>
 
-                        <h:outputText value="#{mbPerJuridica.selected.estado.nombre}" 
-                                      title="#{bundle.EstadoViewTitle}"/>
+                        <h:outputLabel value="Estado: "/>
+                        <h:outputText value="#{mbPerJuridica.selected.estado.nombre}" title="#{bundle.EstadoViewTitle}"/>
 
-                        <h:outputLabel value="#{bundle.LabelUsuarioAlta}"/>
+                        <h:outputLabel value="#{bundle.LabelUsuarioAlta}: "/>
                         <h:outputText value="#{mbPerJuridica.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
 
-                        <h:outputLabel value="#{bundle.LabelFechaAlta}"/>
+                        <h:outputLabel value="#{bundle.LabelFechaAlta}: "/>
                         <h:outputText value="#{mbPerJuridica.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
 
-                        <h:outputLabel value="#{bundle.LabelUsuarioModif}"/>
+                        <h:outputLabel value="#{bundle.LabelUsuarioModif}:"/>
                         <h:outputText value="#{mbPerJuridica.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
 
-                        <h:outputLabel value="#{bundle.LabelFechaModif}"/>
+                        <h:outputLabel value="#{bundle.LabelFechaModif}:"/>
                         <h:outputText value="#{mbPerJuridica.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
 
-                        <h:outputLabel value="#{bundle.LabelUsuario}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
+                        <h:outputLabel value="#{bundle.LabelUsuario}: " rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
                         <h:outputText value="#{mbPerJuridica.selected.admin.usBaja.nombre}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
                                       title="#{bundle.LabelUsuario}"/>                        
 
-                        <h:outputLabel value="#{bundle.LabelFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
+                        <h:outputLabel value="#{bundle.LabelFechaBaja}: " rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
                         <h:outputText value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
                                       title="#{bundle.LabelFechaBaja}"/>             
-
                     </h:panelGrid>
 
-                    <h:panelGrid>
-                            <h:form id="form">    
-                                <p:panel id="pnNew" header="#{bundle.EstablecimientosAsociados}" style="margin-bottom: 10px">
-                                <p:growl id="msgs" showDetail="true" />
-                                <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="est"  style="font-weight: normal; font-size: 80%">
-                                    <p:tab title="#{est.domicilio.calle} Nro: #{est.domicilio.numero} - #{est.domicilio.localidad} / #{est.domicilio.provincia}">
-                                            <h:panelGrid columns="2" cellpadding="5">
-                                                <h:outputLabel value="Tipo"/>
-                                                <h:outputText value="#{est.tipo.nombre}"/>    
+                    <h:panelGrid >
+                        <p:panel id="pnEst1" header="#{bundle.EstablecimientosAsociados}" style="margin-bottom: 10px" toggleable="true">
+                            <p:accordionPanel value="#{mbPerJuridica.selected.establecimientos}" var="est"  style="font-weight: normal; font-size: 80%">
+                                <p:tab title="#{est.domicilio.calle} Nro: #{est.domicilio.numero} - #{est.domicilio.localidad} / #{est.domicilio.provincia}">
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        <h:outputLabel value="Tipo: "/>
+                                        <h:outputText value="#{est.tipo.nombre}"/>    
 
-                                                <h:outputLabel value="Estado"/>
-                                                <h:outputText value="#{est.estado.nombre}"/>       
+                                        <h:outputLabel value="Estado: "/>
+                                        <h:outputText value="#{est.estado.nombre}"/>       
 
-                                                <h:outputLabel value="Email"/>
-                                                <h:outputText value="#{est.correoElectronico}"/>    
+                                        <h:outputLabel value="Email: "/>
+                                        <h:outputText value="#{est.correoElectronico}"/>    
 
-                                                <h:outputLabel value="Telefono"/>
-                                                <h:outputText value="#{est.telefono}"/>                                              
+                                        <h:outputLabel value="Telefono: "/>
+                                        <h:outputText value="#{est.telefono}"/>                                              
+                                   </h:panelGrid>    
+                                </p:tab>
+                            </p:accordionPanel>
+                        </p:panel>
+                        <p:panel id="pnEst2" header="Establecimientos cedidos" style="margin-bottom: 10px" toggleable="true">
+                            <p:accordionPanel value="#{mbPerJuridica.selected.establecimientosCedidos}" var="estCed"  style="font-weight: normal; font-size: 80%">
+                                <p:tab title="#{estCed.fecha}">
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        <h:outputLabel value="Tipo: "/>
+                                        <h:outputText value="#{estCed.est.tipo.nombre}"/>    
 
-                                           </h:panelGrid>    
-                                        </p:tab>
-                                    </p:accordionPanel>
-                                </p:panel>
-                            </h:form>
+                                        <h:outputLabel value="Estado: "/>
+                                        <h:outputText value="#{estCed.est.estado.nombre}"/>       
 
+                                        <h:outputLabel value="Email: "/>
+                                        <h:outputText value="#{estCed.est.correoElectronico}"/>    
 
+                                        <h:outputLabel value="Telefono: "/>
+                                        <h:outputText value="#{estCed.est.telefono}"/>   
+                                    </h:panelGrid>
+                                </p:tab>
+                            </p:accordionPanel>
+                        </p:panel>
                     </h:panelGrid>          
                 </p:panel>
                 <p:toolbar>

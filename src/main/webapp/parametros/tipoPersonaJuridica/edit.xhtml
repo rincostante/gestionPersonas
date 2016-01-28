@@ -14,9 +14,14 @@
                 <p:growl id="messages" />
                 <h:panelGrid columns="2">
                     <p:outputLabel value="#{bundle.LabelNombre}" for="nombre"/>
-                    <p:inputText id="nombre"
+                    <p:inputText id="nombre" validator="#{mbTipoPersonaJuridica.validarUpdate}"
                                  value="#{mbTipoPersonaJuridica.selected.nombre}" 
-                                 requiredMessage="#{bundle.LabelNombre}" required="true"/>
+                                 requiredMessage="#{bundle.LabelNombre}" required="true" style="width: 300px"/>
+                    
+                    <p:outputLabel value="Sigla: " for="sigla"/>
+                    <p:inputText id="sigla" 
+                                 value="#{mbTipoPersonaJuridica.selected.sigla}" 
+                                 requiredMessage="El campo sigla es obligatorio" required="true" />                    
                 </h:panelGrid>
             </p:panel>
 

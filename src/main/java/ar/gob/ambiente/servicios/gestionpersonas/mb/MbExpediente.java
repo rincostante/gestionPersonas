@@ -126,54 +126,7 @@ public class MbExpediente implements Serializable{
     public String prepareEdit() {
         return "edit";
     }    
-    
-    /**
-     * Método que verifica que el Cargo que se quiere eliminar no esté siento utilizado por otra entidad
-     * @return 
-     */
-    public String prepareDestroy(){
-        boolean libre = getFacade().noTieneDependencias(current.getId());
 
-        if (libre){
-            // Elimina
-            performDestroy();
-            recreateModel();
-        }else{
-            //No Elimina 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ExpedienteNonDeletable"));
-        }
-        return "view";
-    }    
-    
-    
-    /****************************
-     * Métodos de validación
-     ****************************/    
-    
-    /**
-     * Método para validar que no exista ya una entidad con este nombre al momento de crearla
-     * @param arg0: vista jsf que llama al validador
-     * @param arg1: objeto de la vista que hace el llamado
-     * @param arg2: contenido del campo de texto a validar 
-     */
-    public void validarInsert(FacesContext arg0, UIComponent arg1, Object arg2){
-        validarExistente(arg2);
-    }
-    
-    /**
-     * Método para validar que no exista una entidad con este nombre, siempre que dicho nombre no sea el que tenía originalmente
-     * @param arg0: vista jsf que llama al validador
-     * @param arg1: objeto de la vista que hace el llamado
-     * @param arg2: contenido del campo de texto a validar 
-     * @throws ValidatorException 
-     */
-    public void validarUpdate(FacesContext arg0, UIComponent arg1, Object arg2){
-        if(!current.getNombre().equals((String)arg2)){
-            validarExistente(arg2);
-        }
-    }    
-
-    
     /**********************
      * Métodos de operación
      **********************/
@@ -240,11 +193,6 @@ public class MbExpediente implements Serializable{
         return expedienteFacade;
     }    
     
-    private void validarExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExiste((String)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateExpedienteExistente")));
-        }
-    }    
     
     /**
      * Opera el borrado de la entidad

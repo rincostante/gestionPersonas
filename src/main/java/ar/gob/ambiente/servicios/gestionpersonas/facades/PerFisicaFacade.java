@@ -50,13 +50,31 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
      * @return: True o False
      */
     public boolean noTieneDependencias(Long id){
-        em = getEntityManager();        
-        String queryString = "SELECT pf FROM PerFisica pf " 
-                + "WHERE pf.perFisica.id = :idParam "
-                + "AND usu.adminentidad.habilitado = true";        
-        Query q = em.createQuery(queryString)
-                .setParameter("idParam", id);
-        return q.getResultList().isEmpty();
+        em = getEntityManager();     
+        String queryString;
+        Query q;
+        boolean result = true;
+        
+        // verifico que no tenga establecimientos asignados
+        queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.perFisica.id = :id";        
+        q = em.createQuery(queryString)
+                .setParameter("id", id);
+        if(!q.getResultList().isEmpty()){
+            result = false;
+        }
+        
+        // verifico que no tenga establecimientos asignados
+        queryString = "SELECT reasig FROM ReasignaRazonSocial reasig "
+                + "WHERE reasig.perFisica.id = :id "
+                + "AND reasig.activa = true";        
+        q = em.createQuery(queryString)
+                .setParameter("id", id);
+        if(!q.getResultList().isEmpty()){
+            result = false;
+        }
+        
+        return result;
     } 
     
    /**

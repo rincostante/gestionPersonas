@@ -7,9 +7,13 @@
 package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ActividadFacade;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -18,13 +22,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
-import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 
@@ -35,14 +35,13 @@ import javax.servlet.http.HttpSession;
 public class MbActividad implements Serializable{
     
     private Actividad current;
-    private DataModel items = null;
     private List<Actividad> listado = null;
     private List<Actividad> listaFilter;
     
-    private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
-    private MbLogin login;
-    private Usuario usLogeado;   
     private boolean iniciado;
+    
+    // listado para los establecimientos vinculados
+    private List<Establecimiento> listEstVincFilter;
     
     @EJB
     private ActividadFacade actividadFacade;
@@ -80,30 +79,6 @@ public class MbActividad implements Serializable{
         this.listaFilter = listaFilter;
     }
 
-    public int getUpdate() {
-        return update;
-    }
-
-    public void setUpdate(int update) {
-        this.update = update;
-    }
-
-    public MbLogin getLogin() {
-        return login;
-    }
-
-    public void setLogin(MbLogin login) {
-        this.login = login;
-    }
-
-    public Usuario getUsLogeado() {
-        return usLogeado;
-    }
-
-    public void setUsLogeado(Usuario usLogeado) {
-        this.usLogeado = usLogeado;
-    }
-
     public boolean isIniciado() {
         return iniciado;
     }
@@ -120,15 +95,25 @@ public class MbActividad implements Serializable{
         this.actividadFacade = actividadFacade;
     }
     
+    private Actividad getActividad(java.lang.Long id) {
+        return actividadFacade.find(id);
+    }
+
+    public List<Establecimiento> getListEstVincFilter() {
+        return listEstVincFilter;
+    }
+
+    public void setListEstVincFilter(List<Establecimiento> listEstVincFilter) {
+        this.listEstVincFilter = listEstVincFilter;
+    }
+    
+    
     /**
      * METODOS DE INICIALIZACION
      */
     @PostConstruct
     public void init(){
         iniciado = false;
-        ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
-        login = (MbLogin)ctx.getSessionMap().get("mbLogin");
-        usLogeado = login.getUsLogeado();
     }
     
     /**
@@ -161,7 +146,8 @@ public class MbActividad implements Serializable{
     }
         
     public String prepareCreate() {
-       return "new"; 
+        current = new Actividad();
+        return "new"; 
     }
     
     public String prepareEdit() {
@@ -169,17 +155,24 @@ public class MbActividad implements Serializable{
     }
     
     public String prepareDestroy(){
-       return "view"; 
+        boolean libre = getFacade().noTieneDependencias(current.getId());
+
+        if (libre){
+            // Elimina
+            performDestroy();
+            recreateModel();
+        }else{
+            //No Elimina 
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ActividadNonDeletable"));
+        }
+        return "view";
     }
     
     public String prepareInicio(){
         recreateModel();
         return "/faces/index";
     }
-    
-    public String prepareSelect(){
-        return "list";
-    }
+
     
     /**
      * METODOS DE VALIDACION
@@ -209,8 +202,8 @@ public class MbActividad implements Serializable{
     }
     
     private void validarExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExiste(null,current)){ 
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateGeneroExistente")));
+        if(!getFacade().noExiste((String)arg2)){ 
+            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateActividadExistente")));
         }
     }
     
@@ -223,19 +216,10 @@ public class MbActividad implements Serializable{
     public Actividad getSelected() {
         if (current == null) {
             current = new Actividad();
-            //selectedItemIndex = -1;
         }
         return current;
     } 
 
-    public DataModel getItems() {
-        if (items == null) {
-            //items = getPagination().createPageDataModel();
-            items = new ListDataModel(getFacade().findAll());
-        }
-        return items;
-    }    
-    
     
     /**
      * METODOS PRIVADOS
@@ -251,64 +235,54 @@ public class MbActividad implements Serializable{
      */
     
     public String create() {
-        return "view";
+        try {
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ActividadCreated"));
+            return "view";
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ActividadCreatedErrorOccured"));
+            return null;
+        }
     }
     
     public String update() {
-        return "view";
+        try {
+            getFacade().edit(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ActividadUpdated"));
+            return "view";
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ActividadUpdatedErrorOccured"));
+            return null;
+        }
     }
     
     private void recreateModel() {
-        items = null;
+        listado.clear();
     }
     
     private void performDestroy() {
         try {
-            //getFacade().remove(current);
+            getFacade().remove(current);
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ActividadDeleted"));
         } catch (Exception e) {
             JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("ActividadDeletedErrorOccured"));
         }
     }
     
-    public void habilitar() {
-        update = 2;
-        update();        
-        recreateModel();
-    }  
-    
-    public void deshabilitar() {
-       if (getFacade().noTieneDependencias(current.getId())){
-          update = 1;
-          update();        
-          recreateModel();
-       } 
-        else{
-            //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("ActividadNonDeletable"));            
-        }
-    } 
     
     /**
-     * METODOS DE SELECCION
+     * Método para procesar el pdf
+     * @param document
+     * @throws DocumentException
+     * @throws IOException 
      */
-        /**
-     * @return la totalidad de las entidades persistidas formateadas
-     */
-    public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(actividadFacade.findAll(), false);
-    }
-
-    /**
-     * @return de a una las entidades persistidas formateadas
-     */
-    public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(actividadFacade.findAll(), true);
-    }
-
-    private Actividad getActividad(java.lang.Long id) {
-        return actividadFacade.find(id);
-    }
+    public void preProcessPDF(Object document) throws DocumentException, IOException {
+        Document pdf = (Document) document;    
+        pdf.open();
+        pdf.setPageSize(PageSize.A4.rotate());
+        pdf.newPage();
+    }        
+   
  
     /********************************************************************
     ** Converter. Se debe actualizar la entidad y el facade respectivo **

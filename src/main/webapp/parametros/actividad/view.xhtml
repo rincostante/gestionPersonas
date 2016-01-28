@@ -15,6 +15,9 @@
                 <h:panelGrid columns="2">
                     <h:outputLabel value="#{bundle.LabelNombre}"/>
                     <h:outputText value="#{mbActividad.selected.nombre}" title="#{bundle.LabelNombre}"/>
+                    
+                    <h:outputLabel value="Establecimientos asociados: " />
+                    <p:commandButton value="Ver" type="button" onclick="PF('est').show();" />
                 </h:panelGrid>   
             </p:panel>
 
@@ -23,6 +26,74 @@
                     <p:commandButton icon="ui-icon-refresh" action="#{mbActividad.prepareList}" value="Volver" ajax="false"/>
                 </f:facet>
             </p:toolbar>
+            
+            <p:dialog style="font-size: 80%"
+                      header="Listado de Establecimientos asociados a la Actividad #{mbActividad.selected.nombre}" 
+                      widgetVar="est"
+                      showEffect="fade"
+                      hideEffect="fade"
+                      width="80%">
+                <p:dataTable value="#{mbActividad.selected.establecimientos}" 
+                            filteredValue="#{mbActividad.listEstVincFilter}" 
+                            var="e" id="estVinc" 
+                            rows="5"
+                            paginator="true"
+                            widgetVar="famTable"                             
+                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="5,10,15">
+                    
+                    <f:facet name="header"> 
+                        <p:commandButton value="Excel" ajax="false">
+                            <p:dataExporter type="xls" target="estVinc" fileName="ListadoTipoEstXActividad#{mbActividad.selected.nombre}" />
+                        </p:commandButton>
+                        <p:commandButton value="Pdf" ajax="false">
+                            <p:dataExporter type="pdf" target="estVinc" fileName="ListadoTipoEstXActividad#{mbActividad.selected.nombre}" preProcessor="#{mbActividad.preProcessPDF}" />
+                        </p:commandButton>
+                    </f:facet>
+                    
+                    <p:column headerText="Razón Social" filterMatchMode="contains" sortBy="#{e.strRazonSocial}" 
+                              filterBy="#{e.strRazonSocial}" >
+                        <p:outputLabel value="#{e.strRazonSocial}" />
+                    </p:column>    
+                    
+                    <p:column headerText="CUIT" filterMatchMode="contains" sortBy="#{e.strCuit}" 
+                              filterBy="#{e.strCuit}" >
+                        <p:outputLabel value="#{e.strCuit}" />
+                    </p:column>    
+ 
+                    <p:column headerText="Calle" filterMatchMode="contains" sortBy="#{e.domicilio.calle}" filterBy="#{e.domicilio.calle}">
+                        <p:outputLabel value="#{e.domicilio.calle}"/>
+                    </p:column>   
+                    
+                    <p:column headerText="N°" filterMatchMode="contains" sortBy="#{e.domicilio.numero}" filterBy="#{e.domicilio.numero}">
+                        <p:outputLabel value="#{e.domicilio.numero}"/>
+                    </p:column>  
+                    
+                    <p:column headerText="Localidad" filterMatchMode="contains" sortBy="#{e.domicilio.localidad}" filterBy="#{e.domicilio.localidad}">
+                        <p:outputLabel value="#{e.domicilio.localidad}"/>
+                    </p:column>  
+                    
+                    <p:column headerText="Provincia" filterMatchMode="contains" sortBy="#{e.domicilio.provincia}" filterBy="#{e.domicilio.provincia}">
+                        <p:outputLabel value="#{e.domicilio.provincia}"/>
+                    </p:column>  
+                    
+                    <p:column style="width: 180px" headerText="Correo Electrónico" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
+                        <p:outputLabel value="#{e.correoElectronico}" />
+                    </p:column>    
+
+                    <p:column headerText="Teléfono" filterMatchMode="contains" sortBy="#{e.telefono}" filterBy="#{e.telefono}">
+                        <p:outputLabel value="#{e.telefono}"/>
+                    </p:column>  
+
+                    <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{e.tipo.nombre}" filterBy="#{e.tipo.nombre}">
+                        <p:outputLabel value="#{e.tipo.nombre}"/>
+                    </p:column>  
+
+                    <p:column headerText="Estado" filterMatchMode="contains" sortBy="#{e.estado}" filterBy="#{e.estado}">
+                        <p:outputLabel value="#{e.estado.nombre}"/>
+                    </p:column>              
+                </p:dataTable>
+            </p:dialog>  
 
         </h:form>
     </ui:define>   

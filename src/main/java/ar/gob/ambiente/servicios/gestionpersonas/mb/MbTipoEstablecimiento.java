@@ -6,9 +6,14 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -29,6 +34,9 @@ public class MbTipoEstablecimiento implements Serializable{
     private List<TipoEstablecimiento> listado = null;
     private List<TipoEstablecimiento> listaFilter;    
     
+    // listados para ver los establecimientos asociados
+    private List<Establecimiento> listEstVincFilter;
+    
     @EJB
     private TipoEstablecimientoFacade tipoEstablecimientoFacade;
 
@@ -38,6 +46,14 @@ public class MbTipoEstablecimiento implements Serializable{
      * Creates a new instance of MbTipoEstablecimiento
      */
     public MbTipoEstablecimiento() {
+    }
+
+    public List<Establecimiento> getListEstVincFilter() {
+        return listEstVincFilter;
+    }
+
+    public void setListEstVincFilter(List<Establecimiento> listEstVincFilter) {
+        this.listEstVincFilter = listEstVincFilter;
     }
 
     public TipoEstablecimiento getCurrent() {
@@ -229,6 +245,18 @@ public class MbTipoEstablecimiento implements Serializable{
         return tipoEstablecimientoFacade.find(id);
     }  
     
+    /**
+     * Método para procesar el pdf
+     * @param document
+     * @throws DocumentException
+     * @throws IOException 
+     */
+    public void preProcessPDF(Object document) throws DocumentException, IOException {
+        Document pdf = (Document) document;    
+        pdf.open();
+        pdf.setPageSize(PageSize.A4.rotate());
+        pdf.newPage();
+    }       
     
     /*********************
     ** Métodos privados **

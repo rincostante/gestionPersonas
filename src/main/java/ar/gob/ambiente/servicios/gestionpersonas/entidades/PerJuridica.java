@@ -41,10 +41,9 @@ public class PerJuridica implements Serializable {
     @Size(message = "El campo Razón Social debe tener entre 1 y 250 caracteres", min = 1, max = 250)
     private String razonSocial;
     
-    @Column (nullable=false, length=11, unique=true)
-    @NotNull(message = "El campo CUIT no puede quedar nulo")
-    @Size(message = "El campo CUIT debe tener 11 caracteres", min = 1, max = 11)    
-    private String cuit;
+    @Column (nullable=false)
+    @NotNull(message = "El compo CUIT no debe quedar nulo")
+    private long cuit;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="tipoPersonaJuridica_id")
@@ -62,7 +61,7 @@ public class PerJuridica implements Serializable {
      * flag "activa" sea falso, dado que los que es verdadero, están vinculados actualmente.
      */     
     @OneToMany(mappedBy="perJuridica")
-    private List<Establecimiento> establecimientosCedidos;
+    private List<ReasignaRazonSocial> establecimientosCedidos;
     
     private Long idAplicacion; 
     
@@ -88,11 +87,11 @@ public class PerJuridica implements Serializable {
     }
 
     @XmlTransient
-    public List<Establecimiento> getEstablecimientosCedidos() {
+    public List<ReasignaRazonSocial> getEstablecimientosCedidos() {
         return establecimientosCedidos;
     }
 
-    public void setEstablecimientosCedidos(List<Establecimiento> establecimientosCedidos) {
+    public void setEstablecimientosCedidos(List<ReasignaRazonSocial> establecimientosCedidos) {
         this.establecimientosCedidos = establecimientosCedidos;
     }
 
@@ -112,11 +111,11 @@ public class PerJuridica implements Serializable {
         this.razonSocial = razonSocial;
     }
 
-    public String getCuit() {
+    public long getCuit() {
         return cuit;
     }
 
-    public void setCuit(String cuit) {
+    public void setCuit(long cuit) {
         this.cuit = cuit;
     }
 

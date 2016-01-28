@@ -8,55 +8,50 @@
      <ui:composition template="/WEB-INF/facelets/templates/indexTemplate.xhtml">
      <ui:define name="content">
      <h:form style="text-align: left">
-         <p:panel id="pnEdit" header="#{bundle.PerJuridicaViewTitle}" style="margin-bottom:10px;">
-                    
-            <h:inputHidden id="id" value="#{mbPerJuridica.selected.id}" />
+         <p:panel id="pnEdit" header="#{bundle.PerJuridicaEditTitle}" style="margin-bottom:10px;">
             <p:messages id="messages" />
 
-            <p:dialog id="dlg" resizable="false" />
-            
-            <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
-                <h:panelGrid columns="2">
+            <h:panelGrid columns="5">
+                    <p:commandButton id="validar" value="Seleccionar para Validar" action="#{mbPerJuridica.prepareValidarCuit}" disabled="#{mbPerJuridica.personaAfip.pejID > 0}"
+                                 process="@this" /> 
+                    <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" disabled="true" />
+                    <p:commandButton icon="ui-icon-refresh" process="@this" update="cuit,razonSocial,validar,limpiar" /> 
+                    <p:commandButton id="limpiar" icon="ui-icon-trash" actionListener="#{mbPerJuridica.limpiarCuit}" disabled="#{mbPerJuridica.personaAfip.pejID == 0}" process="@this" update="cuit,razonSocial,validar" /> 
+            </h:panelGrid>  
+            <h:panelGrid columns="2">
 
-                    <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
-                    <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" 
-                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_razonSocial}" required="true"/>
+                <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
+                <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" style="width: 300px" disabled="true"/>
 
-                    <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}" for="cuit"/>
-                    <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" 
-                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_cuit}" required="true"/>
+                <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
+                <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" 
+                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_estado}" 
+                                 required="true" >
+                    <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                    <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                </p:selectOneMenu>   
 
-                    <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
-                    <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" >
-                        <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
-                        <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
-                    </p:selectOneMenu>   
+                <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
+                <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}" 
+                                requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_tipo}" 
+                                required="true" >
+                    <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
+                    <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
+                </p:selectOneMenu>
 
-                    <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
-                    <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}" >
-                        <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
-                        <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
-                    </p:selectOneMenu>
-
-                    <p:outputLabel value="Establecimientos "/>
-                    <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.prepareViewEstablecimiento}" value="Editar Establecimientos"/>
-                    
-
-                 </h:panelGrid>
-            </p:panel>
-
-            <p:toolbar>
-                <f:facet name="left">
-                    <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.update}" value="Guardar" style="margin-right:10px;" update="pnEdit"/>
-                    <p:commandButton icon="ui-icon-cancel" value="Limpiar">
-                        <p:ajax update="pnEdit" resetValues="true" />
-                    </p:commandButton>    
-                </f:facet>   
-                <f:facet name="right">
-                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbPerJuridica.prepareList}" value="Volver" immediate="true"/>        
-                </f:facet>
-            </p:toolbar>
+             </h:panelGrid>
          </p:panel>
+        <p:toolbar>
+            <f:facet name="left">
+                <p:commandButton icon="ui-icon-pencil" action="#{mbPerJuridica.update}" value="Guardar" style="margin-right:10px;" update="pnEdit"/>
+                <p:commandButton icon="ui-icon-cancel" value="Limpiar">
+                    <p:ajax update="pnEdit" resetValues="true" />
+                </p:commandButton>    
+            </f:facet>   
+            <f:facet name="right">
+                <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbPerJuridica.prepareList}" value="Volver" immediate="true"/>        
+            </f:facet>
+        </p:toolbar>
     </h:form>
 </ui:define>
 </ui:composition>

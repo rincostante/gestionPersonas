@@ -20,47 +20,79 @@
                 </h:panelGroup>
             </p:panel>
 
-            <p:dataTable value="#{mbEstablecimiento.listEstablecimiento}" filteredValue="#{mbEstablecimiento.listEstablecimiento}" 
+            <p:dataTable value="#{mbEstablecimiento.listado}" filteredValue="#{mbEstablecimiento.listadoFilter}" 
                          var="e" id="establecimientoList" rows="5" paginator="true" widgetVar="establecimientoTable"                             
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15">
-
+                
                 <f:facet name="header"> 
                     #{bundle.EstablecimientoListTitle}  
                     <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
                     <p:commandButton icon="ui-icon-refresh" value="Listar" action="#{mbEstablecimiento.prepareList}" update="establecimientoList" style="margin-left: 10px"/>
                     <p:columnToggler datasource="establecimientoList" trigger="toggler" />
+                    <p:commandButton value="Excel" ajax="false">
+                        <p:dataExporter type="xls" target="establecimientoList" fileName="ListadoEstablecimientos" />
+                    </p:commandButton>
+                    <p:commandButton value="Pdf" ajax="false">
+                        <p:dataExporter type="pdf" target="establecimientoList" fileName="ListadoEstablecimientos" preProcessor="#{mbEstablecimiento.preProcessPDF}" />
+                    </p:commandButton>
                 </f:facet>
 
-                <p:column headerText="Tipo de Establecimiento" filterMatchMode="contains" sortBy="#{e.tipo}" filterBy="#{e.tipo}">
-                    <p:outputLabel value="#{e.tipo.nombre}"/>
-                </p:column>                
+                <p:column headerText="Razón Social" filterMatchMode="contains" sortBy="#{e.strRazonSocial}" 
+                          filterBy="#{e.strRazonSocial}" >
+                    <p:outputLabel value="#{e.strRazonSocial}" />
+                </p:column>    
 
-                <p:column headerText="Correo Electrónico" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
-                    <p:outputLabel value="#{e.correoElectronico}"/>
+                <p:column headerText="CUIT" filterMatchMode="contains" sortBy="#{e.strCuit}" 
+                          filterBy="#{e.strCuit}" >
+                    <p:outputLabel value="#{e.strCuit}" />
+                </p:column>    
+
+                <p:column headerText="Calle" filterMatchMode="contains" sortBy="#{e.domicilio.calle}" filterBy="#{e.domicilio.calle}">
+                    <p:outputLabel value="#{e.domicilio.calle}"/>
+                </p:column>   
+
+                <p:column headerText="N°" filterMatchMode="contains" sortBy="#{e.domicilio.numero}" filterBy="#{e.domicilio.numero}">
+                    <p:outputLabel value="#{e.domicilio.numero}"/>
+                </p:column>  
+
+                <p:column headerText="Localidad" filterMatchMode="contains" sortBy="#{e.domicilio.localidad}" filterBy="#{e.domicilio.localidad}">
+                    <p:outputLabel value="#{e.domicilio.localidad}"/>
+                </p:column>  
+
+                <p:column headerText="Provincia" filterMatchMode="contains" sortBy="#{e.domicilio.provincia}" filterBy="#{e.domicilio.provincia}">
+                    <p:outputLabel value="#{e.domicilio.provincia}"/>
+                </p:column>  
+
+                <p:column style="width: 180px" headerText="Correo Electrónico" filterMatchMode="contains" sortBy="#{e.correoElectronico}" filterBy="#{e.correoElectronico}">
+                    <p:outputLabel value="#{e.correoElectronico}" />
                 </p:column>    
 
                 <p:column headerText="Teléfono" filterMatchMode="contains" sortBy="#{e.telefono}" filterBy="#{e.telefono}">
                     <p:outputLabel value="#{e.telefono}"/>
                 </p:column>  
-                
+
+                <p:column headerText="Tipo" filterMatchMode="contains" sortBy="#{e.tipo.nombre}" filterBy="#{e.tipo.nombre}">
+                    <p:outputLabel value="#{e.tipo.nombre}"/>
+                </p:column>  
+
                 <p:column headerText="Estado" filterMatchMode="contains" sortBy="#{e.estado}" filterBy="#{e.estado}">
                     <p:outputLabel value="#{e.estado.nombre}"/>
-                </p:column>  
+                </p:column>   
                 
-                 <p:column filterBy="#{e.admin.habilitado}" headerText="Activos" filterMatchMode="equals">
-                        <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('establecimientoTable').filter()" style="font-size: 80%">
-                                <f:converter converterId="javax.faces.Boolean" />
-                                <f:selectItem itemLabel="Todos" itemValue="" />
-                                <f:selectItem itemLabel="Activos" itemValue="true" />
-                                <f:selectItem itemLabel="Inactivos" itemValue="false" />
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <h:outputText value="#{e.admin.habilitado ? 'Habilitado': 'Deshabilitado'}" />
-                    </p:column>                    
+                <p:column filterBy="#{e.admin.habilitado}" headerText="Activos" filterMatchMode="equals">
+                       <f:facet name="filter">
+                           <p:selectOneMenu onchange="PF('establecimientoTable').filter()" style="font-size: 80%">
+                               <f:converter converterId="javax.faces.Boolean" />
+                               <f:selectItem itemLabel="Todos" itemValue="" />
+                               <f:selectItem itemLabel="Activos" itemValue="true" />
+                               <f:selectItem itemLabel="Inactivos" itemValue="false" />
+                           </p:selectOneMenu>
+                       </f:facet>
+                       <h:outputText value="#{e.admin.habilitado ? 'Habilitado': 'Deshabilitado'}" />
+                </p:column>                    
                 
-                <p:column headerText="Acciones" style="width:140px">
+                <p:column headerText="Acciones" style="width:110px">
                     <p:growl id="messages" showDetail="true" />                           
                     <p:commandButton icon="ui-icon-zoomin" action="#{mbEstablecimiento.prepareView}" title="Ver Detalle">
                         <f:setPropertyActionListener value="#{e}" target="#{mbEstablecimiento.current}" />  
@@ -70,7 +102,8 @@
                         <f:setPropertyActionListener value="#{e}" target="#{mbEstablecimiento.current}" /> 
                     </p:commandButton>            
 
-                    <p:commandButton icon="ui-icon-trash" action="#{mbEstablecimiento.prepareDestroy}" update="messages" title="Deshabilitar">
+                    <p:commandButton icon="ui-icon-trash" action="#{mbEstablecimiento.prepareDeshabilitar}" rendered="#{e.admin.habilitado == 'true'}" 
+                                        update="establecimientoList" title="Deshabilitar">
                         <f:setPropertyActionListener value="#{e}" target="#{mbEstablecimiento.current}" />
                         <p:confirm header="Confirmar" message="¿Desea deshabilitar el Establecimiento?" />
                     </p:commandButton>

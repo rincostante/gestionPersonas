@@ -32,15 +32,15 @@ public class EspecialidadFacade extends AbstractFacade<Especialidad> {
     }
       /**
      * Metodo que verifica si ya existe la entidad.
-     * @param aBuscar: es la cadena que buscara para ver si ya existe en la BDD
+     * @param nombre: es la cadena que buscara para ver si ya existe en la BDD
      * @return: devuelve True o False
      */
-    public boolean existe(String aBuscar){
+    public boolean existe(String nombre){
         em = getEntityManager();       
-        String queryString = "SELECT act.nombre FROM Especialidad especialidad "
-                + "WHERE act.nombre = :stringParam ";
+        String queryString = "SELECT esp.nombre FROM Especialidad esp "
+                + "WHERE esp.nombre = :stringParam ";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", aBuscar);
+                .setParameter("nombre", nombre);
         return q.getResultList().isEmpty();
     }    
     
@@ -49,14 +49,12 @@ public class EspecialidadFacade extends AbstractFacade<Especialidad> {
      * @param nombre
      * @return: devuelve True o False
      */
-    public boolean noExiste(String nombre, Especialidad especialidad){
+    public boolean noExiste(String nombre){
         em = getEntityManager();
-        String queryString = "SELECT act FROM Especialidad act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.especialidad = :especialidad";
+        String queryString = "SELECT esp FROM Especialidad esp "
+                + "WHERE esp.nombre = :nombre";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("especialidad", especialidad);
+                .setParameter("nombre", nombre);
         return q.getResultList().isEmpty();
     }  
     
@@ -65,15 +63,13 @@ public class EspecialidadFacade extends AbstractFacade<Especialidad> {
      * @param nombre
      * @return 
      */ 
-    public Especialidad getExistente(String nombre, Especialidad especialidad){
+    public Especialidad getExistente(String nombre){
         List<Especialidad> lCp;
         em = getEntityManager();
-        String queryString = "SELECT act FROM Especialidad act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.especialidad = :especialidad";
+        String queryString = "SELECT esp FROM Especialidad esp "
+                + "WHERE esp.nombre = :nombre";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("especialidad", especialidad);
+                .setParameter("stringParam", nombre);
         lCp = q.getResultList();
         if(!lCp.isEmpty()){
             return lCp.get(0);
@@ -82,18 +78,6 @@ public class EspecialidadFacade extends AbstractFacade<Especialidad> {
         }
     }    
 
-     /**
-     * Metodo para el autocompletado de la búsqueda por nombre
-     * @return 
-     */  
-
-    public List<String> getNombres(){
-        em = getEntityManager();
-        String queryString = "SELECT act.nombre FROM Especialidad act ";
-        Query q = em.createQuery(queryString);
-        return q.getResultList();
-    }
-    
     /**
      * Método que verifica si la entidad tiene dependencia (Hijos) en estado HABILITADO
      * @param id: ID de la entidad
@@ -101,15 +85,24 @@ public class EspecialidadFacade extends AbstractFacade<Especialidad> {
      */
     public boolean noTieneDependencias(Long id){
         em = getEntityManager();        
-        String queryString = "SELECT act FROM Especialidad act " 
-                + "WHERE act.especialidad.id = :idParam ";        
+        String queryString = "SELECT est FROM Establecimiento est "
+                + "INNER JOIN est.especialidades esp " 
+                + "WHERE esp.id = :id";        
         Query q = em.createQuery(queryString)
-                .setParameter("idParam", id);
+                .setParameter("id", id);
         return q.getResultList().isEmpty();
     }  
-
-    public boolean noExiste(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
+    /**
+     * Método para ordenar las Especialidades alfabéticamente
+     * @return 
+     */
+    public List<Especialidad> findAllByOrder(){
+        em = getEntityManager();
+        String queryString = "SELECT esp FROM Especialidad esp "
+                + "ORDER BY esp.nombre";
+        Query q = em.createQuery(queryString);
+        return q.getResultList();
+    }    
 }
 

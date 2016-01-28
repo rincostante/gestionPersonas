@@ -31,15 +31,19 @@
 
                 <f:facet name="header"> 
                     #{bundle.EstadoListTitle}  
-                    <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
-                    <p:columnToggler datasource="estadoList" trigger="toggler" />
+                    <p:commandButton value="Excel" ajax="false">
+                        <p:dataExporter type="xls" target="estadoList" fileName="ListadoEstados" />
+                    </p:commandButton>
+                    <p:commandButton value="Pdf" ajax="false">
+                        <p:dataExporter type="pdf" target="estadoList" fileName="ListadoEstados" />
+                    </p:commandButton>
                 </f:facet>
 
                 <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
                     <p:outputLabel value="#{e.nombre}"/>
                 </p:column>
 
-                <p:column headerText="Acciones" style="width:140px">
+                <p:column headerText="Acciones" style="width:110px" exportable="false" >
                     <p:growl id="messages" showDetail="true" />                           
                     <p:commandButton icon="ui-icon-zoomin" action="#{mbEstado.prepareView}" title="Ver Detalle">
                         <f:setPropertyActionListener value="#{e}" target="#{mbEstado.current}" />  
@@ -48,6 +52,11 @@
                     <p:commandButton icon="ui-icon-pencil" action="#{mbEstado.prepareEdit}" title="Editar" >
                         <f:setPropertyActionListener value="#{e}" target="#{mbEstado.current}" /> 
                     </p:commandButton>            
+
+                    <p:commandButton icon="ui-icon-trash" action="#{mbEstado.prepareDestroy}" title="Eliminar" >
+                        <f:setPropertyActionListener value="#{e}" target="#{mbEstado.current}" /> 
+                        <p:confirm header="Confirmar" message="¿Desea eliminar el Estado seleccionado?" icon="ui-icon-alert" />
+                    </p:commandButton>  
 
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

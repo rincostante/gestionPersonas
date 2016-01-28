@@ -10,6 +10,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.AdminEntidad;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
@@ -20,12 +21,18 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfip;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfipWs;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfipWs_Service;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -38,8 +45,11 @@ import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.context.ExternalContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.xml.ws.WebServiceRef;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
@@ -49,15 +59,10 @@ import org.primefaces.event.RowEditEvent;
 * @author rodriguezn
 */
 public class MbPerJuridica implements Serializable{
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CuitAfipWs/CuitAfipWs.wsdl")
+    private CuitAfipWs_Service srvCuitAfip;
     
     private PerJuridica current;
-    private Establecimiento establecimiento;
-    private Domicilio domicilio;  
-    private Domicilio domVinc;
-    
-    private List<Establecimiento> establecimientos;
-    private List<Establecimiento> listaEstablecimientos;
-        
 
     @EJB
     private PerJuridicaFacade perJuridicaFacade;
@@ -65,10 +70,6 @@ public class MbPerJuridica implements Serializable{
     private EstadoFacade estadoFacade;
     @EJB
     private TipoPersonaJuridicaFacade tipoFacade;
-    @EJB
-    private TipoEstablecimientoFacade tipoEstablecimientoFacade;
-    @EJB
-    private EstablecimientoFacade establecimientoFacade;
     
     private PerJuridica perJuridicaSelected;
     private MbLogin login;
@@ -76,12 +77,13 @@ public class MbPerJuridica implements Serializable{
     
     private boolean iniciado;
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
+    private CuitAfip personaAfip;
+    private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
+    private Long cuit;    
     
     private List<PerJuridica> listaPerJuridica;
     private List<Estado> listaEstado;
     private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
-    private List<TipoEstablecimiento> listaTipoEstablecimiento;
-
 
     
     /**
@@ -125,65 +127,30 @@ public class MbPerJuridica implements Serializable{
 
     /********************************
      ****** Getters y Setters *******
-     * @return 
      ********************************/
    
-    public List<Establecimiento> getListaEstablecimientos() {
-        return listaEstablecimientos;
+    public CuitAfip getPersonaAfip() {
+        return personaAfip;
     }
 
-    public void setListaEstablecimientos(List<Establecimiento> listaEstablecimientos) {
-        this.listaEstablecimientos = listaEstablecimientos;
+    public void setPersonaAfip(CuitAfip personaAfip) {
+        this.personaAfip = personaAfip;
     }
 
-    public Domicilio getDomicilio() {
-        return domicilio;
+    public Long getCuit() {
+        return cuit;
     }
 
-    public void setDomicilio(Domicilio domicilio) {
-        this.domicilio = domicilio;
+    public void setCuit(Long cuit) {
+        this.cuit = cuit;
     }
 
-    public Domicilio getDomVinc() {
-        return domVinc;
-    }
-
-    public void setDomVinc(Domicilio domVinc) {
-        this.domVinc = domVinc;
-    }
-    
-    public List<Establecimiento> getEstablecimientos() {
-        return establecimientos;
-    }
-
-    public void setEstablecimientos(List<Establecimiento> establecimientos) {
-        this.establecimientos = establecimientos;
-    }
-
-   
-    public List<TipoEstablecimiento> getListaTipoEstablecimiento() {
-        return listaTipoEstablecimiento;
-    }
-
-    public void setListaTipoEstablecimiento(List<TipoEstablecimiento> listaTipoEstablecimiento) {
-        this.listaTipoEstablecimiento = listaTipoEstablecimiento;
-    }
-
-   
     public PerJuridica getCurrent() {
         return current;
     }
 
     public void setCurrent(PerJuridica current) {
         this.current = current;
-    }
-
-    public Establecimiento getEstablecimiento() {
-        return establecimiento;
-    }
-
-    public void setEstablecimiento(Establecimiento establecimiento) {
-        this.establecimiento = establecimiento;
     }
 
     public PerJuridicaFacade getPerJuridicaFacade() {
@@ -284,21 +251,6 @@ public class MbPerJuridica implements Serializable{
         return current;
     }   
 
-    public TipoEstablecimientoFacade getTipoEstablecimientoFacade() {
-        return tipoEstablecimientoFacade;
-    }
-
-    public void setTipoEstablecimientoFacade(TipoEstablecimientoFacade tipoEstablecimientoFacade) {
-        this.tipoEstablecimientoFacade = tipoEstablecimientoFacade;
-    }
-
-    public EstablecimientoFacade getEstablecimientoFacade() {
-        return establecimientoFacade;
-    }
-
-    public void setEstablecimientoFacade(EstablecimientoFacade establecimientoFacade) {
-        this.establecimientoFacade = establecimientoFacade;
-    }
     
     /*******************************
      ** Métodos de inicialización **
@@ -317,8 +269,6 @@ public class MbPerJuridica implements Serializable{
      * @return acción para el detalle de la entidad
      */
     public String prepareView() {
-        establecimientos = current.getEstablecimientos();
-        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
         listaEstado = estadoFacade.findAll();
         return "view";
     }
@@ -330,12 +280,7 @@ public class MbPerJuridica implements Serializable{
     public String prepareCreate() {
         //Se instancia current
         current = new PerJuridica();      
-        //Inicializamos la creacion de establecimiento
-        establecimiento = new Establecimiento();
-        domicilio = new Domicilio();
-        establecimientos = new ArrayList();
         listaTipoPersonaJuridica = tipoFacade.findAll();
-        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
         listaEstado = estadoFacade.findAll();
         return "new";
     }
@@ -344,14 +289,14 @@ public class MbPerJuridica implements Serializable{
      * @return acción para la edición de la entidad
      */
     public String prepareEdit() {
-        //inicializamos el objeto establecimiento para asignar nuevos a la persona Jurídica que se está editando
-        establecimiento = new Establecimiento();
-        domicilio = new Domicilio();
-        
         //pueblo los combos
         listaEstado = estadoFacade.findAll();
         listaTipoPersonaJuridica = tipoFacade.findAll();
-        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
+        
+        //limpio el cuit si es que hubiera
+        personaAfip = null;
+        personaAfip = new CuitAfip();
+        
         return "edit";
     }
            
@@ -375,257 +320,12 @@ public class MbPerJuridica implements Serializable{
         update = 1;
         update();        
     } 
-    
-    /**
-     * 
-     */
-    public void prepareHabilitarEstablecimiento(){
-        update = 2;
-        updateEstablecimiento();
-    }
-    
-    /**
-     * 
-     */
-    public void prepareDeshabilitarEstablecimiento(){
-        update = 1;
-        updateEstablecimiento();
-    }
+
 
     /*************************
     ** Métodos de operación **
     **************************/
-    
-    /**
-     * Agrega un Establecimiento y su domicilio
-     */
-    public void prepareCreateEstablecimientos(){
-        if(current.getId()== null){
-            //Si el ID es nulo, preparamos la carga de un nuevo Establecimiento y su Domicilio
-            // instanciamos el Domicilio del Establecimiento
-            Domicilio dom = new Domicilio();
-            establecimiento.setDomicilio(dom);
 
-            Map<String,Object> options = new HashMap<>();
-            options.put("contentWidth", 1200);
-            RequestContext.getCurrentInstance().openDialog("dlgAddEstablecimientos", options, null); 
-            
-        }else{
-            //Si el ID del current existe 
-            current.getId();
-            current.getEstablecimientos();
-            establecimiento = new Establecimiento();
-            Domicilio dom = new Domicilio();
-            establecimiento.setDomicilio(dom);      
-            Map<String,Object> options = new HashMap<>();
-            options.put("contentWidth", 1000);
-            RequestContext.getCurrentInstance().openDialog("dlgNewAddEstablecimientos", options, null);  
-        }            
-    }
-
-    /**
-     * Abre el dlgViewEstablecimientos
-     */        
-    public void prepareViewEstablecimiento(){
-        listaTipoEstablecimiento = tipoEstablecimientoFacade.findAll();
-        listaEstado = estadoFacade.findAll();
-        
-        Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 1200);
-        options.put("contentHeight", 500);
-        RequestContext.getCurrentInstance().openDialog("dlgViewEstablecimientos", options, null);
-    }
-    
-   /**
-     * Edita un establecimiento
-     */
-    public void prepareEditEstablecimiento() {
-        current.getEstablecimientos();
-        listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
-        listaEstado = estadoFacade.findAll();
-        Map<String,Object> options = new HashMap<>();
-        options.put("contentWidth", 1000);
-        RequestContext.getCurrentInstance().openDialog("dlgEditEstablecimientos", options, null);
-
-    }
-    
-    /**
-     * Método para actualizar el listado de los establecimientos en el EDIT
-     * 
-     */
-    public void prepareListEstablecimiento() {
-        iniciado = true;
-        current.getEstablecimientos();
-    }    
-    
-    
-    /*--------------------------------------------------------------------------------*/    
-    /**
-    * Método para validar si una instacia ya existe en el list que las guarda en memoria
-    */
-    private boolean compararEstablecimiento(Establecimiento esta){
-        boolean retorno = false;
-        Iterator estaIt;
-        
-        // Si estoy creando un procedimiento nuevo, uso el iterator del listInstancias
-        // Si no, lo uso del current.getInstancias
-        if(current.getId() != null){
-            estaIt = current.getEstablecimientos().iterator();
-        }else{
-            estaIt = establecimientos.iterator(); 
-        }
-        
-        while(estaIt.hasNext()){
-            Establecimiento establecimiento = (Establecimiento)estaIt.next();
-            /**********************************************************************
-             * Ver el método getActividad() de Establecimient que ahora ha cambiado
-             **********************************************************************/
-            /*
-            if(establecimiento.getActividad().equals(esta.getActividad())
-                    && establecimiento.getEstado().equals(esta.getEstado())){
-                retorno = true;
-            }
-            */
-        } 
-        return retorno;
-    }   
-    
-    
-    /**
-     * Método para guardar los Establecimientos creados en el listaEstablecimiento que irán en la nueva perJuridica
-     */
-    public void createEstablecimiento(){
-        if(!compararEstablecimiento(establecimiento)){ 
-
-            // Si estoy creanto un procedimiento nuevo, agrego la instancia al list
-            // Si no se la agrego a la propiedad instancias del procedimiento
-             
-            if(current.getId() != null){
-
-                current.getEstablecimientos().add(establecimiento);
-                // se agregan los datos del AdminEntidad
-                Date date = new Date(System.currentTimeMillis());
-                AdminEntidad admEnt = new AdminEntidad();
-                admEnt.setFechaAlta(date);
-                admEnt.setHabilitado(true);
-                admEnt.setUsAlta(usLogeado);
-                current.setAdmin(admEnt);
-                
-                // se agregan los datos del AdminEntidad para el Establecimiento
-                AdminEntidad admEntEstablecimiento = new AdminEntidad();
-                admEntEstablecimiento.setFechaAlta(date);
-                admEntEstablecimiento.setHabilitado(true);
-                admEntEstablecimiento.setUsAlta(usLogeado);
-                establecimiento.setAdmin(admEntEstablecimiento);
-                //establecimiento.setDomicilio(domicilio);  
-                //current.getEstablecimientos().add(establecimiento); 
-                
-            }else{
-                // se agregan los datos del AdminEntidad
-                Date date = new Date(System.currentTimeMillis());
-                AdminEntidad admEnt = new AdminEntidad();
-                admEnt.setFechaAlta(date);
-                admEnt.setHabilitado(true);
-                admEnt.setUsAlta(usLogeado);
-                
-                // asigno la admin
-                establecimiento.setAdmin(admEnt);
-               
-                // agrego el establecimiento al listado
-                establecimientos.add(establecimiento); 
-
-                // volvemos a instanciar el Domicilio del Establecimiento
-                domicilio = null;
-                domicilio = new Domicilio();
-                //establecimiento.setDomicilio(domicilio);    
-            
-                //Asigno los Establecimientos
-                current.setEstablecimientos(establecimientos);   
-                                                  
-            }
-           // reseteo establecimientos y domicilios
-            establecimiento = null;
-            establecimiento = new Establecimiento();
-
-        } else{
-            
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoExistente"));
-        }
-        
-        Domicilio dom = new Domicilio();
-        establecimiento.setDomicilio(dom);
-    }
-
-
-      /**
-     * Método para actualizar un Establecimiento
-    * @return dlgViewEstablecimiento
-     */
-    public String updateEstablecimiento(){
-        
-        boolean edito;
-        Establecimiento esta;
-        Date date = new Date(System.currentTimeMillis());
-
-        //Deshabilito
-        if(update == 1){
-            establecimiento.getAdmin().setFechaBaja(date);
-            establecimiento.getAdmin().setUsBaja(usLogeado);
-            establecimiento.getAdmin().setHabilitado(false);
-        }
-        //Habilito
-        if(update == 2){
-            establecimiento.getAdmin().setFechaModif(date);
-            establecimiento.getAdmin().setUsModif(usLogeado);
-            establecimiento.getAdmin().setHabilitado(true);
-            establecimiento.getAdmin().setFechaBaja(null);
-            establecimiento.getAdmin().setUsBaja(usLogeado);
-        }
-        //Modificar / Editar el establecimiento
-        if(update == 0){
-            establecimiento.getAdmin().setFechaModif(date);
-            establecimiento.getAdmin().setUsModif(usLogeado);
-        }
-        //Actualizo segun la operacion seleccionada
-        try{
-            if(update==0){
-                //esta = getEstablecimientoFacade().getExistente(establecimiento.getActividad());
-                esta = null;
-                /*****************************************
-                 * Ver el método getExistente() del facade
-                 *****************************************/
-                if(esta == null){
-                    edito = true;
-                }else{
-                    edito = esta.getId().equals(establecimiento.getId());
-                }
-                if(edito){
-                    //Actualizacion de datos de administracion de la entidad Establecimiento
-                    establecimiento.getAdmin().setFechaModif(date);
-                    establecimiento.getAdmin().setUsModif(usLogeado);
-                    
-                    //Actualizo
-                    getEstablecimientoFacade().edit(establecimiento);                
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ha sido actualizada"));
-                    return "dlgViewEstablecimiento";
-                }else{
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ya Existe"));
-                    return null; 
-                    }
-            }else if(update==1){
-                 getEstablecimientoFacade().edit(establecimiento);
-                 JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Deshabilitado"));
-                return "dlgViewEstablecimiento";
-            }else{
-                getEstablecimientoFacade().edit(establecimiento);
-                JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("Habilitado"));
-                return "dlgViewEstablecimiento";
-            }
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Actualizado correctamente"));
-            return null;
-        }
-    }
     
     /**
      * Método que inserta una nueva instancia en la base de datos, previamente genera una entidad de administración
@@ -641,18 +341,11 @@ public class MbPerJuridica implements Serializable{
         admEnt.setUsAlta(usLogeado);
         current.setAdmin(admEnt);
         
-        //Asigno expediente
-        /**
-         * Ya no hay expediente para la perJuridica, va en los Establecimientos
-         * y cada perJuridica tiene al menos un establecimento, el domicilio legal
-         */
-        //current.setExpediente(expediente);
-        
-        //Asigno los Establecimientos
-        current.setEstablecimientos(establecimientos);
-        
-        if(current.getRazonSocial().isEmpty()){
-            JsfUtil.addSuccessMessage("La persona Jurídica que está guardando debe tener una Razón Social.");
+        if(current.getRazonSocial() == null){
+            JsfUtil.addErrorMessage("La Persona Jurídica que está guardando debe tener una Razón Social.");
+            return null;
+        }else if(current.getCuit() == 0){
+            JsfUtil.addErrorMessage("La Persona Jurícia que está guardando debe tener un CUIT.");
             return null;
         }else{
             try {
@@ -700,8 +393,16 @@ public class MbPerJuridica implements Serializable{
             current.getAdmin().setUsBaja(usLogeado);
         }
         if(update == 0){
-            current.getAdmin().setFechaModif(date);
-            current.getAdmin().setUsModif(usLogeado);
+            if(current.getRazonSocial().isEmpty()){
+                JsfUtil.addErrorMessage("La Persona Jurídica que está guardando debe tener una Razón Social.");
+                return null;
+            }else if(current.getCuit() == 0){
+                JsfUtil.addErrorMessage("La Persona Jurícia que está guardando debe tener un CUIT.");
+                return null;
+            }else{  
+                current.getAdmin().setFechaModif(date);
+                current.getAdmin().setUsModif(usLogeado);
+            }
         }
        //Acualizo según la operación seleccionada
         try {
@@ -791,6 +492,74 @@ public class MbPerJuridica implements Serializable{
         }
     }    
  
+    /**
+     * Método para abrir el diálogo para validar cuit 
+     */
+    public void prepareValidarCuit(){
+        // seteo el objeto que recibirá los resultados de la validación
+        personaAfip = new CuitAfip();
+        cuit = Long.valueOf(0);
+        
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 700);
+        options.put("contentHeight", 250);
+        RequestContext.getCurrentInstance().openDialog("dlgValidarCuit", options, null);
+    }
+
+    
+    /**
+     * Método que consume el servicio de validación de cuit
+     * Recibe un cuit y retorna los datos de la persona asociada, en caso de ser válido.
+     * Los datos recibidos los guarda en el campo personaAfip para mostrarlo al usuario.
+     */
+    public void validarCuit(){
+        try { 
+            CuitAfipWs port = srvCuitAfip.getCuitAfipWsPort();
+            personaAfip = port.verPersona(cuit);
+            
+            // Si valida seteo los datos correspondientes de la persona
+            current.setCuit(personaAfip.getPejID());
+            current.setRazonSocial(personaAfip.getPejRazonSocial());
+            
+            JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"), ex.getMessage()});
+        }
+    }    
+    
+    /**
+     * Método para limpiar los datos AFIP seleccionado
+     */
+    public void limpiarCuit(){
+        personaAfip = null;
+        personaAfip = new CuitAfip();
+        current.setRazonSocial("");
+        current.setCuit(Long.valueOf(0));
+    }
+    
+    /**
+     * Método para limpiar todo el formulario new
+     */
+    public void limpiarForm(){
+        limpiarCuit();
+    }    
+    
+    /**
+     * Método para procesar el pdf
+     * @param document
+     * @throws DocumentException
+     * @throws IOException 
+     */
+    public void preProcessPDF(Object document) throws DocumentException, IOException {
+        Document pdf = (Document) document;    
+        pdf.open();
+        pdf.setPageSize(PageSize.A4.rotate());
+        pdf.newPage();
+    }        
+    
    
     /*********************
     ** Métodos privados **
@@ -825,7 +594,7 @@ public class MbPerJuridica implements Serializable{
     }  
             
     private void validarExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExiste((String)arg2)){
+        if(!getFacade().noExiste((long)arg2)){
             throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerJuridicaExistente")));
         }
     }  
@@ -836,13 +605,7 @@ public class MbPerJuridica implements Serializable{
     private void recreateModel() {
         listaPerJuridica.clear();
         listaPerJuridica = null;
-
-        if(establecimientos !=null){
-            establecimientos.clear();
-            establecimientos =null;
-        }   
-    }        
-    
+    }            
     
     public void pruebaChangeListener(AjaxBehaviorEvent event){
         System.out.println("cambió");

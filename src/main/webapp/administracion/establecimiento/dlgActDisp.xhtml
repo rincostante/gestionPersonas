@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Actividades disponibles para agregar al Establecimiento</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 80%;
+            }
+        </style>
+    </h:head>
+     
+    <h:body>
+        <h:form id="frmActDisp">
+            <p:dataTable var="act" value="#{mbEstablecimiento.listActDisp}" 
+                         filteredValue="#{mbEstablecimiento.listActFilter}" id= "actList"
+			 rows="5" 
+                         paginator="true" 
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                         rowsPerPageTemplate="5,10,15">
+                <f:facet name="header">
+                    <h:commandLink>
+                        <p:dataExporter type="xls" target="actList" fileName="ListadoActividadesParaEstabl" />
+                    </h:commandLink>   
+                    <h:commandLink>
+                        <p:dataExporter type="pdf" target="actList" fileName="ListadoActividadesParaEstabl" preProcessor="#{mbEstablecimiento.preProcessPDF}" />
+                    </h:commandLink> 
+                </f:facet>
+                <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{act.nombre}" filterBy="#{act.nombre}">
+                    <p:outputLabel value="#{act.nombre}"/>
+                </p:column>
+                <p:column headerText="Asignar" style="width :45px;" rendered="#{mbEstablecimiento.asignaDisp}">
+                    <p:commandButton icon="ui-icon-circle-triangle-s" ajax="false" rendered="#{mbEstablecimiento.asignaDisp}" 
+                                     actionListener="#{mbEstablecimiento.asignarActividad(act)}" />
+                </p:column>                  
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>

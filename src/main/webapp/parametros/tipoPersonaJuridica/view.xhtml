@@ -13,10 +13,15 @@
                 <p:messages id="messages" />
 
                 <h:panelGrid columns="2">
-                    <h:outputLabel value="#{bundle.LabelNombre}"/>
+                    <h:outputLabel value="#{bundle.LabelNombre}: "/>
                     <h:outputText value="#{mbTipoPersonaJuridica.selected.nombre}" title="#{bundle.LabelNombre}"/>
-                    </h:panelGrid>   
-
+                    
+                    <h:outputLabel value="Sigla: "/>
+                    <h:outputText value="#{mbTipoPersonaJuridica.selected.sigla}" title="Sigla"/>
+                    
+                    <h:outputLabel value="Personas Jurídicas asociadas: " />
+                    <p:commandButton value="Ver" type="button" onclick="PF('perJur').show();" />
+                </h:panelGrid>      
             </p:panel>
 
             <p:toolbar>
@@ -24,7 +29,41 @@
                     <p:commandButton icon="ui-icon-refresh" action="#{mbTipoPersonaJuridica.prepareList}" value="Volver" ajax="false"/>
                 </f:facet>
             </p:toolbar>
+            
+            <p:dialog style="font-size: 80%"
+                      header="Listado de Personas Jurídicas asociadas al tipo #{mbTipoPersonaJuridica.selected.nombre}" 
+                      widgetVar="perJur"
+                      showEffect="fade"
+                      hideEffect="fade"
+                      width="30%">
+                <p:dataTable value="#{mbTipoPersonaJuridica.selected.perJuridicas}" 
+                            filteredValue="#{mbTipoPersonaJuridica.listPerJurVincFilter}" 
+                            var="e" id="perJurVinc" 
+                            rows="5"
+                            paginator="true"
+                            widgetVar="famTable"                             
+                            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="5,10,15">
+                    
+                    <f:facet name="header"> 
+                        <p:commandButton value="Excel" ajax="false">
+                            <p:dataExporter type="xls" target="perJurVinc" fileName="ListadoPerJurXTipo#{mbTipoPersonaJuridica.selected.nombre}" />
+                        </p:commandButton>
+                        <p:commandButton value="Pdf" ajax="false">
+                            <p:dataExporter type="pdf" target="perJurVinc" fileName="ListadoPerJurXTipo#{mbTipoPersonaJuridica.selected.nombre}" />
+                        </p:commandButton>
+                    </f:facet>
+                    
+                    <p:column headerText="Razon Social" filterMatchMode="contains" sortBy="#{e.razonSocial}" filterBy="#{e.razonSocial}">
+                        <p:outputLabel value="#{e.razonSocial}"/>
+                    </p:column>
 
+                    <p:column headerText="Cuit" filterMatchMode="contains" sortBy="#{e.cuit}" filterBy="#{e.cuit}">
+                        <p:outputLabel value="#{e.cuit}"/>
+                    </p:column>             
+                </p:dataTable>
+            </p:dialog>  
+            
         </h:form>
     </ui:define>   
 </ui:composition>

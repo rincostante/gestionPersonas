@@ -8,6 +8,8 @@ package ar.gob.ambiente.servicios.gestionpersonas.facades;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -41,6 +43,15 @@ public abstract class AbstractFacade<T> {
     public List<T> findAll() {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    public List<T> findAllByNombre(){
+        javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<T> c = cq.from(entityClass);
+        cq.select(c);
+        cq.orderBy(cb.asc(c.get("nombre")));
         return getEntityManager().createQuery(cq).getResultList();
     }
 

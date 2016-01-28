@@ -29,16 +29,21 @@
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15">
 
-                <f:facet name="header"> #{bundle.TipoEstablecimientoListTitle}  
-                    <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator" style="margin-left: 10px" />
-                    <p:columnToggler datasource="tipoEstablecimientoList" trigger="toggler" />
+                <f:facet name="header"> 
+                    #{bundle.TipoEstablecimientoListTitle}  
+                    <p:commandButton value="Excel" ajax="false">
+                        <p:dataExporter type="xls" target="tipoEstablecimientoList" fileName="ListadoTipoEstablecimiento" />
+                    </p:commandButton>
+                    <p:commandButton value="Pdf" ajax="false">
+                        <p:dataExporter type="pdf" target="tipoEstablecimientoList" fileName="ListadoTipoEstablecimiento" />
+                    </p:commandButton>
                 </f:facet>
 
                 <p:column headerText="Nombre" filterMatchMode="contains" sortBy="#{e.nombre}" filterBy="#{e.nombre}">
                     <p:outputLabel value="#{e.nombre}"/>
                 </p:column>
 
-                <p:column headerText="Acciones" style="width:140px">
+                <p:column headerText="Acciones" style="width:110px" exportable="false">
                     <p:growl id="messages" showDetail="true" />                           
                     <p:commandButton icon="ui-icon-zoomin" action="#{mbTipoEstablecimiento.prepareView}" title="Ver Detalle">
                         <f:setPropertyActionListener value="#{e}" target="#{mbTipoEstablecimiento.current}" />  
@@ -47,6 +52,11 @@
                     <p:commandButton icon="ui-icon-pencil" action="#{mbTipoEstablecimiento.prepareEdit}" title="Editar" >
                         <f:setPropertyActionListener value="#{e}" target="#{mbTipoEstablecimiento.current}" /> 
                     </p:commandButton>               
+
+                    <p:commandButton icon="ui-icon-trash" action="#{mbTipoEstablecimiento.prepareDestroy}" title="Eliminar" >
+                        <f:setPropertyActionListener value="#{e}" target="#{mbTipoEstablecimiento.current}" /> 
+                        <p:confirm header="Confirmar" message="¿Desea eliminar el Tipo de Establecimiento seleccionado?" icon="ui-icon-alert" />
+                    </p:commandButton>  
 
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />

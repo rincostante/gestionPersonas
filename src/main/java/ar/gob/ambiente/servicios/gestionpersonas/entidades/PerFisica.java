@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
@@ -35,7 +36,7 @@ public class PerFisica implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="expediente_id")
     private Expediente expediente; 
         
@@ -48,7 +49,7 @@ public class PerFisica implements Serializable {
      * Campo de tipo entero que indica el CUIT
      */
     @Column (nullable=false)
-    @NotNull(message = "{entidades.fieldNotNullError}")
+    @NotNull(message = "El campo CUIT/CUIL no puede quedar vacío")
     private long cuitCuil; 
     
     private String correoElectronico;
@@ -58,15 +59,25 @@ public class PerFisica implements Serializable {
     @JoinColumn(name="domicilio_id")
     private Domicilio domicilio;
     
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="estado_id")
     private Estado estado;
+       
+    private boolean cuitValidado;
     
     /**
      * Campo de tipo Array que contiene el conjunto de los establecimientos que puediera tener asociado la persona
      */     
     @OneToMany(mappedBy="perFisica")
     private List<Establecimiento> establecimientos;
+    
+    /**
+     * Campo de tipo Array que contiene el conjunto de las diferentes Establecimientos que alguna vez estuvieron vinculados a 
+     * esta Persona Física. Si bien el listado traerá todos las reasignaciones en el get, habrá que filtrar solo aquellas cuyo
+     * flag "activa" sea falso, dado que los que es verdadero, están vinculados actualmente.
+     */     
+    @OneToMany(mappedBy="perFisica")
+    private List<ReasignaRazonSocial> establecimientosCedidos;    
    
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="adminentidad_id")
@@ -77,6 +88,24 @@ public class PerFisica implements Serializable {
     */
     public PerFisica() {
         establecimientos = new ArrayList();
+        establecimientosCedidos = new ArrayList();
+    }
+
+    @XmlTransient
+    public List<ReasignaRazonSocial> getEstablecimientosCedidos() {
+        return establecimientosCedidos;
+    }
+
+    public void setEstablecimientosCedidos(List<ReasignaRazonSocial> establecimientosCedidos) {
+        this.establecimientosCedidos = establecimientosCedidos;
+    }
+
+    public boolean isCuitValidado() {
+        return cuitValidado;
+    }
+
+    public void setCuitValidado(boolean cuitValidado) {
+        this.cuitValidado = cuitValidado;
     }
 
     @XmlTransient

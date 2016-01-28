@@ -34,11 +34,24 @@ public class TipoPersonaJuridica implements Serializable {
     @Size(message = "El campo nombre debe tener entre 1 y 250 caracteres", min = 1, max = 250)
     private String nombre;
     
+    @Column (nullable=false, length=10, unique=true)
+    @NotNull(message = "El campo nombre no puede quedar nulo")
+    @Size(message = "El campo nombre debe tener entre 1 y 10 caracteres", min = 1, max = 10)
+    private String sigla;    
+    
     @OneToMany(mappedBy="tipoPersonaJuridica")
     private List<PerJuridica> perJuridica;
 
     public TipoPersonaJuridica() {
         perJuridica = new ArrayList();
+    }
+
+    public String getSigla() {
+        return sigla;
+    }
+
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
         
     public Long getId() {

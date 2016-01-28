@@ -29,34 +29,19 @@ public class EstadoFacade extends AbstractFacade<Estado> {
 
     public EstadoFacade() {
         super(Estado.class);
-    }
-      /**
-     * Metodo que verifica si ya existe la entidad.
-     * @param aBuscar: es la cadena que buscara para ver si ya existe en la BDD
-     * @return: devuelve True o False
-     */
-    public boolean existe(String aBuscar){
-        em = getEntityManager();       
-        String queryString = "SELECT estado.nombre FROM Estado estado "
-                + "WHERE estado.nombre = :stringParam ";
-        Query q = em.createQuery(queryString)
-                .setParameter("stringParam", aBuscar);
-        return q.getResultList().isEmpty();
-    }    
+    }   
     
     /**
      * Metodo que verifica si ya existe la entidad.
      * @param nombre
      * @return: devuelve True o False
      */
-    public boolean noExiste(String nombre, Estado estado){
+    public boolean noExiste(String nombre){
         em = getEntityManager();
-        String queryString = "SELECT act FROM Estado act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.estado = :estado";
+        String queryString = "SELECT est FROM Estado est "
+                + "WHERE est.nombre = :nombre";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("estado", estado);
+                .setParameter("nombre", nombre);
         return q.getResultList().isEmpty();
     }  
     
@@ -65,15 +50,13 @@ public class EstadoFacade extends AbstractFacade<Estado> {
      * @param nombre
      * @return 
      */ 
-    public Estado getExistente(String nombre, Estado estado){
+    public Estado getExistente(String nombre){
         List<Estado> lCp;
         em = getEntityManager();
-        String queryString = "SELECT act FROM Estado act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.estado = :estado";
+        String queryString = "SELECT est FROM Estado est "
+                + "WHERE est.nombre = :nombre";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("estado", estado);
+                .setParameter("nombre", nombre);
         lCp = q.getResultList();
         if(!lCp.isEmpty()){
             return lCp.get(0);
@@ -81,18 +64,6 @@ public class EstadoFacade extends AbstractFacade<Estado> {
             return null;
         }
     }    
-
-     /**
-     * Metodo para el autocompletado de la búsqueda por nombre
-     * @return 
-     */  
-
-    public List<String> getNombres(){
-        em = getEntityManager();
-        String queryString = "SELECT act.nombre FROM Estado act ";
-        Query q = em.createQuery(queryString);
-        return q.getResultList();
-    }
     
     /**
      * Método que verifica si la entidad tiene dependencia (Hijos) en estado HABILITADO
@@ -100,19 +71,37 @@ public class EstadoFacade extends AbstractFacade<Estado> {
      * @return: True o False
      */
     public boolean noTieneDependencias(Long id){
-        em = getEntityManager();        
-        String queryString = "SELECT act FROM Estado act " 
-                + "WHERE act.estado.id = :idParam ";        
-        Query q = em.createQuery(queryString)
-                .setParameter("idParam", id);
-        return q.getResultList().isEmpty();
+        em = getEntityManager();     
+        String queryString;
+        Query q;
+        boolean result = true;
+                
+        // verifico que no tenga personasa físicas vinculadas
+        queryString = "SELECT perFis FROM PerFisica perFis "
+                + "WHERE perFis.estado.id = :id";        
+        q = em.createQuery(queryString)
+                .setParameter("id", id);
+        if(!q.getResultList().isEmpty()){
+            result = false;
+        }
+        
+        // verifico que no tenga personas jurídicas vinculadas
+        queryString = "SELECT perJur FROM PerJuridica perJur "
+                + "WHERE perJur.estado.id = :id";        
+        q = em.createQuery(queryString)
+                .setParameter("id", id);
+        if(!q.getResultList().isEmpty()){
+            result = false;
+        }
+        
+        // verifico que no tenga establecimientos vinculados
+        queryString = "SELECT establ FROM Establecimiento establ "
+                + "WHERE establ.estado.id = :id";        
+        q = em.createQuery(queryString)
+                .setParameter("id", id);
+        if(!q.getResultList().isEmpty()){
+            result = false;
+        }
+        return result;
     }  
-
- /*   public List<Estado> getNombres(Estado selectEstado) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }*/
-
-    public boolean noExiste(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

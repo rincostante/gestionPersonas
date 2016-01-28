@@ -15,7 +15,8 @@
                 <h:panelGrid columns="2">
                     
                     <p:outputLabel value="#{bundle.LabelNombre}" for="nombre"/>
-                    <p:inputText id="nombre" value="#{mbTipoEstablecimiento.selected.nombre}" 
+                    <p:inputText id="nombre" validator="#{mbTipoEstablecimiento.validarInsert}" 
+                                 value="#{mbTipoEstablecimiento.selected.nombre}" style="width: 250px"
                                  requiredMessage="#{bundle.LabelNombre}" required="true"/>
                     
                 </h:panelGrid>

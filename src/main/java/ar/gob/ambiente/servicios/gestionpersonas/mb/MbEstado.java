@@ -6,9 +6,16 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
@@ -29,6 +36,11 @@ public class MbEstado implements Serializable{
     private List<Estado> listado = null;
     private List<Estado> listaFilter;    
     
+    // listado para los objetos vinculados vinculados
+    private List<Establecimiento> listEstVincFilter;    
+    private List<PerFisica> listPerFisVincFilter;    
+    private List<PerJuridica> listPerJurVincFilter;   
+    
     @EJB
     private EstadoFacade estadoFacade;
 
@@ -38,6 +50,30 @@ public class MbEstado implements Serializable{
      * Creates a new instance of MbEstado
      */
     public MbEstado() {
+    }
+
+    public List<Establecimiento> getListEstVincFilter() {
+        return listEstVincFilter;
+    }
+
+    public void setListEstVincFilter(List<Establecimiento> listEstVincFilter) {
+        this.listEstVincFilter = listEstVincFilter;
+    }
+
+    public List<PerFisica> getListPerFisVincFilter() {
+        return listPerFisVincFilter;
+    }
+
+    public void setListPerFisVincFilter(List<PerFisica> listPerFisVincFilter) {
+        this.listPerFisVincFilter = listPerFisVincFilter;
+    }
+
+    public List<PerJuridica> getListPerJurVincFilter() {
+        return listPerJurVincFilter;
+    }
+
+    public void setListPerJurVincFilter(List<PerJuridica> listPerJurVincFilter) {
+        this.listPerJurVincFilter = listPerJurVincFilter;
     }
 
     public Estado getCurrent() {
@@ -101,7 +137,7 @@ public class MbEstado implements Serializable{
      * @return acción para el listado de entidades a mostrar en el list
      */
     public String prepareList() {
-        //recreateModel();
+        recreateModel();
         return "list";
     }
     
@@ -209,6 +245,19 @@ public class MbEstado implements Serializable{
     private void recreateModel() {
         listado.clear();
     }    
+    
+    /**
+     * Método para procesar el pdf
+     * @param document
+     * @throws DocumentException
+     * @throws IOException 
+     */
+    public void preProcessPDF(Object document) throws DocumentException, IOException {
+        Document pdf = (Document) document;    
+        pdf.open();
+        pdf.setPageSize(PageSize.A4.rotate());
+        pdf.newPage();
+    }         
     
     /**
      * @return La entidad gestionada

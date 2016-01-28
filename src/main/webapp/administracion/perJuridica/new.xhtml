@@ -14,43 +14,43 @@
                 <p:panel id="pnNew" header="#{bundle.PerJuridicaNewTitle}" style="margin-bottom:10px;">
                     <p:growl id="messages" />
 
-                    <p:panel id="pnNew2" header="#{bundle.PerJuridicaDatosTitle}" style="margin-bottom:10px;">
-                        <h:panelGrid columns="2">
+                    <h:panelGrid columns="5">
+                        <p:commandButton id="validar" value="Seleccionar para Validar" action="#{mbPerJuridica.prepareValidarCuit}" disabled="#{mbPerJuridica.personaAfip.pejID > 0}"
+                                     process="@this" /> 
+                        <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" disabled="true" />
+                        <p:commandButton icon="ui-icon-refresh" process="@this" update="cuit,razonSocial,validar,limpiar" /> 
+                        <p:commandButton id="limpiar" icon="ui-icon-trash" actionListener="#{mbPerJuridica.limpiarCuit}" disabled="#{mbPerJuridica.personaAfip.pejID == 0}" process="@this" update="cuit,razonSocial,validar" /> 
+                    </h:panelGrid>                         
+                    <h:panelGrid columns="2">
 
-                            <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
-                            <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" 
-                                     requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_razonSocial}" required="true"/>
+                        <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
+                        <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" style="width: 300px" disabled="true" />
 
-                            <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_cuit}" for="cuit"/>
-                            <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" 
-                                     requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_cuit}" required="true"/>
+                        <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
+                        <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" 
+                                 requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_estado}" 
+                                 required="true">
+                            <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                            <p:ajax listener="#{mbPerJuridica.pruebaChangeListener}"/>
+                        </p:selectOneMenu>   
 
-                            <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
-                            <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" >
-                                <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
-                                <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
-                                <p:ajax listener="#{mbPerJuridica.pruebaChangeListener}"/>
-                            </p:selectOneMenu>   
+                        <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
+                        <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}"  
+                                requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_tipo}" 
+                                required="true" >
+                            <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
+                            <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
+                        </p:selectOneMenu>
 
-                            <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
-                            <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}" >
-                                <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
-                                <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
-                            </p:selectOneMenu>
+                     </h:panelGrid>
 
-
-                            <p:outputLabel value="Establecimientos "/>
-                            <p:commandButton value="Agregar" action="#{mbPerJuridica.prepareCreateEstablecimientos}" process="@this" />
-
-                         </h:panelGrid>
-                    </p:panel>
-    
                 </p:panel>            
                 <p:toolbar>
                     <f:facet name="left">
                         <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.create}" update="pnNew"/>
                         <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
-                            <p:ajax update="pnNew" resetValues="true" />
+                            <p:ajax update="pnNew" resetValues="true" listener="#{mbPerJuridica.limpiarForm}"  />
                         </p:commandButton>
                     </f:facet>
                     <f:facet name="right">

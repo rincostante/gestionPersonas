@@ -29,88 +29,54 @@ public class ExpedienteFacade extends AbstractFacade<Expediente> {
 
     public ExpedienteFacade() {
         super(Expediente.class);
-    }
-      /**
-     * Metodo que verifica si ya existe la entidad.
-     * @param aBuscar: es la cadena que buscara para ver si ya existe en la BDD
-     * @return: devuelve True o False
-     */
-    public boolean existe(String aBuscar){
-        em = getEntityManager();       
-        String queryString = "SELECT act.nombre FROM Expediente expediente "
-                + "WHERE act.nombre = :stringParam ";
-        Query q = em.createQuery(queryString)
-                .setParameter("stringParam", aBuscar);
-        return q.getResultList().isEmpty();
-    }    
+    }  
     
     /**
      * Metodo que verifica si ya existe la entidad.
-     * @param nombre
-     * @param depto
+     * @param numero
+     * @param anio
      * @return: devuelve True o False
      */
-    public boolean noExiste(String nombre, Expediente expediente){
+    public boolean noExiste(int numero, int anio){
         em = getEntityManager();
-        String queryString = "SELECT act FROM Expediente act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.expediente = :expediente";
+        String queryString = "SELECT exp FROM Expediente exp "
+                + "WHERE exp.numero = :numero "
+                + "AND exp.anio = :anio";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("expediente", expediente);
+                .setParameter("numero", numero)
+                .setParameter("anio", anio);
         return q.getResultList().isEmpty();
     }  
     
     /**
      * Método que obtiene un Centro Poblado existente según los datos recibidos como parámetro
-     * @param nombre
+     * @param numero
+     * @param anio
      * @return 
      */ 
-    public Expediente getExistente(String nombre, Expediente expediente){
-        List<Expediente> lCp;
+    public Expediente getExistente(int numero, int anio){
+        List<Expediente> list;
         em = getEntityManager();
-        String queryString = "SELECT act FROM Expediente act "
-                + "WHERE act.nombre = :stringParam "
-                + "AND act.expediente = :expediente";
+        String queryString = "SELECT exp FROM Expediente exp "
+                + "WHERE exp.numero = :numero "
+                + "AND exp.anio = :anio";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", nombre)
-                .setParameter("expediente", expediente);
-        lCp = q.getResultList();
-        if(!lCp.isEmpty()){
-            return lCp.get(0);
+                .setParameter("numero", numero)
+                .setParameter("anio", anio);
+        list = q.getResultList();
+        if(!list.isEmpty()){
+            return list.get(0);
         }else{
             return null;
         }
     }    
-
-     /**
-     * Metodo para el autocompletado de la búsqueda por nombre
-     * @return 
-     */  
-
-    public List<String> getNombres(){
+    
+    public List<Expediente> findAllByOrder(){
         em = getEntityManager();
-        String queryString = "SELECT act.nombre FROM Expediente act ";
+        String queryString = "SELECT exp FROM Expediente exp "
+                + "ORDER BY exp.numero, exp.anio";
         Query q = em.createQuery(queryString);
         return q.getResultList();
     }
-    
-    /**
-     * Método que verifica si la entidad tiene dependencia (Hijos) en estado HABILITADO
-     * @param id: ID de la entidad
-     * @return: True o False
-     */
-    public boolean noTieneDependencias(Long id){
-        em = getEntityManager();        
-        String queryString = "SELECT act FROM Expediente act " 
-                + "WHERE act.expediente.id = :idParam ";        
-        Query q = em.createQuery(queryString)
-                .setParameter("idParam", id);
-        return q.getResultList().isEmpty();
-    }  
-
-    public boolean noExiste(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-}
+} 
 

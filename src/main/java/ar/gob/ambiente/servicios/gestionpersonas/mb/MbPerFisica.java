@@ -11,7 +11,6 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.EntidadServicio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
@@ -46,7 +45,12 @@ import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Centro
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentrosPobladosWebService;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Provincia;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Departamento;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.PageSize;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,8 +71,6 @@ public class MbPerFisica implements Serializable{
     private List<PerFisica> listPerFisica;
     private Domicilio domVinc;
     
-    private List<Expediente> expVinc;
-    
     @EJB
     private PerFisicaFacade perFisicaFacade;
     @EJB
@@ -84,8 +86,8 @@ public class MbPerFisica implements Serializable{
     
     private boolean iniciado;
     private int update; // 0=updateNormal | 1=deshabiliar | 2=habilitar
-    private List<PerJuridica> listaPerJuridica;
     private List<Estado> listaEstado;
+    private List<Expediente> listExpedientes;
     private CuitAfip personaAfip;
     private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
     private Long cuit;
@@ -141,6 +143,14 @@ public class MbPerFisica implements Serializable{
     /********************************
      ****** Getters y Setters *******
      ********************************/
+    public List<Expediente> getListExpedientes() {
+        return listExpedientes;
+    }
+
+    public void setListExpedientes(List<Expediente> listExpedientes) {
+        this.listExpedientes = listExpedientes;
+    }
+
     public List<EntidadServicio> getListProvincias() {
         return listProvincias;
     }
@@ -248,14 +258,6 @@ public class MbPerFisica implements Serializable{
         this.domVinc = domVinc;
     }
 
-    public List<Expediente> getExpVinc() {
-        return expVinc;
-    }
-
-    public void setExpVinc(List<Expediente> expVinc) {
-        this.expVinc = expVinc;
-    }
-
     public PerFisica getPerFisicaSelected() {
         return perFisicaSelected;
     }
@@ -286,14 +288,6 @@ public class MbPerFisica implements Serializable{
 
     public void setIniciado(boolean iniciado) {
         this.iniciado = iniciado;
-    }
-
-    public List<PerJuridica> getListaPerJuridica() {
-        return listaPerJuridica;
-    }
-
-    public void setListaPerJuridica(List<PerJuridica> listaPerJuridica) {
-        this.listaPerJuridica = listaPerJuridica;
     }
 
     public List<Estado> getListaEstado() {
@@ -376,10 +370,10 @@ public class MbPerFisica implements Serializable{
         limpiarEntitadesSrv();
         //Se instancia current
         current = new PerFisica();      
-        //Inicializamos la creacion de expediente y domicilio
-        expediente = new Expediente();
+        //Inicializamos la creacion de domicilio
         domicilio = new Domicilio();
         listaEstado = estadoFacade.findAll();
+        listExpedientes = expedienteFacade.findAllByOrder();
         
         // cargo el listado de Provincias
         getProvinciasSrv();
@@ -392,8 +386,25 @@ public class MbPerFisica implements Serializable{
     public String prepareEdit() {
         domVinc = current.getDomicilio();
         listaEstado = estadoFacade.findAll();
+        listExpedientes = expedienteFacade.findAllByOrder();
         cargarEntidadesSrv();
+        
+        //limpio el cuit si es que hubiera
+        personaAfip = null;
+        personaAfip = new CuitAfip();
+        
         return "edit";
+    }
+    
+    /**
+     * Método que muestra el diálogo para registrar un nuevo expediente
+     */
+    public void prepareRegExp(){
+        expediente = new Expediente();
+        
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 500);
+        RequestContext.getCurrentInstance().openDialog("dlgRegistrarExpediente", options, null);
     }
            
     public String prepareInicio(){
@@ -419,7 +430,7 @@ public class MbPerFisica implements Serializable{
         }
         else{
             //No Deshabilita 
-            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("DeshabilitarError"));            
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PersonaFisicaNoDesabilitable"));            
         }
         return "view";
     } 
@@ -471,8 +482,11 @@ public class MbPerFisica implements Serializable{
         //Asigno domicilio
         current.setDomicilio(domicilio);
 
-        if(current.getNombreCompleto().isEmpty()){
-            JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
+        if(current.getNombreCompleto() == null){
+            JsfUtil.addErrorMessage("La persona que está guardando debe tener un nombre.");
+            return null;
+        }else if(current.getCuitCuil() == 0){
+            JsfUtil.addErrorMessage("La persona que está guardando debe tener un CUIT o CUIL.");
             return null;
         }else{
             try {
@@ -493,7 +507,36 @@ public class MbPerFisica implements Serializable{
             }
         }  
     }
-
+    
+    /**
+     * Método para registrar un nuevo Expediente
+     */
+    public void createExp(){
+        if(expediente.getNumero() < 1){
+            JsfUtil.addErrorMessage("El N° del Expediente no puede ser menor a 1.");
+        }else{
+            if(expedienteFacade.noExiste(expediente.getNumero(), expediente.getAnio())){
+                try{
+                    expedienteFacade.create(expediente);
+                    JsfUtil.addSuccessMessage("El Expediente ya ha sido registrado, por favor cierre esta ventana, "
+                            + "actualice el listado con el botón adjunto y seleccionelo para asignarlo a la Persona Física");
+                }catch(Exception e){
+                    JsfUtil.addErrorMessage(e, "Hubo un error registrando el Expediente. " + e.getMessage());
+                }
+            }else{
+                JsfUtil.addErrorMessage("Ya existe un Expediente con el N° y año que está tratando de registrar.");
+            }
+        }
+    }
+    
+    /**
+     * Método para actualizar el listados de expedientes
+     */
+    public void actualizarExpedientes(){
+        listExpedientes.clear();
+        listExpedientes = expedienteFacade.findAllByOrder();
+    }
+    
     /**
      * Método que actualiza una nueva Instancia en la base de datos.
      * Previamente actualiza los datos de administración
@@ -531,16 +574,25 @@ public class MbPerFisica implements Serializable{
                     edito = perFisica.getId().equals(current.getId());
                 }
                 if(edito){
-                    // Actualización de datos de administración de la entidad
-                    current.getAdmin().setFechaModif(date);
-                    current.getAdmin().setUsModif(usLogeado); 
+                    // valido que el nombre y el cuil/cuit esté completo
+                    if(current.getNombreCompleto().equals("")){
+                        JsfUtil.addErrorMessage("La persona que está guardando debe tener un nombre");
+                        return null;
+                    }else if(current.getCuitCuil() == 0 || current.getCuitCuil() < 1){
+                        JsfUtil.addErrorMessage("La persona que está guardando debe tener un CUIT o CUIL");
+                        return null;
+                    }else{
+                        // Actualización de datos de administración de la entidad
+                        current.getAdmin().setFechaModif(date);
+                        current.getAdmin().setUsModif(usLogeado); 
 
-                    // Actualizo
-                    getFacade().edit(current);
-                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdated"));
-                    return "view";
+                        // Actualizo
+                        getFacade().edit(current);
+                        JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaUpdated"));
+                        return "view";
+                    }
                 }else{
-                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaExistente"));
+                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerFisicaExistente"));
                     return null; 
                     }
                 
@@ -578,14 +630,6 @@ public class MbPerFisica implements Serializable{
         getDepartamentosSrv(provSelected.getId());
     }   
     
-    public void pruebaChanceListener(){
-        System.out.println("Pasó el listener!");
-        EntidadServicio prueba = provSelected;
-        
-        System.out.println("La entidad seleccionada es: " + provSelected.getNombre());
-        System.out.println("Y su id es: " + provSelected.getId());
-    }  
-    
     /**
      * Método para actualizar el listado de localidades según el departamento seleccionado
      */    
@@ -616,6 +660,23 @@ public class MbPerFisica implements Serializable{
     /****************************
      * Métodos de validación
      ****************************/    
+    /**
+     * Método para validar que el año ingresado tenga un formato válido
+     * @param arg0: vista jsf que llama al validador
+     * @param arg1: objeto de la vista que hace el llamado
+     * @param arg2: contenido del campo de texto a validar 
+     */
+    public void validarAnio(FacesContext arg0, UIComponent arg1, Object arg2) throws ValidatorException{
+        int anioActual = Calendar.getInstance().get(Calendar.YEAR);
+        int anioMinimo = anioActual - 20;
+        if((int)arg2 > anioActual){
+            throw new ValidatorException(new FacesMessage("El año ingresado no puede ser mayor que el año actual = " + anioActual));
+        }else{
+            if((int)arg2 < anioMinimo){
+                throw new ValidatorException(new FacesMessage("El año ingresado no puede ser menor a 20 años antes del año actual = " + anioMinimo));
+            }
+        }
+    }     
     
     /**
      * Método para validar que no exista ya una entidad con este nombre al momento de crearla
@@ -702,6 +763,19 @@ public class MbPerFisica implements Serializable{
     public void limpiarFormEdit(){
         cargarEntidadesSrv();
     }
+    
+    /**
+     * Método para procesar el pdf
+     * @param document
+     * @throws DocumentException
+     * @throws IOException 
+     */
+    public void preProcessPDF(Object document) throws DocumentException, IOException {
+        Document pdf = (Document) document;    
+        pdf.open();
+        pdf.setPageSize(PageSize.A4.rotate());
+        pdf.newPage();
+    }        
    
     
     /*********************
@@ -810,26 +884,7 @@ public class MbPerFisica implements Serializable{
             logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetLocalError"), ex.getMessage()});
         }
     }    
-
-
-    /**
-     * Opera el borrado de la entidad
-     */
-    private void performDestroy() {
-        try {
-            // Actualización de datos de administración de la entidad
-            Date date = new Date(System.currentTimeMillis());
-            current.getAdmin().setFechaBaja(date);
-            current.getAdmin().setUsBaja(usLogeado);
-            current.getAdmin().setHabilitado(false);
-            
-            // Deshabilito la entidad
-            //getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaDeletedErrorOccured"));
-        }
-    }      
+    
     
     /**
      * Método para limpiar las entidades del servicio

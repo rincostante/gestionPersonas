@@ -6,6 +6,7 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.mb;
 
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
@@ -27,7 +28,10 @@ public class MbTipoPersonaJuridica implements Serializable{
     
     private TipoPersonaJuridica current;
     private List<TipoPersonaJuridica> listado = null;
-    private List<TipoPersonaJuridica> listaFilter;    
+    private List<TipoPersonaJuridica> listaFilter;   
+    
+    // listados para ver las personas jurídicas asociadas
+    private List<PerJuridica> listPerJurVincFilter;
     
     @EJB
     private TipoPersonaJuridicaFacade tipoPersonaJuridicaFacade;
@@ -38,6 +42,14 @@ public class MbTipoPersonaJuridica implements Serializable{
      * Creates a new instance of MbTipoPersonaJuridica
      */
     public MbTipoPersonaJuridica() {
+    }
+
+    public List<PerJuridica> getListPerJurVincFilter() {
+        return listPerJurVincFilter;
+    }
+
+    public void setListPerJurVincFilter(List<PerJuridica> listPerJurVincFilter) {
+        this.listPerJurVincFilter = listPerJurVincFilter;
     }
 
     public TipoPersonaJuridica getCurrent() {

@@ -14,8 +14,8 @@
                 <p:growl id="messages" />
                 <h:panelGrid columns="2">
                     <p:outputLabel value="#{bundle.LabelNombre}" for="nombre"/>
-                    <p:inputText id="nombre"
-                                 value="#{mbEspecialidad.selected.nombre}" 
+                    <p:inputText id="nombre" validator="#{mbEspecialidad.validarUpdate}"
+                                 value="#{mbEspecialidad.selected.nombre}" style="width: 250px"
                                  requiredMessage="#{bundle.LabelNombre}" required="true"/>
                 </h:panelGrid>
             </p:panel>

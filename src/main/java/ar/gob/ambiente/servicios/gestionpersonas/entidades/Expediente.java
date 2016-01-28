@@ -7,11 +7,14 @@
 package ar.gob.ambiente.servicios.gestionpersonas.entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -32,13 +35,46 @@ public class Expediente implements Serializable {
     @NotNull(message = "{entidades.fieldNotNullError}")
     private int numero;
     
-     /**
+    /**
      * Campo de tipo entero que indica el Año del expediente
      */
     @Column (nullable=false)
     @NotNull(message = "{entidades.fieldNotNullError}")
     private int anio;
+    
+    /**
+     * Listado de Personas Físicas vinculadas a un Expediente
+     */
+    @OneToMany(mappedBy="expediente")
+    private List<PerFisica> perFisicas;    
  
+    /**
+     * Listado de Establecimientos vinculados a un Expediente
+     */
+    @OneToMany(mappedBy="expediente")
+    private List<Establecimiento> establecimientos;        
+    
+    public Expediente(){
+        perFisicas = new ArrayList();
+        establecimientos = new ArrayList();
+    } 
+
+    public List<PerFisica> getPerFisicas() {
+        return perFisicas;
+    }
+
+    public void setPerFisicas(List<PerFisica> perFisicas) {
+        this.perFisicas = perFisicas;
+    }
+
+    public List<Establecimiento> getEstablecimientos() {
+        return establecimientos;
+    }
+
+    public void setEstablecimientos(List<Establecimiento> establecimientos) {
+        this.establecimientos = establecimientos;
+    }
+    
     public Long getId() {
         return id;
     }
