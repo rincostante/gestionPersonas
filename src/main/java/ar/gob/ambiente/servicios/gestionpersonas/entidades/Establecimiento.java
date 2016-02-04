@@ -94,6 +94,8 @@ public class Establecimiento implements Serializable {
     @JoinColumn(name="adminentidad_id")
     private AdminEntidad admin;    
     
+    private boolean alertaDomicilio;
+    
     // campos para mostrar en los listados según esté vinculado a una persona física o jurídica
     @Transient
     private String strRazonSocial;      
@@ -106,6 +108,14 @@ public class Establecimiento implements Serializable {
         especialidades = new ArrayList();
         actividades = new ArrayList();
     }  
+
+    public boolean isAlertaDomicilio() {
+        return alertaDomicilio;
+    }
+
+    public void setAlertaDomicilio(boolean alertaDomicilio) {
+        this.alertaDomicilio = alertaDomicilio;
+    }
 
     public Expediente getExpediente() {
         return expediente;

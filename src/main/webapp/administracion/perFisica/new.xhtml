@@ -59,7 +59,7 @@
                                              required="true" />
 
                             <p:outputLabel value="#{bundle.CreatePerFisicaLabel_cel}: " for="cel"/>
-                            <p:inputText id="cel" value="#{mbPerFisica.selected.cel}" />
+                            <p:inputMask id="cel" value="#{mbPerFisica.selected.cel}" mask="(9999) 9999-9999" />
 
                             <p:outputLabel value="#{bundle.EstadoViewTitle}: " for="estado"/>
                             <p:selectOneMenu id="estado" value="#{mbPerFisica.selected.estado}"  

@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Ingrese aquí los datos del Domicilio Legal</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 80%;
+            }
+        </style>
+    </h:head>
+     
+    <h:body>
+        <h:form id="frmNew">
+            <p:panel id="pnNew" header="#{bundle.EstablecimientoNewTitle}" style="margin-bottom:10px;">
+                <p:growl id="messages" />
+                <p:panel id="pnNew2" header="Expediente" toggleable="true" >
+                    <h:panelGrid columns="4">
+                        <p:outputLabel for="exp" value="Expediente: " />
+                        <p:selectOneMenu id="exp" value="#{mbPerJuridica.domLegal.expediente}" >
+                            <f:selectItem itemLabel="Seleccione el Expediente" noSelectionOption="true" />
+                            <f:selectItems value="#{mbPerJuridica.listaExpedientes}" var="exp" itemLabel="#{exp.numero}/#{exp.anio} " itemValue="#{exp}" />
+                        </p:selectOneMenu> 
+                        <p:commandButton id="newExp" value="Registrar nuevo Exp." action="#{mbPerJuridica.prepareRegExp}" 
+                                     process="@this" /> 
+                        <p:commandButton icon="ui-icon-refresh" actionListener="#{mbPerJuridica.actualizarExpedientes}" process="@this" update="exp" /> 
+                    </h:panelGrid>
+                </p:panel>
+                <p:panel id="pnNew3" header="Datos generales" style="margin-bottom:10px;" toggleable="true">
+                    <h:panelGrid columns="4">
+                        <p:outputLabel value="#{bundle.LabelNombre}" for="estado"/>
+                        <p:selectOneMenu id="estado" value="#{mbPerJuridica.domLegal.estado}" >
+                              <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                              <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                        </p:selectOneMenu>   
+
+                        <p:outputLabel value="#{bundle.CreateEstablecimientoLabel_correoElectronico}" for="correo"/>
+                        <p:inputText id="correo" value="#{mbPerJuridica.domLegal.correoElectronico}" style="width: 200px" required="false"/>    
+
+                        <p:outputLabel value="Telefono" for="telefono"/>
+                        <p:inputText id="telefono" value="#{mbPerJuridica.domLegal.telefono}" required="false"/>
+                    </h:panelGrid>
+                </p:panel>
+                <p:panel id="pnNew5" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;" toggleable="true">        
+                    <h:panelGrid columns="2">  
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}: " for="calle"/>
+                        <p:inputText id="calle" value="#{mbPerJuridica.domicilio.calle}" 
+                                     requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}: " for="numero_dom"/>
+                        <p:inputText id="numero_dom" value="#{mbPerJuridica.domicilio.numero}" 
+                                     requiredMessage="#{bundle.CreateDomicilioRequiredMessage_numero}" required="true"/>
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}: " for="piso"/>
+                        <p:inputText id="piso" value="#{mbPerJuridica.domicilio.piso}" />
+
+                        <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}: " for="dpto"/>
+                        <p:inputText id="dpto" value="#{mbPerJuridica.domicilio.dpto}" />       
+
+                        <p:outputLabel for="provincia" value="Provincia: " />
+                        <p:selectOneMenu id="provincia" value="#{mbPerJuridica.provSelected}" converter="omnifaces.SelectItemsConverter"  
+                                         requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_prov}" 
+                                         required="true" >
+                            <f:selectItem itemLabel="Seleccione la Provincia" noSelectionOption="true" />
+                            <f:selectItems value="#{mbPerJuridica.listProvincias}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                            <p:ajax listener="#{mbPerJuridica.provinciaChangeListener}" update="depto" />
+                        </p:selectOneMenu> 
+
+                        <p:outputLabel for="depto" value="Departamento: " />
+                        <p:selectOneMenu id="depto" value="#{mbPerJuridica.deptoSelected}" converter="omnifaces.SelectItemsConverter"  
+                                         requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_depto}" 
+                                         required="true" >
+                            <f:selectItem itemLabel="Seleccione el Departamento/Partido/Comuna" noSelectionOption="true" />
+                            <f:selectItems value="#{mbPerJuridica.listDepartamentos}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                            <p:ajax listener="#{mbPerJuridica.deptoChangeListener}" update="local" />
+                        </p:selectOneMenu> 
+
+                        <p:outputLabel for="local" value="Localidad: " />
+                        <p:selectOneMenu id="local" value="#{mbPerJuridica.localSelected}" converter="omnifaces.SelectItemsConverter"  
+                                         requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_local}" 
+                                         required="true" >
+                            <f:selectItem itemLabel="Seleccione la Localidad" noSelectionOption="true" />
+                            <f:selectItems value="#{mbPerJuridica.listLocalidades}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                        </p:selectOneMenu>  
+                    </h:panelGrid>
+                </p:panel>  
+            </p:panel>  
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createDomLegal}" update="pnNew"/>
+                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
+                        <p:ajax update="pnNew" resetValues="true" listener="#{mbPerJuridica.limpiarDlg}" />
+                    </p:commandButton>
+                </f:facet>
+            </p:toolbar>
+        </h:form>
+    </h:body>
+</html>

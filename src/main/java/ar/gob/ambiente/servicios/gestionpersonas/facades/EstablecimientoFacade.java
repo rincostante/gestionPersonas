@@ -6,9 +6,8 @@
 
 package ar.gob.ambiente.servicios.gestionpersonas.facades;
 
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Actividad;
-import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Establecimiento;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,132 +30,58 @@ public class EstablecimientoFacade extends AbstractFacade<Establecimiento> {
 
     public EstablecimientoFacade() {
         super(Establecimiento.class);
-    }
-      /**
-     * Metodo que verifica si ya existe la entidad.
-     * @param aBuscar: es la cadena que buscara para ver si ya existe en la BDD
-     * @return: devuelve True o False
-     */
-    public boolean existe(String aBuscar){
-        em = getEntityManager();       
-        String queryString = "SELECT act.nombre FROM Establecimiento establecimiento "
-                + "WHERE act.nombre = :stringParam ";
-        Query q = em.createQuery(queryString)
-                .setParameter("stringParam", aBuscar);
-        return q.getResultList().isEmpty();
-    }    
-    
-    /**
-     * Método para validad que no exista una Actividad Planificada con este nombre ya ingresado
-     * @param telefono
-     * @param domicilio
-     * @return 
-     */
-    public boolean noExiste(String telefono, int domicilio){
-        em = getEntityManager();       
-        String queryString = "SELECT est FROM Establecimiento est "
-                + "WHERE est.telefono = :telefono "
-                + "AND est.domicilio = :domicilio";
-        Query q = em.createQuery(queryString)
-                .setParameter("telefono", telefono)
-                .setParameter("domicilio", domicilio);
-        return q.getResultList().isEmpty();
     }   
     
     /**
-     * Método que obtiene un Centro Poblado existente según los datos recibidos como parámetro
-    * @param domicilio
-    * @param actividad
+     * Método que retorna un Establecimiento del tipo solicitado ubicado en un domicilio coincidente
+     * @param calle
+     * @param numero
+     * @param tipo
+     * @param idLocalidad
      * @return 
-   */
-    public Establecimiento getExistente(Domicilio domicilio, Actividad actividad){
-        List<Establecimiento> lCp;
-        em = getEntityManager();
-        String queryString = "SELECT act FROM Establecimiento act "
-                + "WHERE act.domicilio = :stringParam "
-                + "AND act.actividad = :actividad";
+     */
+    public List<Establecimiento> getExistente(String calle, String numero, Long idLocalidad, TipoEstablecimiento tipo){
+        em = getEntityManager();       
+        String queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.tipo = :tipo "
+                + "AND est.domicilio.calle = :calle "
+                + "AND est.domicilio.numero = :numero "
+                + "AND est.domicilio.idLocalidad = :idLocalidad";
         Query q = em.createQuery(queryString)
-                .setParameter("stringParam", domicilio)
-                .setParameter("actividad", actividad);
-        lCp = q.getResultList();
-        if(!lCp.isEmpty()){
-            return lCp.get(0);
-        }else{
-            return null;
-        }
-    } 
-
-     /**
-     * Metodo para el autocompletado de la búsqueda por nombre
-     * @return 
-     */  
-
-    public List<String> getNombres(){
-        em = getEntityManager();
-        String queryString = "SELECT act.nombre FROM Establecimiento act ";
-        Query q = em.createQuery(queryString);
+                .setParameter("tipo", tipo)
+                .setParameter("calle", calle)
+                .setParameter("numero", numero)
+                .setParameter("idLocalidad", idLocalidad);
         return q.getResultList();
-    }
+    }   
     
     /**
-     * Método que verifica si la entidad tiene dependencia (Hijos) en estado HABILITADO
-     * @param id: ID de la entidad
-     * @return: True o False
+     * Método para consultar por la existencia de un domicilio legal existente
+     * @param cuit
+     * @param tipoPer = "false" para Física y "true" para Jurídica
+     * @return 
      */
-    public boolean noTieneDependencias(Long id){
-        em = getEntityManager();        
-        String queryString = "SELECT est FROM Establecimiento est " 
-                + "WHERE est.establecimiento.id = :idParam "
-                + "AND est.adminentidad.habilitado = true"; 
-        Query q = em.createQuery(queryString)
-                .setParameter("idParam", id);
+    public boolean noExisteDomLegal(Long cuit, boolean tipoPer){
+        String tipo = "Domicilio legal";
+        em = getEntityManager();
+        String queryString; 
+        Query q;
+        if(tipoPer){
+            queryString = "SELECT est FROM Establecimiento est "
+                    + "WHERE est.tipo.nombre = :tipo "
+                    + "AND est.perJuridica.cuit = :cuit";
+            q = em.createQuery(queryString)
+                    .setParameter("tipo", tipo)
+                    .setParameter("cuit", cuit);   
+        }else{
+            queryString = "SELECT est FROM Establecimiento est "
+                    + "WHERE est.tipo.nombre = :tipo "
+                    + "AND est.perFisica.cuitCuil = :cuit";
+            q = em.createQuery(queryString)
+                    .setParameter("tipo", tipo)
+                    .setParameter("cuit", cuit);   
+        }
         return q.getResultList().isEmpty();
     }  
-    
-    /**
-     * Método que devuelve todos los estados de una app 
-     * @param actividad: ID de la entidad
-     * @return: True o False
-     */
-    public List<Establecimiento> getEstabXactividad(int actividad){
-        em = getEntityManager();        
-        String queryString = "SELECT est FROM Establecimiento est "
-                + "WHERE est.actividad = :actividad"; 
 
-      
-        Query q = em.createQuery(queryString)
-                .setParameter("actividad", actividad);
-        return q.getResultList();
-    }
-    /**
-     * Método que devuelve todos los estados de una app 
-     * @param pjur: ID de la entidad
-     * @return: True o False
-     */
-    public List<Establecimiento> getEstabXpJuridica(int pjur){
-        em = getEntityManager();        
-        String queryString = "SELECT est FROM Establecimiento est "
-                + "WHERE est.perJuridica = :pjur"; 
-
-      
-        Query q = em.createQuery(queryString)
-                .setParameter("pjur", pjur);
-        return q.getResultList();
-    }    
-
-    public List<Establecimiento> findAll(int perJuridica) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    public boolean noExisteDomicilio(Object object, Domicilio domicilio) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public boolean noExiste(long l) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public Establecimiento getExistente(Actividad actividad) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

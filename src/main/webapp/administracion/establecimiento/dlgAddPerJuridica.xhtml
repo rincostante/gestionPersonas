@@ -19,32 +19,35 @@
                 <p:growl id="messages" />
 
                 <h:panelGrid columns="5">
-                    <p:commandButton id="validar" value="Seleccionar para Validar" action="#{mbPerJuridica.prepareValidarCuit}" disabled="#{mbPerJuridica.personaAfip.pejID > 0}"
-                                 process="@this" /> 
-                    <p:inputText id="cuit" value="#{mbPerJuridica.selected.cuit}" disabled="true" />
-                    <p:commandButton icon="ui-icon-refresh" process="@this" update="cuit,razonSocial,validar,limpiar" /> 
-                    <p:commandButton id="limpiar" icon="ui-icon-trash" actionListener="#{mbPerJuridica.limpiarCuit}" disabled="#{mbPerJuridica.personaAfip.pejID == 0}" process="@this" update="cuit,razonSocial,validar" /> 
+                    <p:commandButton id="validar" value="Seleccionar para Validar" action="#{mbEstablecimiento.prepareValidarCuit}" 
+                                     disabled="#{mbEstablecimiento.personaAfip.pejID > 0}" process="@this" 
+                                     title="Abre el formulario para validar el CUIT" /> 
+                    <p:inputText id="cuit" value="#{mbEstablecimiento.perJuridica.cuit}" disabled="true" />
+                    <p:commandButton icon="ui-icon-refresh" process="@this" update="cuit,razonSocial,validar,limpiar" 
+                                     title="Actualizar los datos con el CUIT seleccionado" /> 
+                    <p:commandButton id="limpiar" icon="ui-icon-trash" actionListener="#{mbEstablecimiento.limpiarCuit}" 
+                                     disabled="#{mbEstablecimiento.personaAfip.pejID == 0}" process="@this" 
+                                     update="cuit,razonSocial,validar" title="Limpiar los datos del CUIT validado" /> 
                 </h:panelGrid>                         
                 <h:panelGrid columns="2">
 
                     <p:outputLabel value="#{bundle.CreatePerJuridicaLabel_RazonSocial}" for="razonSocial"/>
-                    <p:inputText id="razonSocial" value="#{mbPerJuridica.selected.razonSocial}" style="width: 300px" disabled="true" />
+                    <p:inputText id="razonSocial" value="#{mbEstablecimiento.perJuridica.razonSocial}" style="width: 300px" disabled="true" />
 
                     <p:outputLabel value="#{bundle.EstadoViewTitle}" for="estado"/>
-                    <p:selectOneMenu id="estado" value="#{mbPerJuridica.selected.estado}" 
+                    <p:selectOneMenu id="estado" value="#{mbEstablecimiento.perJuridica.estado}" 
                              requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_estado}" 
                              required="true">
                         <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
-                        <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
-                        <p:ajax listener="#{mbPerJuridica.pruebaChangeListener}"/>
+                        <f:selectItems value="#{mbEstablecimiento.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
                     </p:selectOneMenu>   
 
                     <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>
-                    <p:selectOneMenu id="tipo" value="#{mbPerJuridica.selected.tipoPersonaJuridica}"  
+                    <p:selectOneMenu id="tipo" value="#{mbEstablecimiento.perJuridica.tipoPersonaJuridica}"  
                             requiredMessage="#{bundle.CreatePerJuridicaRequiredMessage_tipo}" 
                             required="true" >
                         <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
-                        <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
+                        <f:selectItems value="#{mbEstablecimiento.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
                     </p:selectOneMenu>
 
                  </h:panelGrid>
@@ -52,13 +55,11 @@
             </p:panel>            
             <p:toolbar>
                 <f:facet name="left">
-                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.create}" update="pnNew"/>
-                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
-                        <p:ajax update="pnNew" resetValues="true" listener="#{mbPerJuridica.limpiarForm}"  />
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbEstablecimiento.createPerJuridica}" 
+                                     update="pnNew" title="Guardar la nueva Persona Jurídica creada"/>
+                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right" title="Limpiar los datos del formilario" >
+                        <p:ajax update="pnNew" resetValues="true" listener="#{mbEstablecimiento.limpiarFormRazSoc}"  />
                     </p:commandButton>
-                </f:facet>
-                <f:facet name="right">
-                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbPerJuridica.prepareList}" value="Volver" immediate="true"/>        
                 </f:facet>
             </p:toolbar>
         </h:form>

@@ -19,33 +19,22 @@
                 <p:messages id="messages" />
                 <h:panelGrid columns="2">
                     <p:outputLabel value="N°: " for="num" />
-                    <p:inputText converter="#{Integer}" id="num" value="#{mbEstablecimiento.expediente.numero}" rendered="#{not mbEstablecimiento.esRazonSocial}" 
-                                validatorMessage="El N° de Expediente debe tener entre 1 y 5 dígitos." 
-                                requiredMessage="El N° de Expediente es obligatorio" required="true" >
-                        <f:validateLength maximum="5" minimum="1" />
-                    </p:inputText>
-                    
-                    <p:inputText converter="#{Integer}" id="numRs" value="#{mbEstablecimiento.expRazSoc.numero}" rendered="#{mbEstablecimiento.esRazonSocial}"  
+                    <p:inputText converter="#{Integer}" id="num" value="#{mbPerJuridica.expediente.numero}" 
                                 validatorMessage="El N° de Expediente debe tener entre 1 y 5 dígitos." 
                                 requiredMessage="El N° de Expediente es obligatorio" required="true" >
                         <f:validateLength maximum="5" minimum="1" />
                     </p:inputText>
                     <p:outputLabel value="Año: " for="anio" />
-                    <p:inputText converter="#{Integer}" id="anio" value="#{mbEstablecimiento.expediente.anio}" rendered="#{not mbEstablecimiento.esRazonSocial}"
-                                 validator="#{mbEstablecimiento.validarAnio}">
+                    <p:inputText converter="#{Integer}" id="anio" value="#{mbPerJuridica.expediente.anio}" 
+                                 validator="#{mbPerJuridica.validarAnio}">
                         <f:validateLength maximum="4" minimum="1" />
                     </p:inputText>
-                    
-                    <p:inputText converter="#{Integer}" id="anioRs" value="#{mbEstablecimiento.expRazSoc.anio}" rendered="#{mbEstablecimiento.esRazonSocial}"
-                                 validator="#{mbEstablecimiento.validarAnio}">
-                        <f:validateLength maximum="4" minimum="1" />
-                    </p:inputText> 
                 </h:panelGrid>
             </p:panel>
             
             <p:toolbar>
                 <f:facet name="left">
-                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbEstablecimiento.createExp}" update="pnNew"/>
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerJuridica.createExp}" update="pnNew"/>
                     <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
                         <p:ajax update="pnNew" resetValues="true" />
                     </p:commandButton>

@@ -32,7 +32,6 @@
                                  required="true">
                             <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
                             <f:selectItems value="#{mbPerJuridica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
-                            <p:ajax listener="#{mbPerJuridica.pruebaChangeListener}"/>
                         </p:selectOneMenu>   
 
                         <p:outputLabel value="#{bundle.TipoPersonaJuridicaViewTitle}" for="tipo"/>

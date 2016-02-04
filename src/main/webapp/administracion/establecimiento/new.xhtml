@@ -26,7 +26,7 @@
                                                  itemValue="#{perFis}"/>
                                   <p:ajax event="change" update="perJuridica,btnNewJuridica"/>
                             </p:selectOneMenu>
-                            <p:commandButton icon="ui-icon-refresh" process="@this" /> 
+                            <p:commandButton icon="ui-icon-refresh" process="@this" actionListener="#{mbEstablecimiento.actualizarPerFisicas}" update="perFisica" /> 
                             <p:commandButton id="btnNewFisica" disabled="#{not mbEstablecimiento.esJuridica}" value="Agergar Nueva" 
                                              action="#{mbEstablecimiento.addPerFisica}" 
                                              icon="ui-icon-extlink" process="@this" style="width: 170px" /> 
@@ -41,7 +41,7 @@
                                                  itemValue="#{perJur}"/>
                                   <p:ajax event="change" update="perFisica,btnNewFisica"/>
                             </p:selectOneMenu> 
-                            <p:commandButton icon="ui-icon-refresh" process="@this" /> 
+                            <p:commandButton icon="ui-icon-refresh" process="@this" actionListener="#{mbEstablecimiento.actualizarPerJuridicas}" update="perJuridica" /> 
                             <p:commandButton id="btnNewJuridica" disabled="#{not mbEstablecimiento.esFisica}" value="Agergar Nueva" 
                                              action="#{mbEstablecimiento.addPerJuridica}" 
                                              icon="ui-icon-extlink" process="@this" style="width: 170px" /> 
@@ -63,22 +63,30 @@
                     <p:panel id="pnNew3" header="Datos generales" style="margin-bottom:10px;" toggleable="true">
                         <h:panelGrid columns="4">
                             <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>                             
-                            <p:selectOneMenu id="tipoEstablecimiento" value="#{mbEstablecimiento.selected.tipo}" >
+                            <p:selectOneMenu id="tipoEstablecimiento" value="#{mbEstablecimiento.selected.tipo}" 
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_tipo}" 
+                                             required="true" >
                                   <f:selectItem itemLabel="Tipo Establecimiento" itemValue="" noSelectionOption="true" />                           
                                   <f:selectItems value="#{mbEstablecimiento.listaTipoEstablecimiento}" var="tipoEstablecimiento" itemLabel="#{tipoEstablecimiento.nombre}" itemValue="#{tipoEstablecimiento}"/>
                             </p:selectOneMenu> 
 
                             <p:outputLabel value="#{bundle.LabelNombre}" for="estado"/>
-                            <p:selectOneMenu id="estado" value="#{mbEstablecimiento.selected.estado}" >
+                            <p:selectOneMenu id="estado" value="#{mbEstablecimiento.selected.estado}"  
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_estado}" 
+                                             required="true"  >
                                   <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
                                   <f:selectItems value="#{mbEstablecimiento.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
                             </p:selectOneMenu>   
                         
                             <p:outputLabel value="#{bundle.CreateEstablecimientoLabel_correoElectronico}" for="correo"/>
-                            <p:inputText id="correo" value="#{mbEstablecimiento.selected.correoElectronico}" style="width: 200px" required="false"/>    
+                            <p:inputText id="correo" value="#{mbEstablecimiento.selected.correoElectronico}" style="width: 200px" 
+                                         requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_correo}" 
+                                         required="true"/>    
                             
                             <p:outputLabel value="Telefono" for="telefono"/>
-                            <p:inputText id="telefono" value="#{mbEstablecimiento.selected.telefono}" required="false"/>
+                            <p:inputMask  id="telefono" value="#{mbEstablecimiento.selected.telefono}" mask="(9999) 9999-9999" 
+                                         requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_telefono}" 
+                                         required="true"/>
                         </h:panelGrid>
                     </p:panel>
                     
@@ -116,7 +124,7 @@
 
                             <p:outputLabel for="provincia" value="Provincia: " />
                             <p:selectOneMenu id="provincia" value="#{mbEstablecimiento.provSelected}" converter="omnifaces.SelectItemsConverter"  
-                                             requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_prov}" 
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_provincia}" 
                                              required="true" >
                                 <f:selectItem itemLabel="Seleccione la Provincia" noSelectionOption="true" />
                                 <f:selectItems value="#{mbEstablecimiento.listProvincias}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
@@ -125,7 +133,7 @@
 
                             <p:outputLabel for="depto" value="Departamento: " />
                             <p:selectOneMenu id="depto" value="#{mbEstablecimiento.deptoSelected}" converter="omnifaces.SelectItemsConverter"  
-                                             requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_depto}" 
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_departamento}" 
                                              required="true" >
                                 <f:selectItem itemLabel="Seleccione el Departamento/Partido/Comuna" noSelectionOption="true" />
                                 <f:selectItems value="#{mbEstablecimiento.listDepartamentos}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
@@ -134,7 +142,7 @@
 
                             <p:outputLabel for="local" value="Localidad: " />
                             <p:selectOneMenu id="local" value="#{mbEstablecimiento.localSelected}" converter="omnifaces.SelectItemsConverter"  
-                                             requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_local}" 
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_localidad}" 
                                              required="true" >
                                 <f:selectItem itemLabel="Seleccione la Localidad" noSelectionOption="true" />
                                 <f:selectItems value="#{mbEstablecimiento.listLocalidades}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
@@ -146,9 +154,9 @@
 
                 <p:toolbar>
                     <f:facet name="left">
-                        <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbEstablecimiento.create}" update="pnNew"/>
-                        <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
-                            <p:ajax update="pnNew" resetValues="true" />
+                        <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbEstablecimiento.create}" update="pnNew1,pnNew2,pnNew3,pnNew4,pnNew5"/>
+                        <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right" >
+                            <p:ajax update="pnNew" resetValues="true" listener="#{mbEstablecimiento.limpiarForm}" />
                         </p:commandButton>
                     </f:facet>
                     <f:facet name="right">

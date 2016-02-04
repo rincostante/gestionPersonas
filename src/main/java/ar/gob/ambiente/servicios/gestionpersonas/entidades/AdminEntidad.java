@@ -37,21 +37,21 @@ public class AdminEntidad implements Serializable {
     @NotNull(message = "Debe haber un usuario dealta")
     private Usuario usAlta;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fechaAlta;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="usmodif_id", nullable=true)
     private Usuario usModif;
     
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fechaModif;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="usbaja_id", nullable=true)
     private Usuario usBaja;
     
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fechaBaja;
     private boolean habilitado;
 

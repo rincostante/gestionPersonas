@@ -14,68 +14,96 @@
         <br/>
         <h:form id="frmEstablecimientoView">
             <p:panel id="pnView" header="#{bundle.EstablecimientoViewTitle}" style="margin-bottom:10px;">
-                    <p:messages id="messages" />
+                <p:messages id="messages" />
+                <p:panel id="pnView1" header="Razón social" style="margin-bottom:10px;" toggleable="true" >
+                    <h:panelGrid columns="2">
+                        <h:outputLabel  value="Razón Social: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.strRazonSocial}" />
+                        <h:outputLabel  value="CUIT: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.strCuit}" />
+                        <p:commandButton value="Ver anteriores" action="#{mbEstablecimiento.verRsAnteriores}" 
+                                             icon="ui-icon-extlink" process="@this" style="width: 150px" /> 
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:panel id="pnView2" header="Expediente" style="margin-bottom:10px;" toggleable="true" >
+                    <h:outputLabel  value="Número y año: "/>
+                    <h:outputLabel  value="#{mbEstablecimiento.selected.expediente.numero}/#{mbEstablecimiento.selected.expediente.anio}" />
+                </p:panel>
    
-            <p:panel id="pnNew1" header="Datos del Establecimiento" style="margin-bottom:10px;">
+                <p:panel id="pnView3" header="Datos del Generales" style="margin-bottom:10px;" toggleable="true" >
                     <h:panelGrid columns="2">           
-                        <h:outputLabel  value="PerJuridica: "/>
-                        <h:outputLabel  value="#{mbEstablecimiento.selected.perJuridica}" title="Pers.Jurídica"/>
-               
-                        <h:outputLabel  value="Tipo Establecimiento: "/>
+                        <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_tipo} :"/>
                         <h:outputLabel  value=" #{mbEstablecimiento.selected.tipo.nombre}" title="Tipo Establecimiento"/>
 
-                        <h:outputLabel  value="Correo Electrónico: "/>
+                        <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_correoElectronico}: "/>
                         <h:outputLabel  value=" #{mbEstablecimiento.selected.correoElectronico}" title="Correo Electrónico"/>
-                                        
-                        <h:outputLabel  value="Teléfono: "/>
+
+                        <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_telefono}: "/>
                         <h:outputLabel  value=" #{mbEstablecimiento.selected.telefono}" title="Teléfono"/>
-                        
-                        <h:outputLabel  value="Estado: "/>
+
+                        <h:outputLabel  value="#{bundle.CreateEstablecimientoLabel_estado}: "/>
                         <h:outputLabel  value=" #{mbEstablecimiento.selected.estado.nombre}" title="Estado"/>
-                        
-                        <h:outputLabel  value="#{bundle.LabelUsuarioAlta}"/>
+        
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:panel id="pnView4" header="Prfil" style="margin-bottom:10px;" toggleable="true" >
+                    <h:panelGrid columns="2">
+                        <h:outputLabel  value="Especialidades: "/>
+                        <p:commandButton value="Ver vinculadas" action="#{mbEstablecimiento.verEspVinc}" 
+                                             icon="ui-icon-extlink" process="@this" style="width: 150px" /> 
+                        <h:outputLabel  value="Actividades: "/>
+                        <p:commandButton value="Ver vinculadas" action="#{mbEstablecimiento.verActVinc}" 
+                                             icon="ui-icon-extlink" process="@this" style="width: 150px" /> 
+                    </h:panelGrid>
+                </p:panel>
+                
+                <p:panel id="pnView5" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;" toggleable="true" >
+                    <h:panelGrid columns="2">   
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_calle}: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.calle}" title="#{bundle.CreateDomicilioLabel_calle}"/>
+
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_numero}: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.numero}" title="#{bundle.CreateDomicilioLabel_numero}"/>
+
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_piso}: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.piso}" title="#{bundle.CreateDomicilioLabel_piso}"/>
+
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_dpto}: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.dpto}" title="#{bundle.CreateDomicilioLabel_dpto}"/>
+
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_idLocalidad}: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.idLocalidad}" title="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
+
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_localidad}: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.localidad}" title="#{bundle.CreateDomicilioLabel_localidad}"/>
+
+                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_provincia}: "/>
+                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.provincia}" title="#{bundle.CreateDomicilioLabel_provincia}"/>                 
+                    </h:panelGrid>
+                </p:panel>
+                <p:panel id="pnView6" header="Datos de administración" style="margin-bottom:10px;" toggleable="true" >
+                    <h:panelGrid columns="2">
+                        <h:outputLabel  value="#{bundle.LabelUsuarioAlta}: "/>
                         <h:outputText   value="#{mbEstablecimiento.selected.admin.usAlta.nombre}" title="#{bundle.LabelUsuarioAlta}"/>                        
 
-                        <h:outputLabel  value="#{bundle.LabelFechaAlta}"/>
+                        <h:outputLabel  value="#{bundle.LabelFechaAlta}: "/>
                         <h:outputText   value="#{mbEstablecimiento.selected.admin.strFechaAlta}" title="#{bundle.LabelFechaAlta}"/>                         
 
-                        <h:outputLabel  value="#{bundle.LabelUsuarioModif}"/>
+                        <h:outputLabel  value="#{bundle.LabelUsuarioModif}: "/>
                         <h:outputText   value="#{mbEstablecimiento.selected.admin.usModif.nombre}" title="#{bundle.LabelUsuarioModif}"/>                        
 
-                        <h:outputLabel  value="#{bundle.LabelFechaModif}"/>
+                        <h:outputLabel  value="#{bundle.LabelFechaModif}: "/>
                         <h:outputText   value="#{mbEstablecimiento.selected.admin.strFechaModif}" title="#{bundle.LabelFechaModif}"/>                          
 
-                        <h:outputLabel  value="#{bundle.LabelUsuario}" rendered="#{not mbEstablecimiento.selected.admin.habilitado}"/>
+                        <h:outputLabel  value="#{bundle.LabelUsuario}: " rendered="#{not mbEstablecimiento.selected.admin.habilitado}"/>
                         <h:outputText   value="#{mbEstablecimiento.selected.admin.usBaja.nombre}" rendered="#{not mbEstablecimiento.selected.admin.habilitado}"
                                         title="#{bundle.LabelUsuario}"/>                        
 
-                        <h:outputLabel  value="#{bundle.LabelFechaBaja}" rendered="#{not mbEstablecimiento.selected.admin.habilitado}"/>
+                        <h:outputLabel  value="#{bundle.LabelFechaBaja}: " rendered="#{not mbEstablecimiento.selected.admin.habilitado}"/>
                         <h:outputText   value="#{mbEstablecimiento.selected.admin.strFechaBaja}" rendered="#{not mbEstablecimiento.selected.admin.habilitado}"
-                                        title="#{bundle.LabelFechaBaja}"/>         
-                    </h:panelGrid>
-                </p:panel>
-                <p:panel id="pnNew7" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">
-                    <h:panelGrid columns="2">   
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_calle}"/>
-                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.calle}" title="#{bundle.CreateDomicilioLabel_calle}"/>
-
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_numero}"/>
-                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.numero}" title="#{bundle.CreateDomicilioLabel_numero}"/>
-
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_piso}"/>
-                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.piso}" title="#{bundle.CreateDomicilioLabel_piso}"/>
-
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_dpto}"/>
-                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.dpto}" title="#{bundle.CreateDomicilioLabel_dpto}"/>
-
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
-                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.idLocalidad}" title="#{bundle.CreateDomicilioLabel_idLocalidad}"/>
-
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_localidad}"/>
-                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.localidad}" title="#{bundle.CreateDomicilioLabel_localidad}"/>
-
-                        <h:outputLabel  value="#{bundle.CreateDomicilioLabel_provincia}"/>
-                        <h:outputLabel  value="#{mbEstablecimiento.selected.domicilio.provincia}" title="#{bundle.CreateDomicilioLabel_provincia}"/>                 
+                                        title="#{bundle.LabelFechaBaja}"/> 
                     </h:panelGrid>
                 </p:panel>
 

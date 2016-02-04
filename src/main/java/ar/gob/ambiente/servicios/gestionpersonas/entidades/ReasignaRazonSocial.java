@@ -4,6 +4,7 @@ package ar.gob.ambiente.servicios.gestionpersonas.entidades;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Esta entidad gestiona los cambios de razón social que se realicen a los Establecimientos.
@@ -34,13 +38,84 @@ public class ReasignaRazonSocial implements Serializable {
     private PerFisica perFisica;
     
     @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="exPerJuridica_id")
+    private PerJuridica exPerJuridica;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="exPerFisica_id")    
+    private PerFisica exPerFisica;    
+    
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="establecimiento_id")    
     private Establecimiento establecimiento;
     
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fecha;
     
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="usuario_id")   
+    @NotNull(message = "Debe haber un usuario de alta")
+    private Usuario usuario;
+    
     private boolean activa;
+    
+    @Column (nullable=true, length=500)
+    @Size(message = "El campo nombre del Estado debe tener entre 1 y 500 caracteres", min = 1, max = 500)
+    private String motivo;    
+    
+    @Transient
+    private boolean inJuridica;     
+    
+    @Transient
+    private boolean exJuridica;   
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public PerJuridica getExPerJuridica() {
+        return exPerJuridica;
+    }
+
+    public void setExPerJuridica(PerJuridica exPerJuridica) {
+        this.exPerJuridica = exPerJuridica;
+    }
+
+    public PerFisica getExPerFisica() {
+        return exPerFisica;
+    }
+
+    public void setExPerFisica(PerFisica exPerFisica) {
+        this.exPerFisica = exPerFisica;
+    }
+
+    public boolean isExJuridica() {
+        return exPerJuridica != null;
+    }
+
+    public void setExJuridica(boolean exJuridica) {
+        this.exJuridica = exJuridica;
+    }
+
+    public boolean isInJuridica() {
+        return perJuridica != null;
+    }
+
+    public void setInJuridica(boolean juridica) {
+        this.inJuridica = juridica;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public PerJuridica getPerJuridica() {
         return perJuridica;

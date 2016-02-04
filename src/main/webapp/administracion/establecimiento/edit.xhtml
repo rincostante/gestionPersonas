@@ -8,84 +8,137 @@
     <ui:composition template="/WEB-INF/facelets/templates/indexTemplate.xhtml">
         <ui:define name="content">
             <h:form id="frmEdit">
-                <p:panel id="pnEdit" header="#{bundle.EstablecimientoEditTitle}" style="margin-bottom:10px;">
+                <p:panel id="pnNew" header="#{bundle.EstablecimientoNewTitle}" style="margin-bottom:10px;">
+                    <p:growl id="messages" />
+                    <p:panel id="pnNew1" header="Razón Social (Seleccione lo que corresponda)" toggleable="true" >
+                        <h:panelGrid columns="2">
+                            <h:outputLabel value="Razón Social: "/>
+                            <h:outputLabel id="razonSocial" value="#{mbEstablecimiento.selected.strRazonSocial}" />
+                            <h:outputLabel value="CUIT: "/>
+                            <h:outputLabel id="cuit" value="#{mbEstablecimiento.selected.strCuit}" /> 
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:commandButton icon="ui-icon-refresh" process="@this" update="razonSocial,cuit" /> 
+                            <p:commandButton id="btnEditRazonSocial" value="Cambiar Razón Social" action="#{mbEstablecimiento.actualizarRazonSocial}" 
+                                             icon="ui-icon-extlink" process="@this" style="width: 200px" /> 
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:panel id="pnNew2" header="Expediente" toggleable="true" >
+                        <h:panelGrid columns="4">
+                            <p:outputLabel for="exp" value="Expediente: " />
+                            <p:selectOneMenu id="exp" value="#{mbEstablecimiento.selected.expediente}" >
+                                <f:selectItem itemLabel="Seleccione el Expediente" noSelectionOption="true" />
+                                <f:selectItems value="#{mbEstablecimiento.listaExpedientes}" var="exp" itemLabel="#{exp.numero}/#{exp.anio} " itemValue="#{exp}" />
+                            </p:selectOneMenu> 
+                            <p:commandButton id="newExp" value="Registrar nuevo Exp." action="#{mbEstablecimiento.prepareRegExp}" 
+                                         process="@this" /> 
+                            <p:commandButton icon="ui-icon-refresh" actionListener="#{mbEstablecimiento.actualizarExpedientes}" process="@this" update="exp" /> 
+                        </h:panelGrid>
+                    </p:panel>
+                
+                    <p:panel id="pnNew3" header="Datos generales" style="margin-bottom:10px;" toggleable="true">
+                        <h:panelGrid columns="4">
+                            <p:outputLabel value="Tipo de Establecimiento" for="tipoEstablecimiento"/>                             
+                            <p:selectOneMenu id="tipoEstablecimiento" value="#{mbEstablecimiento.selected.tipo}" 
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_tipo}" 
+                                             required="true" >
+                                  <f:selectItem itemLabel="Tipo Establecimiento" itemValue="" noSelectionOption="true" />                           
+                                  <f:selectItems value="#{mbEstablecimiento.listaTipoEstablecimiento}" var="tipoEstablecimiento" itemLabel="#{tipoEstablecimiento.nombre}" itemValue="#{tipoEstablecimiento}"/>
+                            </p:selectOneMenu> 
+
+                            <p:outputLabel value="#{bundle.LabelNombre}" for="estado"/>
+                            <p:selectOneMenu id="estado" value="#{mbEstablecimiento.selected.estado}"  
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_estado}" 
+                                             required="true"  >
+                                  <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
+                                  <f:selectItems value="#{mbEstablecimiento.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                            </p:selectOneMenu>   
+                        
+                            <p:outputLabel value="#{bundle.CreateEstablecimientoLabel_correoElectronico}" for="correo"/>
+                            <p:inputText id="correo" value="#{mbEstablecimiento.selected.correoElectronico}" style="width: 200px" 
+                                         requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_correo}" 
+                                         required="true"/>    
+                            
+                            <p:outputLabel value="Telefono" for="telefono"/>
+                            <p:inputMask  id="telefono" value="#{mbEstablecimiento.selected.telefono}" mask="(9999) 9999-9999" 
+                                         requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_telefono}" 
+                                         required="true"/>
+                        </h:panelGrid>
+                    </p:panel>
                     
-                    <p:messages id="messages" />
-                                        
-                    <h:panelGrid columns="2">
-                  
-                        <p:outputLabel value="Id Persona Jurídica: " for="perJuridica"/>
-                        <p:inputText id="perJuridica" value="#{mbEstablecimiento.selected.perJuridica}" required="false"/>
+                    <p:panel id="pnNew4" header="Perfil" style="margin-bottom:10px;" toggleable="true">
+                        <h:panelGrid id="btnEspecialidades" columns="3">  
+                            <h:outputLabel value="Especialidades: " />
+                            <p:commandButton value="Ver/Asignar Disponibles" action="#{mbEstablecimiento.verEspDisp}" 
+                                             icon="ui-icon-extlink" process="@this" style="width: 220px" /> 
+                            <p:commandButton value="Ver/Quitar Vinculadas" action="#{mbEstablecimiento.verEspVinc}" 
+                                             icon="ui-icon-extlink" process="@this" style="width: 220px" />      
 
-                        <p:outputLabel value="Tipo de establecimiento" for="tipo"/>
-                        <p:selectOneMenu id="tipo" value="#{mbEstablecimiento.selected.tipo.nombre}" required="true">
-                            <f:selectItem itemLabel="Seleccione el Tipo" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{mbEstablecimiento.listEstablecimiento}" var="tipo" itemLabel="#{tipo.tipo.nombre}" itemValue="#{tipo.tipo.nombre}"/>
-                        </p:selectOneMenu> 
+                            <h:outputLabel value="Actividades: " />
+                            <p:commandButton value="Ver/Asignar Disponibles" action="#{mbEstablecimiento.verActDisp}" 
+                                             icon="ui-icon-extlink" process="@this" style="width: 220px" /> 
+                            <p:commandButton value="Ver/Quitar Vinculadas" action="#{mbEstablecimiento.verActVinc()}" 
+                                             icon="ui-icon-extlink" process="@this" style="width: 220px" />      
+                        </h:panelGrid> 
+                    </p:panel>
+                
+                    <p:panel id="pnNew5" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;" toggleable="true">        
+                        <h:panelGrid columns="2">  
+                            <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}: " for="calle"/>
+                            <p:inputText id="calle" value="#{mbEstablecimiento.selected.domicilio.calle}" 
+                                         requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
 
-                        <p:outputLabel value="Estado" for="estado"/>
-                        <p:selectOneMenu id="estado" value="#{mbEstablecimiento.selected.estado.nombre}" >
-                              <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
-                              <f:selectItems value="#{mbEstablecimiento.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado.nombre}"/>
-                        </p:selectOneMenu>   
+                            <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}: " for="numero_dom"/>
+                            <p:inputText id="numero_dom" value="#{mbEstablecimiento.selected.domicilio.numero}" 
+                                         requiredMessage="#{bundle.CreateDomicilioRequiredMessage_numero}" required="true"/>
 
-                        <p:outputLabel value="#{bundle.CreateEstablecimientoLabel_correoElectronico}" for="correo"/>
-                        <p:inputText id="correo" value="#{mbEstablecimiento.selected.correoElectronico}" required="false"/>    
+                            <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}: " for="piso"/>
+                            <p:inputText id="piso" value="#{mbEstablecimiento.selected.domicilio.piso}" />
 
-                        <p:outputLabel value="Telefono" for="telefono"/>
-                        <p:inputText id="telefono" value="#{mbEstablecimiento.selected.telefono}" required="false"/>
+                            <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}: " for="dpto"/>
+                            <p:inputText id="dpto" value="#{mbEstablecimiento.selected.domicilio.dpto}" />       
 
-                    </h:panelGrid>
-            </p:panel>
+                            <p:outputLabel for="provincia" value="Provincia: " />
+                            <p:selectOneMenu id="provincia" value="#{mbEstablecimiento.provSelected}" converter="omnifaces.SelectItemsConverter"  
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_provincia}" 
+                                             required="true" >
+                                <f:selectItem itemLabel="Seleccione la Provincia" noSelectionOption="true" />
+                                <f:selectItems value="#{mbEstablecimiento.listProvincias}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                                <p:ajax listener="#{mbEstablecimiento.provinciaChangeListener}" update="depto" />
+                            </p:selectOneMenu> 
 
-            
-            <p:panel id="inNew" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;">
-                <h:panelGrid columns="2">
+                            <p:outputLabel for="depto" value="Departamento: " />
+                            <p:selectOneMenu id="depto" value="#{mbEstablecimiento.deptoSelected}" converter="omnifaces.SelectItemsConverter"  
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_departamento}" 
+                                             required="true" >
+                                <f:selectItem itemLabel="Seleccione el Departamento/Partido/Comuna" noSelectionOption="true" />
+                                <f:selectItems value="#{mbEstablecimiento.listDepartamentos}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                                <p:ajax listener="#{mbEstablecimiento.deptoChangeListener}" update="local" />
+                            </p:selectOneMenu> 
 
-                <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}" for="calle"/>
-                <p:inputText id="calle" value="#{mbEstablecimiento.domVinc.calle}" 
-                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
+                            <p:outputLabel for="local" value="Localidad: " />
+                            <p:selectOneMenu id="local" value="#{mbEstablecimiento.localSelected}" converter="omnifaces.SelectItemsConverter"  
+                                             requiredMessage="#{bundle.CreateEstablecimientoRequiredMessage_localidad}" 
+                                             required="true" >
+                                <f:selectItem itemLabel="Seleccione la Localidad" noSelectionOption="true" />
+                                <f:selectItems value="#{mbEstablecimiento.listLocalidades}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                            </p:selectOneMenu>  
+                        </h:panelGrid>
+                    </p:panel>  
 
-
-                <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}" for="numero_dom"/>
-                <p:inputText id="numero_dom" value="#{mbEstablecimiento.domVinc.numero}" 
-                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_numero}" required="true"/>
-
-
-                <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}" for="piso"/>
-                <p:inputText id="piso" value="#{mbEstablecimiento.domVinc.piso}" 
-                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_piso}" required="true"/>
-
-
-                <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}" for="dpto"/>
-                <p:inputText id="dpto" value="#{mbEstablecimiento.domVinc.dpto}" 
-                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_dpto}" required="true"/>                         
-
-
-                <p:outputLabel value="#{bundle.CreateDomicilioLabel_idLocalidad}" for="idLocalidad"/>
-                <p:inputText id="idLocalidad" value="#{mbEstablecimiento.domVinc.idLocalidad}" 
-                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_idLocalidad}" required="true"/>  
-
-
-                <p:outputLabel value="#{bundle.CreateDomicilioLabel_localidad}" for="localidad"/>
-                <p:inputText id="localidad" value="#{mbEstablecimiento.domVinc.localidad}" 
-                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_localidad}" required="true"/>  
-
-
-                <p:outputLabel value="#{bundle.CreateDomicilioLabel_provincia}" for="provincia"/>
-                <p:inputText id="provincia" value="#{mbEstablecimiento.domVinc.provincia}" 
-                             requiredMessage="#{bundle.CreateDomicilioRequiredMessage_provincia}" required="true"/> 
-                </h:panelGrid>
-            </p:panel>
+                </p:panel>    
 
 
 
             <p:toolbar>
                 <f:facet name="left">
-                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbEstablecimiento.update}" update="pnEdit"/>
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbEstablecimiento.update}" update="pnNew"/>
                     <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: next">
-                        <p:ajax update="pnEdit" resetValues="true" /></p:commandButton>
-                    <p:commandButton icon="ui-icon-refresh" action="#{mbEstablecimiento.prepareList}" value="Volver" ajax="false"/>
+                        <p:ajax update="pnNew" resetValues="true" listener ="#{mbEstablecimiento.restForm}" />
+                    </p:commandButton>
+                </f:facet>
+                <f:facet name="right">
+                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbEstablecimiento.prepareList}" value="Volver" immediate="true"/>        
                 </f:facet>
             </p:toolbar>
 

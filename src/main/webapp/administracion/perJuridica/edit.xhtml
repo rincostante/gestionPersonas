@@ -38,6 +38,12 @@
                     <f:selectItem itemLabel="Seleccione Tipo de Persona Juridica" itemValue="" noSelectionOption="true" />                           
                     <f:selectItems value="#{mbPerJuridica.listaTipoPersonaJuridica}" var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
                 </p:selectOneMenu>
+                
+                <h:outputLabel value="Domicilio legal: "/>
+                <p:commandButton id="btnNewDomLegal" value="Agergar" 
+                                 action="#{mbPerJuridica.prepareCreateDomLegal}" 
+                                 disabled="#{mbPerJuridica.tieneDomLegal}" 
+                                     icon="ui-icon-extlink" process="@this" />  
 
              </h:panelGrid>
          </p:panel>

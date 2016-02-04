@@ -44,7 +44,14 @@
 
                         <h:outputLabel value="#{bundle.LabelFechaBaja}: " rendered="#{not mbPerJuridica.selected.admin.habilitado}"/>
                         <h:outputText value="#{mbPerJuridica.selected.admin.strFechaBaja}" rendered="#{not mbPerJuridica.selected.admin.habilitado}"
-                                      title="#{bundle.LabelFechaBaja}"/>             
+                                      title="#{bundle.LabelFechaBaja}"/>      
+                        
+                        <h:outputLabel value="Domicilio legal: "/>
+                        <p:commandButton id="btnNewDomLegal" value="Agergar" 
+                                         action="#{mbPerJuridica.prepareCreateDomLegal}" 
+                                         disabled="#{mbPerJuridica.tieneDomLegal}" 
+                                             icon="ui-icon-extlink" process="@this" /> 
+
                     </h:panelGrid>
 
                     <h:panelGrid >
@@ -67,21 +74,82 @@
                                 </p:tab>
                             </p:accordionPanel>
                         </p:panel>
-                        <p:panel id="pnEst2" header="Establecimientos cedidos" style="margin-bottom: 10px" toggleable="true">
-                            <p:accordionPanel value="#{mbPerJuridica.selected.establecimientosCedidos}" var="estCed"  style="font-weight: normal; font-size: 80%">
-                                <p:tab title="#{estCed.fecha}">
+                        <p:panel id="pnEst2" header="Establecimientos adquiridos" style="margin-bottom: 10px" toggleable="true">
+                            <p:accordionPanel value="#{mbPerJuridica.listEstAdquiridos}" var="estAdq"  style="font-weight: normal; font-size: 80%">
+                                <p:tab title="#{estAdq.establecimiento.domicilio.calle} Nro: #{estAdq.establecimiento.domicilio.numero} - #{estAdq.establecimiento.domicilio.localidad} / #{estAdq.establecimiento.domicilio.provincia}">
                                     <h:panelGrid columns="2" cellpadding="5">
+                                        
                                         <h:outputLabel value="Tipo: "/>
-                                        <h:outputText value="#{estCed.est.tipo.nombre}"/>    
+                                        <h:outputText value="#{estAdq.establecimiento.tipo.nombre}"/>  
 
                                         <h:outputLabel value="Estado: "/>
-                                        <h:outputText value="#{estCed.est.estado.nombre}"/>       
+                                        <h:outputText value="#{estAdq.establecimiento.estado.nombre}"/>       
 
                                         <h:outputLabel value="Email: "/>
-                                        <h:outputText value="#{estCed.est.correoElectronico}"/>    
+                                        <h:outputText value="#{estAdq.establecimiento.correoElectronico}"/>    
 
                                         <h:outputLabel value="Telefono: "/>
-                                        <h:outputText value="#{estCed.est.telefono}"/>   
+                                        <h:outputText value="#{estAdq.establecimiento.telefono}"/>   
+                                        
+                                        <h:outputLabel value="Origen: " rendered="#{estAdq.inJuridica}"/>
+                                        <h:outputText value="#{estAdq.perJuridica.razonSocial}/#{estAdq.perJuridica.cuit}" rendered="#{estAdq.inJuridica}"/>   
+                                        
+                                        <h:outputLabel value="Origen: " rendered="#{not estAdq.inJuridica}"/>
+                                        <h:outputText value="#{estAdq.perFisica.nombreCompleto}/#{estAdq.perFisica.cuitCuil}" rendered="#{not estAdq.inJuridica}"/>   
+                                        
+                                        <h:outputLabel value="Fecha "/>
+                                        <h:outputText value="#{estAdq.fecha}" >
+                                            <f:convertDateTime pattern="dd/MM/yyyy hh:mm a" />
+                                        </h:outputText>  
+                                        
+                                        <h:outputLabel value="Motivo: "/>
+                                        <h:outputText value="#{estAdq.motivo}"/>   
+
+                                        <h:outputLabel value="Estado: " rendered="#{estAdq.activa}"/>
+                                        <h:outputText value="Activo" rendered="#{estAdq.activa}"/>   
+                                        
+                                        <h:outputLabel value="Registro: " rendered="#{not estAdq.activa}"/>
+                                        <h:outputText value="Histórico" rendered="#{not estAdq.activa}"/> 
+                                    </h:panelGrid>
+                                </p:tab>
+                            </p:accordionPanel>
+                        </p:panel>
+                        <p:panel id="pnEst3" header="Establecimientos cedidos" style="margin-bottom: 10px" toggleable="true">
+                            <p:accordionPanel value="#{mbPerJuridica.listEstCedidos}" var="estCed"  style="font-weight: normal; font-size: 80%">
+                                <p:tab title="#{estCed.establecimiento.domicilio.calle} Nro: #{estCed.establecimiento.domicilio.numero} - #{estCed.establecimiento.domicilio.localidad} / #{estCed.establecimiento.domicilio.provincia}">
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        
+                                        <h:outputLabel value="Tipo: "/>
+                                        <h:outputText value="#{estCed.establecimiento.tipo.nombre}"/>  
+
+                                        <h:outputLabel value="Estado: "/>
+                                        <h:outputText value="#{estCed.establecimiento.estado.nombre}"/>       
+
+                                        <h:outputLabel value="Email: "/>
+                                        <h:outputText value="#{estCed.establecimiento.correoElectronico}"/>    
+
+                                        <h:outputLabel value="Telefono: "/>
+                                        <h:outputText value="#{estCed.establecimiento.telefono}"/>   
+                                        
+                                        <h:outputLabel value="Destino: " rendered="#{estCed.inJuridica}"/>
+                                        <h:outputText value="#{estCed.perJuridica.razonSocial}/#{estCed.perJuridica.cuit}" rendered="#{estCed.inJuridica}"/>   
+                                        
+                                        <h:outputLabel value="Destino: " rendered="#{not estCed.inJuridica}"/>
+                                        <h:outputText value="#{estCed.perFisica.nombreCompleto}/#{estCed.perFisica.cuitCuil}" rendered="#{not estCed.inJuridica}"/>   
+                                        
+                                        <h:outputLabel value="Fecha "/>
+                                        <h:outputText value="#{estCed.fecha}" >
+                                            <f:convertDateTime pattern="dd/MM/yyyy hh:mm a" />
+                                        </h:outputText>  
+
+                                        <h:outputLabel value="Motivo: "/>
+                                        <h:outputText value="#{estCed.motivo}"/>   
+                                        
+                                        <h:outputLabel value="Estado: " rendered="#{estCed.activa}"/>
+                                        <h:outputText value="Activo" rendered="#{estCed.activa}"/>   
+                                        
+                                        <h:outputLabel value="Registro: " rendered="#{not estCed.activa}"/>
+                                        <h:outputText value="Histórico" rendered="#{not estCed.activa}"/> 
                                     </h:panelGrid>
                                 </p:tab>
                             </p:accordionPanel>

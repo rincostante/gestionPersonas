@@ -11,6 +11,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.Domicilio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.ReasignaRazonSocial;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.EntidadServicio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
@@ -18,6 +19,7 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.DomicilioFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.EstadoFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ExpedienteFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.ReasignaRazonSocialFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentroPoblado;
 import java.io.Serializable;
 import java.util.Date;
@@ -79,6 +81,8 @@ public class MbPerFisica implements Serializable{
     private EstadoFacade estadoFacade;
     @EJB
     private DomicilioFacade domicilioFacade;
+    @EJB
+    private ReasignaRazonSocialFacade reasignaFacade;    
     
     private PerFisica perFisicaSelected;
     private MbLogin login;
@@ -99,6 +103,10 @@ public class MbPerFisica implements Serializable{
     private EntidadServicio deptoSelected;
     private List<EntidadServicio> listLocalidades;
     private EntidadServicio localSelected;
+    
+    // listados para ver los historiales de razón social
+    private List<ReasignaRazonSocial> listEstAdquiridos;
+    private List<ReasignaRazonSocial> listEstCedidos; 
     
     /**
      * Creates a new instance of MbPerFisica
@@ -143,6 +151,22 @@ public class MbPerFisica implements Serializable{
     /********************************
      ****** Getters y Setters *******
      ********************************/
+    public List<ReasignaRazonSocial> getListEstAdquiridos() {
+        return listEstAdquiridos;
+    }
+
+    public void setListEstAdquiridos(List<ReasignaRazonSocial> listEstAdquiridos) {
+        this.listEstAdquiridos = listEstAdquiridos;
+    }
+
+    public List<ReasignaRazonSocial> getListEstCedidos() {
+        return listEstCedidos;
+    }
+
+    public void setListEstCedidos(List<ReasignaRazonSocial> listEstCedidos) {
+        this.listEstCedidos = listEstCedidos;
+    }
+
     public List<Expediente> getListExpedientes() {
         return listExpedientes;
     }
@@ -351,6 +375,7 @@ public class MbPerFisica implements Serializable{
     public String prepareList() {
         iniciado = true;
         recreateModel();
+        limpiarHisEst();
         return "list";
     }
 
@@ -359,7 +384,8 @@ public class MbPerFisica implements Serializable{
      */
     public String prepareView() {
         domVinc = current.getDomicilio();
-        //expVinc = current.getExpediente();
+        getEstCedidos();
+        getEstAdquiridos();
         return "view";
     }
 
@@ -956,6 +982,34 @@ public class MbPerFisica implements Serializable{
             logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetProvError"), ex.getMessage()});
         }
     }
+    
+    /**
+     * Método para cargar los establecimientos cedidos
+     */
+    private void getEstCedidos(){
+        listEstCedidos = reasignaFacade.getHistorialXRazonSocial(current, null, true);
+    }
+    
+    /**
+     * Método para cargar los establecimientos adquiridos
+     */
+    private void getEstAdquiridos(){
+        listEstAdquiridos = reasignaFacade.getHistorialXRazonSocial(current, null, false);
+    }    
+    
+    /**
+     * Método para limpiar el historial de establecimientos adquiridos y cedidos
+     */
+    private void limpiarHisEst(){
+        if(listEstAdquiridos != null){
+            listEstAdquiridos.clear();
+            listEstAdquiridos = null;
+        }
+        if(listEstCedidos != null){
+            listEstCedidos.clear();
+            listEstCedidos = null;
+        }
+    }    
     
     
     /******************************************************************************

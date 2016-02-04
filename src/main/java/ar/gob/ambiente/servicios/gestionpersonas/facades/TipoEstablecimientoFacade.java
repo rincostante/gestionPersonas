@@ -79,4 +79,16 @@ public class TipoEstablecimientoFacade extends AbstractFacade<TipoEstablecimient
                 .setParameter("id", id);
         return q.getResultList().isEmpty();
     }  
+    
+    /**
+     * Método que devuelve el Tipo "Domicilio legal"
+     * @return 
+     */
+    public TipoEstablecimiento getTipoDomLegal(){
+        em = getEntityManager();        
+        String queryString = "SELECT tipoEst FROM TipoEstablecimiento tipoEst " 
+                + "WHERE tipoEst.nombre = 'Domicilio legal'";        
+        Query q = em.createQuery(queryString);
+        return (TipoEstablecimiento)q.getSingleResult();
+    }
 }

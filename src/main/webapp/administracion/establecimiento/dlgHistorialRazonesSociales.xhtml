@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Historial de cambios de Razones Sociales para el Establecimiento #{mbEstablecimiento.current.strRazonSocial} / #{mbEstablecimiento.current.id}</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 80%;
+            }
+        </style>
+    </h:head>
+     
+    <h:body>
+        <h:form id="frmHistRs">
+            <p:dataTable var="his" value="#{mbEstablecimiento.listHist}" 
+                         filteredValue="#{mbEstablecimiento.listHistFilter}" id="histRsList"
+			 rows="5" widgetVar="historialTable"   
+                         paginator="true" 
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                         rowsPerPageTemplate="5,10,15">
+
+                <f:facet name="header">
+                    <p:commandButton value="Excel" ajax="false">
+                        <p:dataExporter type="xls" target="establecimientoList" fileName="historialCambioRs#{mbEstablecimiento.current.strRazonSocial}/#{mbEstablecimiento.current.id}" />
+                    </p:commandButton>
+                    <p:commandButton value="Pdf" ajax="false">
+                        <p:dataExporter type="pdf" target="establecimientoList" fileName="historialCambioRs#{mbEstablecimiento.current.strRazonSocial}/#{mbEstablecimiento.current.id}" preProcessor="#{mbEstablecimiento.preProcessPDF}" />
+                    </p:commandButton>
+                </f:facet>
+                <p:column headerText="Razón social cedente" filterMatchMode="contains" rendered="#{his.exJuridica}" 
+                          sortBy="#{his.exPerJuridica.razonSocial}" filterBy="#{his.exPerJuridica.razonSocial}">
+                    <p:outputLabel value="#{his.exPerJuridica.razonSocial}" rendered="#{his.exJuridica}"/>
+                </p:column>
+                <p:column headerText="CUIT cedente" filterMatchMode="contains" rendered="#{his.exJuridica}"  
+                          sortBy="#{his.exPerJuridica.cuit}" filterBy="#{his.exPerJuridica.cuit}">
+                    <p:outputLabel value="#{his.exPerJuridica.cuit}" rendered="#{his.exJuridica}" />
+                </p:column>
+                <p:column headerText="Nombre cedente" filterMatchMode="contains" rendered="#{not his.exJuridica}" 
+                          sortBy="#{his.exPerFisica.nombreCompleto}" filterBy="#{his.exPerFisica.nombreCompleto}">
+                    <p:outputLabel value="#{his.exPerFisica.nombreCompleto}" rendered="#{not his.exJuridica}" />
+                </p:column>
+                <p:column headerText="CUIT cedente" filterMatchMode="contains" rendered="#{not his.exJuridica}" 
+                          sortBy="#{his.exPerFisica.cuitCuil}" filterBy="#{his.exPerFisica.cuitCuil}">
+                    <p:outputLabel value="#{his.exPerFisica.cuitCuil}" rendered="#{not his.exJuridica}" />
+                </p:column>
+                
+                
+                <p:column headerText="Razón social adquirente" filterMatchMode="contains" rendered="#{his.inJuridica}" 
+                          sortBy="#{his.perJuridica.razonSocial}" filterBy="#{his.perJuridica.razonSocial}">
+                    <p:outputLabel value="#{his.perJuridica.razonSocial}" rendered="#{his.inJuridica}"/>
+                </p:column>
+                <p:column headerText="CUIT adquirente" filterMatchMode="contains" rendered="#{his.inJuridica}"  
+                          sortBy="#{his.perJuridica.cuit}" filterBy="#{his.perJuridica.cuit}">
+                    <p:outputLabel value="#{his.perJuridica.cuit}" rendered="#{his.inJuridica}" />
+                </p:column>
+                <p:column headerText="Nombre adquirente" filterMatchMode="contains" rendered="#{not his.inJuridica}" 
+                          sortBy="#{his.perFisica.nombreCompleto}" filterBy="#{his.perFisica.nombreCompleto}">
+                    <p:outputLabel value="#{his.perFisica.nombreCompleto}" rendered="#{not his.inJuridica}" />
+                </p:column>
+                <p:column headerText="CUIT adquirente" filterMatchMode="contains" rendered="#{not his.inJuridica}" 
+                          sortBy="#{his.perFisica.cuitCuil}" filterBy="#{his.perFisica.cuitCuil}">
+                    <p:outputLabel value="#{his.perFisica.cuitCuil}" rendered="#{not his.inJuridica}" />
+                </p:column>
+                
+                
+                <p:column headerText="Motivo" filterMatchMode="contains" sortBy="#{his.motivo}" filterBy="#{his.motivo}">
+                    <p:outputLabel value="#{his.motivo}"/>
+                </p:column>
+                <p:column headerText="Fecha" filterMatchMode="contains" sortBy="#{his.perFisica.fecha}" filterBy="#{his.perFisica.fecha}">
+                    <p:outputLabel value="#{his.fecha}">
+                        <f:convertDateTime pattern="dd/MM/yyyy hh:mm a" />
+                    </p:outputLabel>
+                </p:column>
+                <p:column headerText="Usuario" filterMatchMode="contains" sortBy="#{his.usuario.nombreCompleto}" filterBy="#{his.usuario.nombreCompleto}">
+                    <p:outputLabel value="#{his.usuario.nombreCompleto}"/>
+                </p:column>
+                
+                <p:column filterBy="#{his.activa}" headerText="Estado" filterMatchMode="equals">
+                       <f:facet name="filter">
+                           <p:selectOneMenu onchange="PF('historialTable').filter()" style="font-size: 80%">
+                               <f:converter converterId="javax.faces.Boolean" />
+                               <f:selectItem itemLabel="Todos" itemValue="" />
+                               <f:selectItem itemLabel="Activo" itemValue="true" />
+                               <f:selectItem itemLabel="Inactivos" itemValue="false" />
+                           </p:selectOneMenu>
+                       </f:facet>
+                       <h:outputText value="#{his.activa ? 'Actual': 'Histórico'}" />
+                </p:column> 
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>    
+

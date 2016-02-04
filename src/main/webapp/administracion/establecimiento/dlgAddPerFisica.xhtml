@@ -21,31 +21,35 @@
                 <p:panel id="pnNew1" header="#{bundle.ExpedienteViewTitle}" style="margin-bottom:10px;" toggleable="true">
                     <h:panelGrid columns="4">
                         <p:outputLabel for="exp" value="Expediente: " />
-                        <p:selectOneMenu id="exp" value="#{mbPerFisica.selected.expediente}" >
+                        <p:selectOneMenu id="exp" value="#{mbEstablecimiento.expRazSoc}" >
                             <f:selectItem itemLabel="Seleccione el Expediente" noSelectionOption="true" />
-                            <f:selectItems value="#{mbPerFisica.listExpedientes}" var="exp" itemLabel="#{exp.numero}/#{exp.anio} " itemValue="#{exp}" />
+                            <f:selectItems value="#{mbEstablecimiento.listaExpedientes}" var="exp" itemLabel="#{exp.numero}/#{exp.anio} " itemValue="#{exp}" />
                         </p:selectOneMenu> 
-                        <p:commandButton id="newExp" value="Registrar nuevo Exp." action="#{mbPerFisica.prepareRegExp}" 
-                                     process="@this" /> 
-                        <p:commandButton icon="ui-icon-refresh" actionListener="#{mbPerFisica.actualizarExpedientes}" process="@this" update="exp" /> 
+                        <p:commandButton id="newExp" value="Registrar nuevo Exp." action="#{mbEstablecimiento.prepareRegExp}" 
+                                         process="@this" title="Crea un nuevo Expediente" /> 
+                        <p:commandButton icon="ui-icon-refresh" actionListener="#{mbEstablecimiento.actualizarExpedientes}" 
+                                         process="@this" update="exp" title="Actualizar lista de Expedientes" /> 
                     </h:panelGrid>
                 </p:panel>
 
                 <p:panel id="pnNew2" closable="true" header="CUIT (cierre si no corresponde)" toggleable="true" >
                     <h:panelGrid columns="5">
-                        <p:commandButton id="validar" value="Seleccionar para Validar" action="#{mbPerFisica.prepareValidarCuit}" disabled="#{mbPerFisica.personaAfip.pejID > 0}"
-                                     process="@this" /> 
-                        <p:inputText id="cuit" value="#{mbPerFisica.selected.cuitCuil}" disabled="true" />
-                        <p:commandButton icon="ui-icon-refresh" process="@this" update="cuit,nombre,validar,limpiar,cuil" /> 
-                        <p:commandButton id="limpiar" icon="ui-icon-trash" actionListener="#{mbPerFisica.limpiarCuit}" disabled="#{mbPerFisica.personaAfip.pejID == 0}" process="@this" update="cuit,nombre,validar,cuil" /> 
+                        <p:commandButton id="validar" value="Seleccionar para Validar" action="#{mbEstablecimiento.prepareValidarCuit}" disabled="#{mbEstablecimiento.personaAfip.pejID > 0}"
+                                         process="@this" title="Valida el CUIT ingresado y devuelve la Persona asociada" /> 
+                        <p:inputText id="cuit" value="#{mbEstablecimiento.perFisica.cuitCuil}" disabled="true" />
+                        <p:commandButton icon="ui-icon-refresh" process="@this" title="Actualizar los datos del CUIT seleccionado" 
+                                         update="cuit,nombre,validar,limpiar,cuil" /> 
+                        <p:commandButton id="limpiar" icon="ui-icon-trash" actionListener="#{mbEstablecimiento.limpiarCuit}" 
+                                         disabled="#{mbEstablecimiento.personaAfip.pejID == 0}" title="Limpiar los datos seleccionados" 
+                                         process="@this" update="cuit,nombre,validar,cuil" /> 
                     </h:panelGrid> 
                 </p:panel>
 
                 <p:panel id="pnNew3" closable="true" header="CUIL (cierre si no corresponde)" toggleable="true">
                     <h:panelGrid columns="2">
                         <p:outputLabel value="CUIL: " for="cuil"/>
-                        <p:inputText id="cuil" converter="#{Integer}" value="#{mbPerFisica.selected.cuitCuil}"
-                                     disabled="#{mbPerFisica.personaAfip.pejID > 0}">
+                        <p:inputText id="cuil" converter="#{Integer}" value="#{mbEstablecimiento.perFisica.cuitCuil}"
+                                     disabled="#{mbEstablecimiento.personaAfip.pejID > 0}">
                             <f:validateLength maximum="11" minimum="11" />
                         </p:inputText>
                     </h:panelGrid>
@@ -54,23 +58,23 @@
                 <p:panel id="pnNew4" header="#{bundle.PerFisicaDatosPersonalesTitle}" style="margin-bottom:10px;" toggleable="true">
                     <h:panelGrid columns="2"> 
                         <p:outputLabel value="#{bundle.LabelNombre}: " for="nombre"/>
-                        <p:inputText id="nombre" value="#{mbPerFisica.selected.nombreCompleto}" style="width: 300px" 
-                                   onkeyup="this.value = this.value.toUpperCase();" disabled="#{mbPerFisica.personaAfip.pejID > 0}" />  
+                        <p:inputText id="nombre" value="#{mbEstablecimiento.perFisica.nombreCompleto}" style="width: 300px" 
+                                   onkeyup="this.value = this.value.toUpperCase();" disabled="#{mbEstablecimiento.personaAfip.pejID > 0}" />  
 
                         <p:outputLabel value="#{bundle.CreatePerFisicaLabel_correoElectronico}: " for="correoElectronico"/>
-                        <p:inputText id="correoElectronico" value="#{mbPerFisica.selected.correoElectronico}" style="width: 300px" 
+                        <p:inputText id="correoElectronico" value="#{mbEstablecimiento.perFisica.correoElectronico}" style="width: 300px" 
                                          requiredMessage="#{bundle.CreatePerFisicaLabel_correoElectronico}" 
                                          required="true" />
 
                         <p:outputLabel value="#{bundle.CreatePerFisicaLabel_cel}: " for="cel"/>
-                        <p:inputText id="cel" value="#{mbPerFisica.selected.cel}" />
+                        <p:inputMask id="cel" value="#{mbEstablecimiento.perFisica.cel}" mask="(9999) 9999-9999" />
 
                         <p:outputLabel value="#{bundle.EstadoViewTitle}: " for="estado"/>
-                        <p:selectOneMenu id="estado" value="#{mbPerFisica.selected.estado}"  
+                        <p:selectOneMenu id="estado" value="#{mbEstablecimiento.perFisica.estado}"  
                                          requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_estadp}" 
                                          required="true" >
                               <f:selectItem itemLabel="Seleccione Estado" itemValue="" noSelectionOption="true" />                           
-                              <f:selectItems value="#{mbPerFisica.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
+                              <f:selectItems value="#{mbEstablecimiento.listaEstado}" var="estado" itemLabel="#{estado.nombre}" itemValue="#{estado}"/>
                         </p:selectOneMenu>   
 
                     </h:panelGrid>
@@ -79,43 +83,43 @@
                 <p:panel id="pnNew5" header="#{bundle.DomicilioViewTitle}" style="margin-bottom:10px;" toggleable="true">        
                     <h:panelGrid columns="2">  
                         <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}: " for="calle"/>
-                        <p:inputText id="calle" value="#{mbPerFisica.domicilio.calle}" 
+                        <p:inputText id="calle" value="#{mbEstablecimiento.domicilio.calle}" 
                                      requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
 
                         <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}: " for="numero_dom"/>
-                        <p:inputText id="numero_dom" value="#{mbPerFisica.domicilio.numero}" 
+                        <p:inputText id="numero_dom" value="#{mbEstablecimiento.domicilio.numero}" 
                                      requiredMessage="#{bundle.CreateDomicilioRequiredMessage_numero}" required="true"/>
 
                         <p:outputLabel value="#{bundle.CreateDomicilioLabel_piso}: " for="piso"/>
-                        <p:inputText id="piso" value="#{mbPerFisica.domicilio.piso}" />
+                        <p:inputText id="piso" value="#{mbEstablecimiento.domicilio.piso}" />
 
                         <p:outputLabel value="#{bundle.CreateDomicilioLabel_dpto}: " for="dpto"/>
-                        <p:inputText id="dpto" value="#{mbPerFisica.domicilio.dpto}" />       
+                        <p:inputText id="dpto" value="#{mbEstablecimiento.domicilio.dpto}" />       
 
                         <p:outputLabel for="provincia" value="Provincia: " />
-                        <p:selectOneMenu id="provincia" value="#{mbPerFisica.provSelected}" converter="omnifaces.SelectItemsConverter"  
+                        <p:selectOneMenu id="provincia" value="#{mbEstablecimiento.provRazSocSelected}" converter="omnifaces.SelectItemsConverter"  
                                          requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_prov}" 
                                          required="true" >
                             <f:selectItem itemLabel="Seleccione la Provincia" noSelectionOption="true" />
-                            <f:selectItems value="#{mbPerFisica.listProvincias}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
-                            <p:ajax listener="#{mbPerFisica.provinciaChangeListener}" update="depto" />
+                            <f:selectItems value="#{mbEstablecimiento.listProvincias}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                            <p:ajax listener="#{mbEstablecimiento.provinciaChangeListener}" update="depto" />
                         </p:selectOneMenu> 
 
                         <p:outputLabel for="depto" value="Departamento: " />
-                        <p:selectOneMenu id="depto" value="#{mbPerFisica.deptoSelected}" converter="omnifaces.SelectItemsConverter"  
+                        <p:selectOneMenu id="depto" value="#{mbEstablecimiento.deptoRazSocSelected}" converter="omnifaces.SelectItemsConverter"  
                                          requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_depto}" 
                                          required="true" >
                             <f:selectItem itemLabel="Seleccione el Departamento/Partido/Comuna" noSelectionOption="true" />
-                            <f:selectItems value="#{mbPerFisica.listDepartamentos}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
-                            <p:ajax listener="#{mbPerFisica.deptoChangeListener}" update="local" />
+                            <f:selectItems value="#{mbEstablecimiento.listDepRazSoc}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                            <p:ajax listener="#{mbEstablecimiento.deptoChangeListener}" update="local" />
                         </p:selectOneMenu> 
 
                         <p:outputLabel for="local" value="Localidad: " />
-                        <p:selectOneMenu id="local" value="#{mbPerFisica.localSelected}" converter="omnifaces.SelectItemsConverter"  
+                        <p:selectOneMenu id="local" value="#{mbEstablecimiento.localRazSocSelected}" converter="omnifaces.SelectItemsConverter"  
                                          requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_local}" 
                                          required="true" >
                             <f:selectItem itemLabel="Seleccione la Localidad" noSelectionOption="true" />
-                            <f:selectItems value="#{mbPerFisica.listCentrosSrv}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
+                            <f:selectItems value="#{mbEstablecimiento.listLocRazSoc}" var="entity" itemLabel="#{entity.nombre}" itemValue="#{entity}" />
                         </p:selectOneMenu>  
                     </h:panelGrid>
                 </p:panel>  
@@ -123,13 +127,11 @@
 
             <p:toolbar>
                 <f:facet name="left">
-                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbPerFisica.create}" update="pnNew"/>
-                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right">
-                        <p:ajax update="pnNew" resetValues="true" listener="#{mbPerFisica.limpiarForm}" />
+                    <p:commandButton icon="ui-icon-check" value="Guardar" action="#{mbEstablecimiento.createPerFisica}" 
+                                     update="pnNew" title="Guardar la nueva Persona Física"/>
+                    <p:commandButton icon="ui-icon-cancel" value="Limpiar" style="float: right" title="Limpiar los datos del formulario">
+                        <p:ajax update="pnNew" resetValues="true" listener="#{mbEstablecimiento.limpiarFormRazSoc}" />
                     </p:commandButton>
-                </f:facet>
-                <f:facet name="right">
-                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" action="#{mbPerFisica.prepareList}" value="Volver" immediate="true"/>        
                 </f:facet>
             </p:toolbar>
         </h:form>

@@ -15,7 +15,9 @@ import ar.gob.ambiente.servicios.gestionpersonas.entidades.Estado;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Expediente;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerFisica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.PerJuridica;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.ReasignaRazonSocial;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoEstablecimiento;
+import ar.gob.ambiente.servicios.gestionpersonas.entidades.TipoPersonaJuridica;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.Usuario;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.EntidadServicio;
 import ar.gob.ambiente.servicios.gestionpersonas.entidades.util.JsfUtil;
@@ -28,17 +30,22 @@ import ar.gob.ambiente.servicios.gestionpersonas.facades.PerFisicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.PerJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.ReasignaRazonSocialFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoEstablecimientoFacade;
+import ar.gob.ambiente.servicios.gestionpersonas.facades.TipoPersonaJuridicaFacade;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentroPoblado;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentrosPobladosWebService;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.CentrosPobladosWebService_Service;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Departamento;
 import ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados.Provincia;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfip;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfipWs;
+import ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit.CuitAfipWs_Service;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.PageSize;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -51,7 +58,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.faces.validator.ValidatorException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +65,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.ExternalContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.validator.ValidatorException;
 import javax.xml.ws.WebServiceRef;
 import org.primefaces.context.RequestContext;
 
@@ -69,11 +76,14 @@ import org.primefaces.context.RequestContext;
 public class MbEstablecimiento implements Serializable{
     @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl")
     private CentrosPobladosWebService_Service srvCentrosPob;    
-    private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CuitAfipWs/CuitAfipWs.wsdl")
+    private CuitAfipWs_Service srvCuitAfip;
+    private CuitAfip personaAfip;
+    private Long cuit;
+    private static final Logger logger = Logger.getLogger(Establecimiento.class.getName());
     
     private Establecimiento current;    
     private Domicilio domicilio;
-    private Domicilio domVinc;
     private List<Establecimiento> listado;
     private List<Establecimiento> listadoFilter;
     
@@ -98,7 +108,8 @@ public class MbEstablecimiento implements Serializable{
     private EspecialidadFacade espFacade;
     @EJB
     private ExpedienteFacade expFacade;
-
+    @EJB
+    private TipoPersonaJuridicaFacade tipoPerJurFacade;
     
     private MbLogin login;
     private Usuario usLogeado;
@@ -112,7 +123,7 @@ public class MbEstablecimiento implements Serializable{
     private List<Expediente> listaExpedientes;
     private Expediente expediente;
     
-    // listados provistos por el servicio de centros poblados
+    // listados provistos por el servicio de centros poblados de Establecimientos
     private List<EntidadServicio> listProvincias;
     private EntidadServicio provSelected;
     private List<EntidadServicio> listDepartamentos;
@@ -122,10 +133,29 @@ public class MbEstablecimiento implements Serializable{
     
     // campos para los agregados múltiples
     private List<Especialidad> listEspDisp;
+    private List<Especialidad> listEspVinc;
     private List<Especialidad> listEspFilter;
     private List<Actividad> listActDisp;
+    private List<Actividad> listActVinc;
     private List<Actividad> listActFilter;
     private boolean asignaDisp; 
+    
+    // campos para el agregado de razones sociales
+    private EntidadServicio provRazSocSelected;
+    private List<EntidadServicio> listDepRazSoc;
+    private EntidadServicio deptoRazSocSelected;
+    private List<EntidadServicio> listLocRazSoc;
+    private List<TipoPersonaJuridica> listaTipoPersonaJuridica;
+    private EntidadServicio localRazSocSelected; 
+    private Expediente expRazSoc;
+    private PerJuridica perJuridica;
+    private PerJuridica tempPerJuridica;
+    private PerFisica perFisica;
+    private PerFisica tempPerFisica;
+    private boolean esRazonSocial;
+    private List<ReasignaRazonSocial> listHist;
+    private List<ReasignaRazonSocial> listHistFilter;
+    private ReasignaRazonSocial rsNueva;
     
     /**
      * Creates a new instance of MbEstablecimiento
@@ -170,6 +200,142 @@ public class MbEstablecimiento implements Serializable{
     /********************************
      ****** Getters y Setters *******
      ********************************/
+    public ReasignaRazonSocial getRsNueva() {
+        return rsNueva;
+    }
+
+    public void setRsNueva(ReasignaRazonSocial rsNueva) {
+        this.rsNueva = rsNueva;
+    }
+
+    public List<ReasignaRazonSocial> getListHist() {
+        return listHist;
+    }
+
+    public void setListHist(List<ReasignaRazonSocial> listHist) {
+        this.listHist = listHist;
+    }
+
+    public List<ReasignaRazonSocial> getListHistFilter() {
+        return listHistFilter;
+    }
+
+    public void setListHistFilter(List<ReasignaRazonSocial> listHistFilter) {
+        this.listHistFilter = listHistFilter;
+    }
+
+    public PerJuridica getTempPerJuridica() {
+        return tempPerJuridica;
+    }
+
+    public void setTempPerJuridica(PerJuridica tempPerJuridica) {
+        this.tempPerJuridica = tempPerJuridica;
+    }
+
+    public PerFisica getTempPerFisica() {
+        return tempPerFisica;
+    }
+
+    public void setTempPerFisica(PerFisica tempPerFisica) {
+        this.tempPerFisica = tempPerFisica;
+    }
+
+    public List<TipoPersonaJuridica> getListaTipoPersonaJuridica() {
+        return listaTipoPersonaJuridica;
+    }
+
+    public void setListaTipoPersonaJuridica(List<TipoPersonaJuridica> listaTipoPersonaJuridica) {
+        this.listaTipoPersonaJuridica = listaTipoPersonaJuridica;
+    }
+
+    public boolean isEsRazonSocial() {
+        return esRazonSocial;
+    }
+
+    public void setEsRazonSocial(boolean esRazonSocial) {
+        this.esRazonSocial = esRazonSocial;
+    }
+
+    public PerJuridica getPerJuridica() {
+        return perJuridica;
+    }
+
+    public void setPerJuridica(PerJuridica perJuridica) {
+        this.perJuridica = perJuridica;
+    }
+
+    public PerFisica getPerFisica() {
+        return perFisica;
+    }
+
+    public void setPerFisica(PerFisica perFisica) {
+        this.perFisica = perFisica;
+    }
+
+    public Long getCuit() {
+        return cuit;
+    }
+
+    public void setCuit(Long cuit) {
+        this.cuit = cuit;
+    }
+
+    public CuitAfip getPersonaAfip() {
+        return personaAfip;
+    }
+
+    public void setPersonaAfip(CuitAfip personaAfip) {
+        this.personaAfip = personaAfip;
+    }
+
+    public Expediente getExpRazSoc() {
+        return expRazSoc;
+    }
+
+    public void setExpRazSoc(Expediente expRazSoc) {
+        this.expRazSoc = expRazSoc;
+    }
+
+    public EntidadServicio getProvRazSocSelected() {
+        return provRazSocSelected;
+    }
+
+    public void setProvRazSocSelected(EntidadServicio provRazSocSelected) {
+        this.provRazSocSelected = provRazSocSelected;
+    }
+
+    public List<EntidadServicio> getListDepRazSoc() {
+        return listDepRazSoc;
+    }
+
+    public void setListDepRazSoc(List<EntidadServicio> listDepRazSoc) {
+        this.listDepRazSoc = listDepRazSoc;
+    }
+
+    public EntidadServicio getDeptoRazSocSelected() {
+        return deptoRazSocSelected;
+    }
+
+    public void setDeptoRazSocSelected(EntidadServicio deptoRazSocSelected) {
+        this.deptoRazSocSelected = deptoRazSocSelected;
+    }
+
+    public List<EntidadServicio> getListLocRazSoc() {
+        return listLocRazSoc;
+    }
+
+    public void setListLocRazSoc(List<EntidadServicio> listLocRazSoc) {
+        this.listLocRazSoc = listLocRazSoc;
+    }
+
+    public EntidadServicio getLocalRazSocSelected() {
+        return localRazSocSelected;
+    }
+
+    public void setLocalRazSocSelected(EntidadServicio localRazSocSelected) {
+        this.localRazSocSelected = localRazSocSelected;
+    }
+
     public boolean isEsFisica() {
         return esFisica;
     }
@@ -321,19 +487,11 @@ public class MbEstablecimiento implements Serializable{
         return listado;
     }
 
-    public Domicilio getDomVinc() {
-        return domVinc;
-    }
-
-    public void setDomVinc(Domicilio domVinc) {
-        this.domVinc = domVinc;
-    }
-
     public List<Establecimiento> getListadoFilter() {
         return listadoFilter;
     }
 
-    public void setListaFilter(List<Establecimiento> listadoFilter) {
+    public void setListadoFilter(List<Establecimiento> listadoFilter) {
         this.listadoFilter = listadoFilter;
     }
 
@@ -386,6 +544,7 @@ public class MbEstablecimiento implements Serializable{
         iniciado = true;
         asignaDisp = false;
         limpiarListados();
+        limpiarEntitadesSrv();
         return "list";
     } 
 
@@ -394,7 +553,6 @@ public class MbEstablecimiento implements Serializable{
      */
     public String prepareView() {
         asignaDisp = false;
-        domVinc = current.getDomicilio();
         return "view";
     }
 
@@ -425,8 +583,14 @@ public class MbEstablecimiento implements Serializable{
      * @return acción para la edición de la entidad
      */
     public String prepareEdit() {
+        // guardo los datos recibidos de perfil y razón social
+        update = 0;
+        guardarTempRazonSocial();
+	guardarTempPerfil();
         asignaDisp = true;
-        domVinc = current.getDomicilio();
+        listaPerJuridica = perJuridicaFacade.findAll();
+        listaPerFisica = perFisicaFacade.findAll();
+        listaExpedientes = expFacade.findAllByOrder();
         listaTipoEstablecimiento= tipoEstablecimientoFacade.findAll();
         listaEstado = estadoFacade.findAll();
 	if(current.getPerFisica()!= null){
@@ -438,6 +602,8 @@ public class MbEstablecimiento implements Serializable{
         } 
         cargarListadosDisp();
         cargarEntidadesSrv();
+        esFisica = true;
+        esJuridica = true;            
         return "edit";
     }
     
@@ -445,10 +611,15 @@ public class MbEstablecimiento implements Serializable{
      * Método que muestra el diálogo para registrar un nuevo expediente
      */
     public void prepareRegExp(){
-        expediente = new Expediente();
+        if(esRazonSocial){
+            expRazSoc = new Expediente();
+        }else{
+            expediente = new Expediente();
+        }
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 500);
-        RequestContext.getCurrentInstance().openDialog("dlgRegistrarExpediente", options, null);
+        options.put("modal", true);
+        RequestContext.getCurrentInstance().openDialog("dlgRegistrarExpediente", options, null);        
     }    
            
     public String prepareInicio(){
@@ -499,6 +670,72 @@ public class MbEstablecimiento implements Serializable{
      * @return mensaje que notifica la inserción
      */
     public String create() {
+        List<Establecimiento> listEst;
+        // verifico la razón social, debe ser una persona jurídica o una persona física, no ambas o ninguna
+        if(current.getPerFisica() != null){
+            // no debe haber persona jurídica vinculada
+            if(current.getPerJuridica() != null){
+                JsfUtil.addErrorMessage("El Establecimiento que está creando, ya tiente una Persona Física asignada como Razón Social, "
+                        + "no puede tener además una Persona Jurídica.");
+                return null;
+            }
+        }else if(current.getPerJuridica() != null){
+            // no debe haber persona física vinculada
+            if(current.getPerFisica() != null){
+                JsfUtil.addErrorMessage("El Establecimiento que está creando, ya tiente una Persona Jurpidica asignada como Razón Social, "
+                        + "no puede tener además una Persona Física.");
+                return null;
+            }
+        }else{
+            JsfUtil.addErrorMessage("El Establecimiento que está creando debe tener una Razón Social.");
+            return null;
+        }
+        
+        // verifico que tenga expediente
+        if(current.getExpediente() == null){
+            JsfUtil.addErrorMessage("El Establecimiento que está creando debe tener un Expediente asignado.");
+            return null;
+        }
+        
+        // verifico Actividades y Especialidades solo si no es un Domicilio legal
+        if(!current.getTipo().getNombre().equals("Domicilio legal")){
+            // verifico que tenga al menos una Actividad vinculada
+            if(current.getActividades().isEmpty()){
+                JsfUtil.addErrorMessage("El Establecimiento que está creando debe tener al menos una Actividad asociada.");
+                return null;
+            }
+
+            // verifico que tenga al menos una Especialidad vinculada
+            if(current.getEspecialidades().isEmpty()){
+                JsfUtil.addErrorMessage("El Establecimiento que está creando debe tener al menos una Especialidad asociada.");
+                return null;
+            }
+        }
+
+        
+        // si estoy registrando un domicilio legal, valido que no tenga uno ya
+        if(current.getTipo().getNombre().equals("Domicilio legal")){
+            Long tempCuit;
+            if(current.getPerFisica() != null){
+                tempCuit = current.getPerFisica().getCuitCuil();
+                if(!getFacade().noExisteDomLegal(tempCuit, false)){
+                    JsfUtil.addErrorMessage("El Establecimiento que está creando es de tipo Domicilio legal, pero la razón social asociada "
+                            + "ya tiene registrado un Domicilio legal, solo puede haber uno, por favor, actualice los datos del Domicilio "
+                                + "legal existente.");
+                    return null;
+                }
+            }
+            if(current.getPerJuridica() != null){
+                tempCuit = current.getPerJuridica().getCuit();
+                if(!getFacade().noExisteDomLegal(tempCuit, true)){
+                    JsfUtil.addErrorMessage("El Establecimiento que está creando es de tipo Domicilio legal, pero la razón social asociada "
+                            + "ya tiene registrado un Domicilio legal, solo puede haber uno, por favor, actualice los datos del Domicilio "
+                                + "legal existente.");
+                    return null;
+                }
+            }
+        }
+        
         // Creación de la entidad de administración y asignación
         Date date = new Date(System.currentTimeMillis());
         AdminEntidad admEnt = new AdminEntidad();
@@ -506,52 +743,59 @@ public class MbEstablecimiento implements Serializable{
         admEnt.setHabilitado(true);
         admEnt.setUsAlta(usLogeado);
         current.setAdmin(admEnt);
-        //Asigno domicilio
-        current.setDomicilio(domicilio);
 
-        //current.setExpedientes(listExpedientes);
-        //current.setDomicilios(listaDomicilios);
-        getFacade().create(current);
-        asignaDisp = false;
-        return "view";
-    
-       /* if(current.getNombre().isEmpty()){
-            JsfUtil.addSuccessMessage("La persona que está guardando debe tener un nombre.");
-            return null;
-        }else{
-            try {
-                if(getFacade().noExiste(current.getDni())){
-
-                    // Inserción
-                    getFacade().create(current);
-
-                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoCreated"));
-                   // limpiarListados();
-                    return "view";
-
-                }else{
-                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreateEstablecimientoExistente"));
-                    return null;
-                }
-            } 
-            catch (Exception e) {
-                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstablecimientoCreatedErrorOccured"));
-                return null;
-            }
+        //Actualizo domicilio
+        if(localSelected != null){
+            domicilio.setIdLocalidad(localSelected.getId());
+            domicilio.setLocalidad(localSelected.getNombre());
         }
-        */
+
+        domicilio.setDepartamento(deptoSelected.getNombre());
+        domicilio.setProvincia(provSelected.getNombre());
+        
+        current.setDomicilio(domicilio);
+        
+        // verifico si hay otros Establecimientos del mismo tipo en el mismo domicilio. En cuyo caso seteo un alerta
+        listEst = getFacade().getExistente(domicilio.getCalle(), domicilio.getNumero(), domicilio.getIdLocalidad(), current.getTipo());
+        if(listEst.isEmpty()){
+            current.setAlertaDomicilio(false);
+        }else if(listEst.size() == 1){
+            current.setAlertaDomicilio(!listEst.get(0).getId().equals(current.getId()));
+        }else{
+            current.setAlertaDomicilio(true);
+        }
+    
+        // si todo está en condiciones creo el Establecimiento
+        try{
+            // Inserción
+            getFacade().create(current);
+            asignaDisp = false;
+
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoCreated"));
+            limpiarListados();
+            limpiarEntitadesSrv();
+            return "view";
+        } 
+        catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstablecimientoCreatedErrorOccured"));
+            return null;
+        }
     }
     
     /**
      * Método para registrar un nuevo Expediente
      */
     public void createExp(){
-        if(expediente.getNumero() < 1){
+        Expediente tempExp;
+        if(esRazonSocial) tempExp = expRazSoc;
+        else tempExp = expediente;
+                
+        if(tempExp.getNumero() < 1){
             JsfUtil.addErrorMessage("El N° del Expediente no puede ser menor a 1.");
         }else{
-            if(expFacade.noExiste(expediente.getNumero(), expediente.getAnio())){
+            if(expFacade.noExiste(tempExp.getNumero(), tempExp.getAnio())){
                 try{
-                    expFacade.create(expediente);
+                    expFacade.create(tempExp);
                     JsfUtil.addSuccessMessage("El Expediente ya ha sido registrado, por favor cierre esta ventana, "
                             + "actualice el listado con el botón adjunto y seleccionelo para asignarlo a la Persona Física");
                 }catch(Exception e){
@@ -564,12 +808,110 @@ public class MbEstablecimiento implements Serializable{
     }    
     
     /**
+     * Método para agregar una Persona Física para luego asitnarla al Establecimiento
+     */
+    public void createPerFisica(){
+        // Creación de la entidad de administración y asignación
+        Date date = new Date(System.currentTimeMillis());
+        AdminEntidad admEnt = new AdminEntidad();
+        admEnt.setFechaAlta(date);
+        admEnt.setHabilitado(true);
+        admEnt.setUsAlta(usLogeado);
+        perFisica.setAdmin(admEnt);
+        //Asigno expediente
+        perFisica.setExpediente(expRazSoc);
+        
+        //Actualizo domicilio
+        if(localRazSocSelected != null){
+            domicilio.setIdLocalidad(localRazSocSelected.getId());
+            domicilio.setLocalidad(localRazSocSelected.getNombre());
+        }
+
+        domicilio.setDepartamento(deptoRazSocSelected.getNombre());
+        domicilio.setProvincia(deptoRazSocSelected.getNombre());
+        
+        //Asigno domicilio
+        perFisica.setDomicilio(domicilio);
+
+        if(perFisica.getNombreCompleto() == null){
+            JsfUtil.addErrorMessage("La persona que está guardando debe tener un nombre.");
+        }else if(perFisica.getCuitCuil() == 0){
+            JsfUtil.addErrorMessage("La persona que está guardando debe tener un CUIT o CUIL.");
+        }else{
+            try {
+                if(perFisicaFacade.noExiste(perFisica.getCuitCuil())){
+                    // Inserción
+                    perFisicaFacade.create(perFisica);
+                    limpiarFormRazSoc();
+                    JsfUtil.addSuccessMessage("La Persona Física se creó satisfactoriamente, por favor, cierre la ventana y actualice el listado "
+                            + "de Personas Físicas con el botón correspondiente para poder seleccionarla y asignarla al Establecimiento.");
+                }else{
+                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerFisicaExistente"));
+                }
+            } 
+            catch (Exception e) {
+                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerFisicaCreatedErrorOccured"));
+            }
+        }  
+    }
+    /**
+     * Método para agregar una Persona Jurídica para luego asitnarla al Establecimiento
+     */
+    public void createPerJuridica(){
+        // Creación de la entidad de administración y asignación
+        Date date = new Date(System.currentTimeMillis());
+        AdminEntidad admEnt = new AdminEntidad();
+        admEnt.setFechaAlta(date);
+        admEnt.setHabilitado(true);
+        admEnt.setUsAlta(usLogeado);
+        perJuridica.setAdmin(admEnt);
+        
+        if(perJuridica.getRazonSocial() == null){
+            JsfUtil.addErrorMessage("La Persona Jurídica que está guardando debe tener una Razón Social.");
+        }else if(perJuridica.getCuit() == 0){
+            JsfUtil.addErrorMessage("La Persona Jurícia que está guardando debe tener un CUIT.");
+        }else{
+            try {
+                if(perJuridicaFacade.noExiste(perJuridica.getCuit())){
+                    // Inserción
+                    perJuridicaFacade.create(perJuridica);
+                    resetRazSoc();
+                    JsfUtil.addSuccessMessage("La Persona Jurídica se registró satisfactoriamente, por favor, cierre la ventana y actualice "
+                            + "el listado mediante el botón correspondiente para seleccionarla y asignarla al Establecimiento.");
+                }else{
+                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerJuridicaExistente"));
+                }
+            } 
+            catch (Exception e) {
+                JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PerJuridicaCreatedErrorOccured"));
+            }
+        }
+    }
+    
+    
+    /**
      * Método para actualizar el listados de expedientes
      */
     public void actualizarExpedientes(){
         listaExpedientes.clear();
         listaExpedientes = expFacade.findAllByOrder();
     }    
+    
+    /**
+     * Método para actualizar el listado de Personas físicas
+     */
+    public void actualizarPerFisicas(){
+        listaPerFisica.clear();
+        listaPerFisica = perFisicaFacade.findAll();
+    }
+    
+    /**
+     * Método para actualizar el listado de Personas Jurídicas
+     */
+    public void actualizarPerJuridicas(){
+        listaPerJuridica.clear();
+        listaPerJuridica = perJuridicaFacade.findAll();
+    }
 
     /**
      * Método que actualiza una nueva Instancia en la base de datos.
@@ -577,8 +919,7 @@ public class MbEstablecimiento implements Serializable{
      * @return mensaje que notifica la actualización
      */
     public String update() {    
-        boolean edito;
-        Establecimiento establecimiento;
+        List<Establecimiento> listEst;
         Date date = new Date(System.currentTimeMillis());
 
         // actualizamos según el valor de update
@@ -592,39 +933,151 @@ public class MbEstablecimiento implements Serializable{
             current.getAdmin().setUsModif(usLogeado);
             current.getAdmin().setHabilitado(true);
             current.getAdmin().setFechaBaja(null);
-            current.getAdmin().setUsBaja(usLogeado);
+            current.getAdmin().setUsBaja(null);
         }
         if(update == 0){
             current.getAdmin().setFechaModif(date);
             current.getAdmin().setUsModif(usLogeado);
+            
+            // verifico la razón social, debe ser una persona jurídica o una persona física, no ambas o ninguna
+            if(current.getPerFisica() != null){
+                // no debe haber persona jurídica vinculada
+                if(current.getPerJuridica() != null){
+                    JsfUtil.addErrorMessage("El Establecimiento que está editando, ya tiente una Persona Física asignada como Razón Social, "
+                            + "no puede tener además una Persona Jurídica.");
+                    return null;
+                }
+            }else if(current.getPerJuridica() != null){
+                // no debe haber persona física vinculada
+                if(current.getPerFisica() != null){
+                    JsfUtil.addErrorMessage("El Establecimiento que está editando, ya tiente una Persona Jurpidica asignada como Razón Social, "
+                            + "no puede tener además una Persona Física.");
+                    return null;
+                }
+            }else{
+                JsfUtil.addErrorMessage("El Establecimiento que está editando debe tener una Razón Social.");
+                return null;
+            }
+
+            // verifico que tenga expediente
+            if(current.getExpediente() == null){
+                JsfUtil.addErrorMessage("El Establecimiento que está editando debe tener un Expediente asignado.");
+                return null;
+            }
+
+            // verifico Actividades y Especialidades solo si no es un Domicilio legal
+            if(!current.getTipo().getNombre().equals("Domicilio legal")){
+                // verifico que tenga al menos una Actividad vinculada
+                if(current.getActividades().isEmpty()){
+                    JsfUtil.addErrorMessage("El Establecimiento que está editando debe tener al menos una Actividad asociada.");
+                    return null;
+                }
+
+                // verifico que tenga al menos una Especialidad vinculada
+                if(current.getEspecialidades().isEmpty()){
+                    JsfUtil.addErrorMessage("El Establecimiento que está editando debe tener al menos una Especialidad asociada.");
+                    return null;
+                }
+            }
+
+            // si estoy registrando un domicilio legal, valido que no tenga uno ya
+            if(current.getTipo().getNombre().equals("Domicilio legal")){
+                Long tempCuit;
+                if(current.getPerFisica() != null){
+                    tempCuit = current.getPerFisica().getCuitCuil();
+                    if(!getFacade().noExisteDomLegal(tempCuit, false)){
+                        JsfUtil.addErrorMessage("El Establecimiento que está editando es de tipo Domicilio legal, pero la razón social asociada "
+                                + "ya tiene registrado un Domicilio legal, solo puede haber uno, por favor, actualice los datos del Domicilio "
+                                + "legal existente.");
+                        return null;
+                    }
+                }
+                if(current.getPerJuridica() != null){
+                    tempCuit = current.getPerJuridica().getCuit();
+                    if(!getFacade().noExisteDomLegal(tempCuit, true)){
+                        JsfUtil.addErrorMessage("El Establecimiento que está editando es de tipo Domicilio legal, pero la razón social asociada "
+                                + "ya tiene registrado un Domicilio legal, solo puede haber uno, por favor, actualice los datos del Domicilio "
+                                + "legal existente.");
+                        return null;
+                    }
+                }
+            }
         }
         // acualizo según la operación seleccionada
         try {
             if(update == 0){
-                //establecimiento = getFacade().getExistente(current.getDomicilio(), current.getActividad());
-                /**
-                 * Modificar el método getExistente() en el facade
-                 */
-                establecimiento = null;
-                if(establecimiento == null){
-                    edito = true;  
+                // verifico si hay otros Establecimientos del mismo tipo en el mismo domicilio. En cuyo caso seteo un alerta
+                listEst = getFacade().getExistente(current.getDomicilio().getCalle(), current.getDomicilio().getNumero(), current.getDomicilio().getIdLocalidad(), current.getTipo());
+                if(listEst.isEmpty()){
+                    current.setAlertaDomicilio(false);
+                }else if(listEst.size() == 1){
+                    current.setAlertaDomicilio(!listEst.get(0).getId().equals(current.getId()));
                 }else{
-                    edito = establecimiento.getId().equals(current.getId());
+                    current.setAlertaDomicilio(true);
                 }
-                if(edito){
-                    // Actualización de datos de administración de la entidad
-                    current.getAdmin().setFechaModif(date);
-                    current.getAdmin().setUsModif(usLogeado); 
 
-                    // Actualizo
+                //Actualizo domicilio
+                if(localSelected != null){
+                    current.getDomicilio().setIdLocalidad(localSelected.getId());
+                    current.getDomicilio().setLocalidad(localSelected.getNombre());
+                }
+
+                current.getDomicilio().setDepartamento(deptoSelected.getNombre());
+                current.getDomicilio().setProvincia(provSelected.getNombre());
+                
+                // creo un string que me vaya guardando los pasos por la transacción
+                String estTansac = "";
+
+                // si todo está en condiciones edito el Establecimiento
+                try{
+                    // primero edito
                     getFacade().edit(current);
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ha sido actualizado"));
-                    asignaDisp = false;
-                    return "view";
-                }else{
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Establecimiento", "Ya Existe"));
-                    return null; 
+                    estTansac = estTansac + "Update Establecimiento: Ok. ";
+                    
+                    // luego verifico que no haya habido cambio de razón social
+                    if(!verificarCambioRazonSocial()){
+                        ReasignaRazonSocial rsAnterior = new ReasignaRazonSocial();
+                        Date dt = new Date(System.currentTimeMillis());
+                        // leo el último cambio de rs si lo hubiera
+                        if(reasignaFacade.getUltimaActiva(current) != null){
+                            rsAnterior = reasignaFacade.getUltimaActiva(current);
+                        }
+                        if(current.getPerJuridica() != null)rsNueva.setPerJuridica(current.getPerJuridica());
+                        else rsNueva.setPerFisica(current.getPerFisica());
+                        rsNueva.setEstablecimiento(current);
+                        rsNueva.setFecha(dt);
+                        rsNueva.setActiva(true);
+                        rsNueva.setUsuario(usLogeado);
+
+                        // si hubo una anterior la apago y seteo la razón social anterior
+                        if(rsAnterior.getId() != null){
+                            rsNueva.setExPerJuridica(rsAnterior.getPerJuridica());
+                            rsNueva.setExPerFisica(rsAnterior.getPerFisica());
+                            rsAnterior.setActiva(false);
+                            reasignaFacade.edit(rsAnterior);
+                            estTansac = estTansac + "Update Reasignación anterior: Ok. ";
+                        }else{
+                            // si no hubo asignación anterior seteo las ex con los valores temporales
+                            rsNueva.setExPerJuridica(tempPerJuridica);
+                            rsNueva.setExPerFisica(tempPerFisica);
+                        }
+                        // agrego la nueva como activa
+                        reasignaFacade.create(rsNueva);
+                        estTansac = estTansac + "Insert Reasignación nueva: Ok.";
                     }
+                    
+                    asignaDisp = false;
+                    rsNueva = null;
+
+                    JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EstablecimientoUpdated") + " " + estTansac);
+                    limpiarListados();
+                    limpiarEntitadesSrv();
+                    return "view";
+                } 
+                catch (Exception e) {
+                    JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("EstablecimientoUpdatedErrorOccured")  + " " + estTansac);
+                    return null;
+                }
                 
             }else if(update == 1){
                 getFacade().edit(current);
@@ -740,11 +1193,41 @@ public class MbEstablecimiento implements Serializable{
     }    
     
     /**
+     * Método para mostrar el historial de cambio de razones sociales para un establecimiento
+     */
+    public void verRsAnteriores(){
+        listHist = reasignaFacade.getHistorial(current);
+
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 900);
+        RequestContext.getCurrentInstance().openDialog("dlgHistorialRazonesSociales", options, null);
+    }
+    
+    /**
+     * Método para abrir el diálogo para cambiar la razón social del Establecimiento
+     */
+    public void actualizarRazonSocial(){
+        esFisica = true;
+        esJuridica = true;     
+        rsNueva = new ReasignaRazonSocial();
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 900);
+        options.put("contentHeight", 800);
+        RequestContext.getCurrentInstance().openDialog("dlgEditRazonSocial", options, null);
+    }
+    
+    /**
      * Método para abrir el formulario para registrar una nueva Persona Física
      */
     public void addPerFisica(){
+        esRazonSocial = true;
+        perFisica = new PerFisica();
+        domicilio = new Domicilio();
+        esFisica = true;
+        esJuridica = false;
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 800);
+        options.put("modal", true);
         RequestContext.getCurrentInstance().openDialog("dlgAddPerFisica", options, null);
     }        
     
@@ -752,39 +1235,17 @@ public class MbEstablecimiento implements Serializable{
      * Método para abrir el formulario para registrar una nueva Persona Juridica
      */
     public void addPerJuridica(){
+        esRazonSocial = true;
+        esFisica = false;
+        esJuridica = true;
+        perJuridica = new PerJuridica();
+        listaTipoPersonaJuridica = tipoPerJurFacade.findAllByNombre();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 800);
+        options.put("modal", true);
         RequestContext.getCurrentInstance().openDialog("dlgAddPerJuridica", options, null);
     }        
 
-
-    /****************************
-     * Métodos de validación
-     ****************************/    
-    
-    /**
-     * Método para validar que no exista ya una entidad con este nombre al momento de crearla
-     * @param arg0: vista jsf que llama al validador
-     * @param arg1: objeto de la vista que hace el llamado
-     * @param arg2: contenido del campo de texto a validar 
-     */
-    public void validarInsert(FacesContext arg0, UIComponent arg1, Object arg2){
-        validarExistente(arg2);
-    }
-    
-    /**
-     * Método para validar que no exista una entidad con este nombre, siempre que dicho nombre no sea el que tenía originalmente
-     * @param arg0: vista jsf que llama al validador
-     * @param arg1: objeto de la vista que hace el llamado
-     * @param arg2: contenido del campo de texto a validar 
-     * @throws ValidatorException 
-     */
-    public void validarUpdate(FacesContext arg0, UIComponent arg1, Object arg2){
-        if(!current.getDomicilio().equals((String)arg2)){
-            validarExistente(arg2);
-        }
-    }    
-    
     /**
      * Método para procesar el pdf
      * @param document
@@ -797,7 +1258,118 @@ public class MbEstablecimiento implements Serializable{
         pdf.setPageSize(PageSize.A4.rotate());
         pdf.newPage();
     }        
+    
+    /**
+     * Método para limpiar todo el formulario new
+     */
+    public void limpiarForm(){
+        limpiarRazonSocial();
+        limpiarPerfil();
+        limpiarEntitadesSrv();
+    }
+    
+    /**
+     * Método para restaurar los campos del formulario de edición
+     */
+    public void restForm(){
+        restaurarRazonSocial();
+        restaurarPerfil();
+        cargarEntidadesSrv();
+    }    
+    
+    /**
+     * Método para limpiar todo el formulario new
+     */
+    public void limpiarFormRazSoc(){
+        if(domicilio != null) domicilio = new Domicilio();
+        limpiarCuit();
+        limpiarEntitadesSrvRazSoc();
+    }    
  
+    /**
+     * Método para abrir el diálogo para validar cuit 
+     */
+    public void prepareValidarCuit(){
+        // seteo el objeto que recibirá los resultados de la validación
+        personaAfip = new CuitAfip();
+        cuit = Long.valueOf(0);
+        
+        Map<String,Object> options = new HashMap<>();
+        options.put("contentWidth", 700);
+        options.put("contentHeight", 250);
+        options.put("modal", true);
+        RequestContext.getCurrentInstance().openDialog("dlgValidarCuit", options, null);
+    }
+
+    
+    /**
+     * Método que consume el servicio de validación de cuit
+     * Recibe un cuit y retorna los datos de la persona asociada, en caso de ser válido.
+     * Los datos recibidos los guarda en el campo personaAfip para mostrarlo al usuario.
+     */
+    public void validarCuit(){
+        try { 
+            CuitAfipWs port = srvCuitAfip.getCuitAfipWsPort();
+            personaAfip = port.verPersona(cuit);
+            
+            // Si valida seteo los datos correspondientes de la persona (según el caso)
+            if(esFisica){
+                perFisica.setCuitCuil(personaAfip.getPejID());
+                perFisica.setNombreCompleto(personaAfip.getPejRazonSocial());
+            }else if(esJuridica){
+                perJuridica.setCuit(personaAfip.getPejID());
+                perJuridica.setRazonSocial(personaAfip.getPejRazonSocial());
+            }
+
+            JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
+        } catch (Exception ex) {
+            // muestro un mensaje al usuario
+            JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"));
+            // lo escribo en el log del server
+            logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"), ex.getMessage()});
+        }
+    }   
+    
+    /**
+     * Método para validar que el año ingresado tenga un formato válido
+     * @param arg0: vista jsf que llama al validador
+     * @param arg1: objeto de la vista que hace el llamado
+     * @param arg2: contenido del campo de texto a validar 
+     */
+    public void validarAnio(FacesContext arg0, UIComponent arg1, Object arg2) throws ValidatorException{
+        int anioActual = Calendar.getInstance().get(Calendar.YEAR);
+        int anioMinimo = anioActual - 20;
+        if((int)arg2 > anioActual){
+            throw new ValidatorException(new FacesMessage("El año ingresado no puede ser mayor que el año actual = " + anioActual));
+        }else{
+            if((int)arg2 < anioMinimo){
+                throw new ValidatorException(new FacesMessage("El año ingresado no puede ser menor a 20 años antes del año actual = " + anioMinimo));
+            }
+        }
+    }       
+    
+    /**
+     * Método para limpiar los datos AFIP seleccionado
+     */
+    public void limpiarCuit(){
+        personaAfip = null;
+        personaAfip = new CuitAfip();
+        if(esFisica){
+            perFisica.setNombreCompleto("");
+            perFisica.setCuitCuil(Long.valueOf(0));
+        }else if(esJuridica){
+            perJuridica.setCuit(Long.valueOf(0));
+            perJuridica.setRazonSocial("");
+        }
+    }   
+    
+    /**
+     * Método para actualizar los datos del formulario de cambio de razón social
+     */
+    public void actualizarEditRazonSocial(){
+        JsfUtil.addSuccessMessage("La Razón Social ha sido actualizada, por favor cierre esta ventana y "
+                + "actualice los datos en el formulario principal mediante el botón correspondiente");
+    }
     
     /*********************
     ** Métodos privados **
@@ -809,12 +1381,6 @@ public class MbEstablecimiento implements Serializable{
         return establecimientoFacade;
     }
 
-        
-    private void validarExistente(Object arg2) throws ValidatorException{
-        if(!getFacade().noExiste((long)arg2)){
-            throw new ValidatorException(new FacesMessage(ResourceBundle.getBundle("/Bundle").getString("CreateEstablecimientoExistente")));
-        }
-    }  
     
     /**
      * Restea la entidad
@@ -837,6 +1403,10 @@ public class MbEstablecimiento implements Serializable{
         if(listEspFilter != null) listEspFilter.clear();
         if(listActDisp != null) listActDisp.clear();
         if(listActFilter != null) listActFilter.clear();
+        
+        if(listProvincias != null) listProvincias = null;
+        if(listDepartamentos != null) listDepartamentos = null;
+        if(listLocalidades != null) listLocalidades = null;
     } 
     
     /**
@@ -877,15 +1447,21 @@ public class MbEstablecimiento implements Serializable{
             CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
             listSrv = port.buscarDeptosPorProvincia(idProv);
             
-            // lleno el list con los Departamentos como un objeto Entidad Servicio
-            listDepartamentos = new ArrayList<>();
-            
-            for(Departamento dpt : listSrv){
-                depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
-                listDepartamentos.add(depto);
-                //depto = null;
+            // lleno el list con los Departamentos (según corresponda) como un objeto Entidad Servicio
+            if(esRazonSocial){
+                listDepRazSoc = new ArrayList<>();
+                for(Departamento dpt : listSrv){
+                    depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
+                    listDepRazSoc.add(depto);
+                }
             }
-            
+            else{
+                listDepartamentos = new ArrayList<>();
+                for(Departamento dpt : listSrv){
+                    depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
+                    listDepartamentos.add(depto);
+                }
+            }
         } catch (Exception ex) {
             // muestro un mensaje al usuario
             JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetDeptosError"));
@@ -893,7 +1469,7 @@ public class MbEstablecimiento implements Serializable{
             logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetDeptosError"), ex.getMessage()});
         }
     }
-    
+
     /**
      * Método para poblar el listado de Localidades del servicio de centros poblados
      */
@@ -904,15 +1480,20 @@ public class MbEstablecimiento implements Serializable{
             CentrosPobladosWebService port = srvCentrosPob.getCentrosPobladosWebServicePort();
             listSrv = port.buscarCentrosPorDepto(idDepto);
             
-            // lleno el list con los Departamentos como un objeto Entidad Servicio
-            listLocalidades = new ArrayList<>();
-            
-            for(CentroPoblado loc : listSrv){
-                local = new EntidadServicio(loc.getId(), loc.getNombre());
-                listLocalidades.add(local);
-                //local = null;
+            // lleno el list con las Localidades (según corresponda) como un objeto Entidad Servicio
+            if(esRazonSocial){
+                listLocRazSoc = new ArrayList<>();
+                for(CentroPoblado loc : listSrv){
+                    local = new EntidadServicio(loc.getId(), loc.getNombre());
+                    listLocRazSoc.add(local);
+                }
+            }else{
+                listLocalidades = new ArrayList<>();
+                for(CentroPoblado loc : listSrv){
+                    local = new EntidadServicio(loc.getId(), loc.getNombre());
+                    listLocalidades.add(local);
+                }
             }
-            
         } catch (Exception ex) {
             // muestro un mensaje al usuario
             JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaGetLocalError"));
@@ -936,6 +1517,21 @@ public class MbEstablecimiento implements Serializable{
             localSelected = null;
         }
     }
+    
+    /**
+     * Método para limpiar las entidades del servicio para razones sociales
+     */
+    private void limpiarEntitadesSrvRazSoc(){
+        if(provRazSocSelected != null){
+            provRazSocSelected = null;
+        }
+        if(deptoRazSocSelected != null){
+            deptoRazSocSelected = null;
+        }
+        if(localRazSocSelected != null){
+            localRazSocSelected = null;
+        }
+    }    
 
     /**
      * Método para cargar entidades de servicio y los listados, para actualizar la Persona
@@ -1002,7 +1598,7 @@ public class MbEstablecimiento implements Serializable{
     }    
     
     /**
-     * Mátodo para cargar los Docentes disponibles para asignarlos a una Actividad Dispuesta
+     * Mátodo para cargar los Docentes disponibles para asignarlos a un Establecimiento
      */
     private void cargarEspDisponibles(){
         if(!current.getEspecialidades().isEmpty()){
@@ -1021,7 +1617,7 @@ public class MbEstablecimiento implements Serializable{
     }    
     
     /**
-     * Mátodo para cargar los Docentes disponibles para asignarlos a una Actividad Dispuesta
+     * Mátodo para cargar los Docentes disponibles para asignarlos a un Establecimiento
      */
     private void cargarActDisponibles(){
         if(!current.getActividades().isEmpty()){
@@ -1038,6 +1634,88 @@ public class MbEstablecimiento implements Serializable{
             listActDisp = actividadFacade.findAllByNombre();
         }
     }      
+    
+    /**
+     * Método para resetear los campos asociados al registro de nuevas razones sociales
+     */
+    private void resetRazSoc(){
+        limpiarEntitadesSrvRazSoc();
+        listDepRazSoc.clear();
+        listLocRazSoc.clear();
+        listaTipoPersonaJuridica.clear();
+        perJuridica = null;
+        perFisica = null;
+        expRazSoc = null;
+        esFisica = true;
+        esJuridica = true;
+    }
+    
+    /**
+     * Metodo para guardar temporalmente los datos del Perfil recibidos al abrir el formulario de edición
+     */
+    private void guardarTempPerfil(){
+        listEspVinc = current.getEspecialidades();
+        listActVinc = current.getActividades();
+    }    
+    
+    /**
+     * Metodo para guardar temporalmente los datos de la razón social recibidos al abrir el formulario de edición
+     */
+    private void guardarTempRazonSocial(){
+        tempPerJuridica = current.getPerJuridica();
+        tempPerFisica = current.getPerFisica();
+    }
+    
+    /**
+     * Método para verificar si hubo cambio de razón social
+     */
+    private boolean verificarCambioRazonSocial(){
+        if(tempPerJuridica != null){
+            return tempPerJuridica.equals(current.getPerJuridica());
+        }else if(tempPerFisica != null){
+            return tempPerFisica.equals(current.getPerFisica());
+        }else{
+            return false;
+        }
+    }
+    
+    /**
+     * Método para limpiar los datos de la razón social que se hubieran cargado en el formulario new
+     */
+    private void limpiarRazonSocial(){
+        esFisica = true;
+        esJuridica = true;
+    }
+    
+    /**
+     * Método para restaurar la razón social a los valores recibidos al abrir el formulario de edición
+     */
+    private void restaurarRazonSocial(){
+        current.setPerFisica(tempPerFisica);
+        current.setPerJuridica(tempPerJuridica);
+    }
+    
+    /**
+     * Método para limpiar los datos del perfil seleccinados
+     */
+    private void limpiarPerfil(){
+        if(listEspVinc != null) listEspVinc.clear();
+        if(listActVinc != null) listActVinc.clear();
+        
+        current.setActividades(listActVinc);
+        current.setEspecialidades(listEspVinc);
+
+        listEspDisp = espFacade.findAllByNombre();
+        listActDisp = actividadFacade.findAllByNombre();
+    } 
+    
+    /**
+     * Método para restaurar los datos del perfil recibidos al abrir el formulario de edición
+     */
+    private void restaurarPerfil(){
+        current.setEspecialidades(listEspVinc);
+        current.setActividades(listActVinc);
+    }     
     
 
     /*********************
@@ -1078,16 +1756,20 @@ public class MbEstablecimiento implements Serializable{
     
     /**
      * Método para actualizar el listado de departamentos según la provincia seleccionada
+     * @param esRazSoc
      */    
-    public void provinciaChangeListener(){     
-        getDepartamentosSrv(provSelected.getId());
+    public void provinciaChangeListener(){  
+        if(esRazonSocial) getDepartamentosSrv(provRazSocSelected.getId());
+        else getDepartamentosSrv(provSelected.getId());
     }   
     
     /**
      * Método para actualizar el listado de localidades según el departamento seleccionado
+     * @param esRazSoc
      */    
     public void deptoChangeListener(){
-        getLocalidadesSrv(deptoSelected.getId());
+        if(esRazonSocial) getLocalidadesSrv(deptoRazSocSelected.getId());
+        else getLocalidadesSrv(deptoSelected.getId());
     }     
         
     
