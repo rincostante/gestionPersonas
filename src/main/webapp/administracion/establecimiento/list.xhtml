@@ -46,6 +46,11 @@
                           filterBy="#{e.strCuit}" >
                     <p:outputLabel value="#{e.strCuit}" />
                 </p:column>    
+                
+                <p:column headerText="Exp." filterMatchMode="contains" sortBy="#{e.expediente.numero}" 
+                          filterBy="#{e.expediente.numero}" >
+                    <p:outputLabel value="#{e.expediente.numero}/#{e.expediente.anio}" />
+                </p:column>   
 
                 <p:column headerText="Calle" filterMatchMode="contains" sortBy="#{e.domicilio.calle}" filterBy="#{e.domicilio.calle}">
                     <p:outputLabel value="#{e.domicilio.calle}"/>

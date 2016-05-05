@@ -74,9 +74,9 @@ import org.primefaces.context.RequestContext;
 * @author rodriguezn
 */
 public class MbEstablecimiento implements Serializable{
-    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl")
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/vmdeswebjava.medioambiente.gov.ar_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl")
     private CentrosPobladosWebService_Service srvCentrosPob;    
-    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CuitAfipWs/CuitAfipWs.wsdl")
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/vmdeswebjava.medioambiente.gov.ar_8080/CuitAfipWs/CuitAfipWs.wsdl")
     private CuitAfipWs_Service srvCuitAfip;
     private CuitAfip personaAfip;
     private Long cuit;

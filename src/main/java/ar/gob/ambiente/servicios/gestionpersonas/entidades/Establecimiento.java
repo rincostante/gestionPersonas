@@ -101,14 +101,30 @@ public class Establecimiento implements Serializable {
     private String strRazonSocial;      
     
     @Transient
-    private String strCuit;       
+    private String strCuit;      
+    
+    @Transient
+    private long cuit;           
 
     public Establecimiento() {
         razonesSocialesAnt = new ArrayList();
         especialidades = new ArrayList();
         actividades = new ArrayList();
     }  
-
+    
+    public String getStrCuit(){
+        if(perJuridica != null){
+            strCuit = String.valueOf(perJuridica.getCuit());
+        }else{
+            strCuit = String.valueOf(perFisica.getCuitCuil());
+        }
+        String tempCuit = strCuit.substring(0, 2);
+        tempCuit = tempCuit + "-" + strCuit.substring(2, 10);
+        tempCuit = tempCuit + "-" + strCuit.substring(10);
+        strCuit = tempCuit;
+        return strCuit;
+    }
+    
     public boolean isAlertaDomicilio() {
         return alertaDomicilio;
     }
@@ -198,7 +214,6 @@ public class Establecimiento implements Serializable {
         this.domicilio = domicilio;
     }
 
-
     public String getCorreoElectronico() {
         return correoElectronico;
     }
@@ -239,14 +254,6 @@ public class Establecimiento implements Serializable {
             return perJuridica.getRazonSocial();
         }
     }
-
-    public String getStrCuit() {
-        if(perFisica != null){
-            return String.valueOf(perFisica.getCuitCuil());
-        }else{
-            return String.valueOf(perJuridica.getCuit());
-        }
-    }    
     
     @Override
     public int hashCode() {

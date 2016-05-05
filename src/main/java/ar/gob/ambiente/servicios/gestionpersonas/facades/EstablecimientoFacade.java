@@ -31,6 +31,7 @@ public class EstablecimientoFacade extends AbstractFacade<Establecimiento> {
     public EstablecimientoFacade() {
         super(Establecimiento.class);
     }   
+
     
     /**
      * Método que retorna un Establecimiento del tipo solicitado ubicado en un domicilio coincidente
@@ -54,6 +55,19 @@ public class EstablecimientoFacade extends AbstractFacade<Establecimiento> {
                 .setParameter("idLocalidad", idLocalidad);
         return q.getResultList();
     }   
+    
+    /**
+     * Retorna todos los Establecimientos habilitados
+     * Ordenados por razón social
+     * @return 
+     */
+    public List<Establecimiento> getAtivos(){
+        em = getEntityManager();       
+        String queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.admin.habilitado = true";
+        Query q = em.createQuery(queryString);
+        return q.getResultList();
+    }
     
     /**
      * Método para consultar por la existencia de un domicilio legal existente
@@ -84,4 +98,72 @@ public class EstablecimientoFacade extends AbstractFacade<Establecimiento> {
         return q.getResultList().isEmpty();
     }  
 
+    /**
+     * Método para obtener los Establecimientos por el cuit de la razón social
+     * @param cuit
+     * @return 
+     */
+    public List<Establecimiento> getByCuit(Long cuit){
+        List<Establecimiento> lstEst;
+        em = getEntityManager();       
+        
+        // busco por persona jurídica
+        String queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.perJuridica.cuit = :cuit";
+        Query q = em.createQuery(queryString)
+                .setParameter("cuit", cuit);
+        lstEst = q.getResultList();
+        
+        // busco por persona física
+        queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.perFisica.cuitCuil = :cuit";
+        q = em.createQuery(queryString)
+                .setParameter("cuit", cuit);
+        lstEst.addAll(q.getResultList());
+        
+        return lstEst;
+    }
+    
+    /**
+     * Método que retorna los Establecimientos según su razón social
+     * @param razonSocial
+     * @return 
+     */
+    public List<Establecimiento> getByRazonSocial(String razonSocial){
+        List<Establecimiento> lstEst;
+        em = getEntityManager();       
+        
+        // busco por persona jurídica
+        String queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.perJuridica.razonSocial LIKE :razonSocial";
+        Query q = em.createQuery(queryString)
+                .setParameter("razonSocial", "%" + razonSocial + "%");
+        lstEst = q.getResultList();
+        
+        // busco por persona física
+        queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.perFisica.nombreCompleto LIKE :razonSocial";
+        q = em.createQuery(queryString)
+                .setParameter("razonSocial", "%" + razonSocial + "%");
+        lstEst.addAll(q.getResultList());
+
+        return lstEst;
+    }
+    
+    /**
+     * Método que retorna los Establecimientos según el expediente que tramitan
+     * @param num
+     * @param anio
+     * @return 
+     */
+    public List<Establecimiento> getByExp(int num, int anio){
+        em = getEntityManager();       
+        String queryString = "SELECT est FROM Establecimiento est "
+                + "WHERE est.expediente.numero = :num "
+                + "AND est.expediente.anio = :anio";
+        Query q = em.createQuery(queryString)
+                .setParameter("num", num)
+                .setParameter("anio", anio);
+        return q.getResultList();
+    }
 }

@@ -52,7 +52,7 @@ import javax.persistence.Query;
         em = getEntityManager();        
         List<PerJuridica> result;
         String queryString = "SELECT pj FROM PerJuridica pj " 
-                + "WHERE pj.adminentidad.habilitado = true";                   
+                + "WHERE pj.admin.habilitado = true";                   
         Query q = em.createQuery(queryString);
         result = q.getResultList();
         return result;
@@ -109,6 +109,43 @@ import javax.persistence.Query;
             result = false;
         }
         
+        return result;
+    }     
+    
+    /**
+     * Retorna las personasas jurídicas vinculadas al cuit
+     * @param cuit
+     * @return 
+     */
+    public PerJuridica getByCuit(Long cuit){
+        em = getEntityManager();    
+        List<PerJuridica> result;
+        String queryString = "SELECT pj FROM PerJuridica pj " 
+                + "WHERE pj.cuit = :cuit";                   
+        Query q = em.createQuery(queryString)
+                .setParameter("cuit", cuit);
+        result = q.getResultList();
+        if(result.isEmpty()){
+            return null;
+        }else{
+            return result.get(0);
+        }   
+    }    
+    
+    /**
+     * Retorna las personas jurídica cuya razón social responda al parámetro de búsqueda
+     * @param razonSocial
+     * @return 
+     */
+    public List<PerJuridica> getByRazonSocial(String razonSocial){
+        em = getEntityManager();
+        List<PerJuridica> result;
+        String queryString = "SELECT perJur FROM PerJuridica perJur "
+                + "WHERE perJur.razonSocial LIKE :razonSocial "
+                + "AND perJur.admin.habilitado = true";
+        Query q = em.createQuery(queryString)
+                .setParameter("razonSocial", "%" + razonSocial + "%");
+        result = q.getResultList();
         return result;
     }     
 }

@@ -1,0 +1,291 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.3 (tags/2.3-7528; 2013-04-29T19:34:10+0000) JAXWS-RI/2.2.8 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://ws.gestionterritorial.servicios.ambiente.gob.ar/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.gestionterritorial.servicios.ambiente.gob.ar/">
+
+<xs:element name="buscarCentroPoblado" type="tns:buscarCentroPoblado"/>
+
+<xs:element name="buscarCentroPobladoResponse" type="tns:buscarCentroPobladoResponse"/>
+
+<xs:element name="buscarCentrosPorDepto" type="tns:buscarCentrosPorDepto"/>
+
+<xs:element name="buscarCentrosPorDeptoResponse" type="tns:buscarCentrosPorDeptoResponse"/>
+
+<xs:element name="buscarCentrosPorDeptoYTipo" type="tns:buscarCentrosPorDeptoYTipo"/>
+
+<xs:element name="buscarCentrosPorDeptoYTipoResponse" type="tns:buscarCentrosPorDeptoYTipoResponse"/>
+
+<xs:element name="buscarCentrosPorProvYTipo" type="tns:buscarCentrosPorProvYTipo"/>
+
+<xs:element name="buscarCentrosPorProvYTipoResponse" type="tns:buscarCentrosPorProvYTipoResponse"/>
+
+<xs:element name="buscarCentrosPorRegionYTipo" type="tns:buscarCentrosPorRegionYTipo"/>
+
+<xs:element name="buscarCentrosPorRegionYTipoResponse" type="tns:buscarCentrosPorRegionYTipoResponse"/>
+
+<xs:element name="buscarDeptosPorProvincia" type="tns:buscarDeptosPorProvincia"/>
+
+<xs:element name="buscarDeptosPorProvinciaResponse" type="tns:buscarDeptosPorProvinciaResponse"/>
+
+<xs:element name="buscarMunicipiosPorId" type="tns:buscarMunicipiosPorId"/>
+
+<xs:element name="buscarMunicipiosPorIdResponse" type="tns:buscarMunicipiosPorIdResponse"/>
+
+<xs:element name="buscarMunicipiosPorProvincia" type="tns:buscarMunicipiosPorProvincia"/>
+
+<xs:element name="buscarMunicipiosPorProvinciaResponse" type="tns:buscarMunicipiosPorProvinciaResponse"/>
+
+<xs:element name="buscarProvinciasPorRegion" type="tns:buscarProvinciasPorRegion"/>
+
+<xs:element name="buscarProvinciasPorRegionResponse" type="tns:buscarProvinciasPorRegionResponse"/>
+
+<xs:element name="buscarRegionesPorEspecif" type="tns:buscarRegionesPorEspecif"/>
+
+<xs:element name="buscarRegionesPorEspecifResponse" type="tns:buscarRegionesPorEspecifResponse"/>
+
+<xs:element name="buscarRegionesPorProvincia" type="tns:buscarRegionesPorProvincia"/>
+
+<xs:element name="buscarRegionesPorProvinciaResponse" type="tns:buscarRegionesPorProvinciaResponse"/>
+
+<xs:element name="centropoblado" type="tns:centroPoblado"/>
+
+<xs:element name="centropobladotipo" type="tns:centroPobladoTipo"/>
+
+<xs:element name="departamento" type="tns:departamento"/>
+
+<xs:element name="especificidadderegion" type="tns:especificidadDeRegion"/>
+
+<xs:element name="municipio" type="tns:municipio"/>
+
+<xs:element name="provincia" type="tns:provincia"/>
+
+<xs:element name="region" type="tns:region"/>
+
+<xs:element name="verEspecifRegion" type="tns:verEspecifRegion"/>
+
+<xs:element name="verEspecifRegionResponse" type="tns:verEspecifRegionResponse"/>
+
+<xs:element name="verProvincias" type="tns:verProvincias"/>
+
+<xs:element name="verProvinciasResponse" type="tns:verProvinciasResponse"/>
+
+<xs:element name="verTiposCentros" type="tns:verTiposCentros"/>
+
+<xs:element name="verTiposCentrosResponse" type="tns:verTiposCentrosResponse"/>
+
+<xs:complexType name="buscarDeptosPorProvincia">
+<xs:sequence>
+<xs:element name="idProv" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarDeptosPorProvinciaResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:departamento" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="departamento">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element ref="tns:provincia" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="provincia">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentrosPorProvYTipo">
+<xs:sequence>
+<xs:element name="idProv" type="xs:long" minOccurs="0"/>
+<xs:element name="idTipo" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentrosPorProvYTipoResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:centroPoblado" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="centroPoblado">
+<xs:sequence>
+<xs:element name="centroPobladoTipo" type="tns:centroPobladoTipo" minOccurs="0"/>
+<xs:element ref="tns:departamento" minOccurs="0"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="centroPobladoTipo">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarRegionesPorEspecif">
+<xs:sequence>
+<xs:element name="idEspecif" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarRegionesPorEspecifResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:region" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="region">
+<xs:sequence>
+<xs:element ref="tns:especificidadderegion" minOccurs="0"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="especificidadDeRegion">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarProvinciasPorRegion">
+<xs:sequence>
+<xs:element name="idRegion" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarProvinciasPorRegionResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:provincia" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verProvincias">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="verProvinciasResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:provincia" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarRegionesPorProvincia">
+<xs:sequence>
+<xs:element name="idProv" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarRegionesPorProvinciaResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:region" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentrosPorDeptoYTipo">
+<xs:sequence>
+<xs:element name="idDepto" type="xs:long" minOccurs="0"/>
+<xs:element name="idTipo" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentrosPorDeptoYTipoResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:centroPoblado" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verEspecifRegion">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="verEspecifRegionResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:especificidadDeRegion" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verTiposCentros">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="verTiposCentrosResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:centroPobladoTipo" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentrosPorRegionYTipo">
+<xs:sequence>
+<xs:element name="idRegion" type="xs:long" minOccurs="0"/>
+<xs:element name="idTipo" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentrosPorRegionYTipoResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:centroPoblado" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarMunicipiosPorId">
+<xs:sequence>
+<xs:element name="idMuni" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarMunicipiosPorIdResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:municipio" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="municipio">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element ref="tns:provincia" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentroPoblado">
+<xs:sequence>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentroPobladoResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:centroPoblado" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentrosPorDepto">
+<xs:sequence>
+<xs:element name="idDepto" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarCentrosPorDeptoResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:centroPoblado" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarMunicipiosPorProvincia">
+<xs:sequence>
+<xs:element name="idProv" type="xs:long" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="buscarMunicipiosPorProvinciaResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:municipio" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

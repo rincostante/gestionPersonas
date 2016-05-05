@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -113,6 +114,7 @@ public class AdminEntidad implements Serializable {
         this.strFechaModif = strFechaModif;
     }
             
+    @XmlTransient
     public Usuario getUsAlta() {
         return usAlta;
     }
@@ -129,6 +131,7 @@ public class AdminEntidad implements Serializable {
         this.fechaAlta = fechaAlta;
     }
 
+    @XmlTransient
     public Usuario getUsModif() {
         return usModif;
     }
@@ -145,6 +148,7 @@ public class AdminEntidad implements Serializable {
         this.fechaModif = fechaModif;
     }
 
+    @XmlTransient
     public Usuario getUsBaja() {
         return usBaja;
     }

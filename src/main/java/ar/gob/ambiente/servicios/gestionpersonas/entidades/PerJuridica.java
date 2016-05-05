@@ -55,13 +55,6 @@ public class PerJuridica implements Serializable {
     @OneToMany(mappedBy="perJuridica")
     private List<Establecimiento> establecimientos;
     
-    /**
-     * Campo de tipo Array que contiene el conjunto de las diferentes Establecimientos que alguna vez estuvieron vinculados a 
-     * esta Persona Jurídica. Si bien el listado traerá todos las reasignaciones en el get, habrá que filtrar solo aquellas cuyo
-     * flag "activa" sea falso, dado que los que es verdadero, están vinculados actualmente.
-     */     
-    @OneToMany(mappedBy="perJuridica")
-    private List<ReasignaRazonSocial> establecimientosCedidos;
     
     private Long idAplicacion; 
     
@@ -75,7 +68,6 @@ public class PerJuridica implements Serializable {
 
     public PerJuridica() {
         establecimientos = new ArrayList();
-        establecimientosCedidos = new ArrayList();
     }
 
     public Long getIdAplicacion() {
@@ -84,15 +76,6 @@ public class PerJuridica implements Serializable {
 
     public void setIdAplicacion(Long idAplicacion) {
         this.idAplicacion = idAplicacion;
-    }
-
-    @XmlTransient
-    public List<ReasignaRazonSocial> getEstablecimientosCedidos() {
-        return establecimientosCedidos;
-    }
-
-    public void setEstablecimientosCedidos(List<ReasignaRazonSocial> establecimientosCedidos) {
-        this.establecimientosCedidos = establecimientosCedidos;
     }
 
     public Long getId() {

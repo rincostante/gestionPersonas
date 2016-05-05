@@ -70,14 +70,7 @@ public class PerFisica implements Serializable {
      */     
     @OneToMany(mappedBy="perFisica")
     private List<Establecimiento> establecimientos;
-    
-    /**
-     * Campo de tipo Array que contiene el conjunto de las diferentes Establecimientos que alguna vez estuvieron vinculados a 
-     * esta Persona Física. Si bien el listado traerá todos las reasignaciones en el get, habrá que filtrar solo aquellas cuyo
-     * flag "activa" sea falso, dado que los que es verdadero, están vinculados actualmente.
-     */     
-    @OneToMany(mappedBy="perFisica")
-    private List<ReasignaRazonSocial> establecimientosCedidos;    
+       
    
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="adminentidad_id")
@@ -88,16 +81,6 @@ public class PerFisica implements Serializable {
     */
     public PerFisica() {
         establecimientos = new ArrayList();
-        establecimientosCedidos = new ArrayList();
-    }
-
-    @XmlTransient
-    public List<ReasignaRazonSocial> getEstablecimientosCedidos() {
-        return establecimientosCedidos;
-    }
-
-    public void setEstablecimientosCedidos(List<ReasignaRazonSocial> establecimientosCedidos) {
-        this.establecimientosCedidos = establecimientosCedidos;
     }
 
     public boolean isCuitValidado() {

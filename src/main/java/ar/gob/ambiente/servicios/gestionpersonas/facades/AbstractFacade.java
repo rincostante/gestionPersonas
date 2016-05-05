@@ -54,6 +54,15 @@ public abstract class AbstractFacade<T> {
         cq.orderBy(cb.asc(c.get("nombre")));
         return getEntityManager().createQuery(cq).getResultList();
     }
+    
+    public List<T> findAllByField(String field){
+        javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<T> c = cq.from(entityClass);
+        cq.select(c);
+        cq.orderBy(cb.asc(c.get(field)));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 
     public List<T> findRange(int[] range) {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();

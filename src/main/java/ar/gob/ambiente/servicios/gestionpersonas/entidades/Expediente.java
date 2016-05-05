@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -59,6 +60,7 @@ public class Expediente implements Serializable {
         establecimientos = new ArrayList();
     } 
 
+    @XmlTransient
     public List<PerFisica> getPerFisicas() {
         return perFisicas;
     }
@@ -67,6 +69,7 @@ public class Expediente implements Serializable {
         this.perFisicas = perFisicas;
     }
 
+    @XmlTransient
     public List<Establecimiento> getEstablecimientos() {
         return establecimientos;
     }

@@ -66,9 +66,9 @@ import org.primefaces.context.RequestContext;
 * @author rodriguezn
 */
 public class MbPerJuridica implements Serializable{
-    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CuitAfipWs/CuitAfipWs.wsdl")
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/vmdeswebjava.medioambiente.gov.ar_8080/CuitAfipWs/CuitAfipWs.wsdl")
     private CuitAfipWs_Service srvCuitAfip;
-    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl")
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/vmdeswebjava.medioambiente.gov.ar_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl")
     private CentrosPobladosWebService_Service srvCentrosPob;
     
     private PerJuridica current;
@@ -581,7 +581,7 @@ public class MbPerJuridica implements Serializable{
     
     public void createDomLegal(){
         // valido que no exista ya un domicilio legal para la empresa
-        if(tieneDomLegal()){
+        if(!tieneDomLegal()){
             // Creación de la entidad de administración y asignación
             Date date = new Date(System.currentTimeMillis());
             AdminEntidad admEnt = new AdminEntidad();

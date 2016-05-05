@@ -85,7 +85,8 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
         em = getEntityManager();        
         List<PerFisica> result;
         String queryString = "SELECT pf FROM PerFisica pf " 
-                + "WHERE pf.adminentidad.habilitado = true";                   
+                + "WHERE pf.admin.habilitado = true "
+                + "ORDER BY pf.nombreCompleto";                   
         Query q = em.createQuery(queryString);
         result = q.getResultList();
         return result;
@@ -105,4 +106,67 @@ public class PerFisicaFacade extends AbstractFacade<PerFisica> {
             return result.get(0);
         }
     }
+    
+    /**
+     * Retorna todas las personas físicas registradas
+     * @return 
+     */
+    @Override
+    public List<PerFisica> findAll(){
+        return findAllByField("nombreCompleto");
+    }    
+    
+    /**
+     * Retorna las personasas físicas vinculadas al cuit
+     * @param cuit
+     * @return 
+     */
+    public PerFisica getByCuit(Long cuit){
+        em = getEntityManager();    
+        List<PerFisica> result;
+        String queryString = "SELECT pf FROM PerFisica pf " 
+                + "WHERE pf.cuitCuil = :cuit";                   
+        Query q = em.createQuery(queryString)
+                .setParameter("cuit", cuit);
+        result = q.getResultList();
+        if(result.isEmpty()){
+            return null;
+        }else{
+            return result.get(0);
+        }        
+    }    
+    
+    /**
+     * Retorna las personas físicas cuya nombre responda a la búsqueda
+     * @param nombreCompleto
+     * @return 
+     */
+    public List<PerFisica> getByNombre(String nombreCompleto){
+        em = getEntityManager();
+        List<PerFisica> result;
+        String queryString = "SELECT perFis FROM PerFisica perFis "
+                + "WHERE perFis.nombreCompleto LIKE :nombreCompleto "
+                + "AND perFis.admin.habilitado = true";
+        Query q = em.createQuery(queryString)
+                .setParameter("nombreCompleto", "%" + nombreCompleto + "%");
+        result = q.getResultList();
+        return result;
+    }     
+
+    /**
+     * Método que retorna las Personas Físicas según el expediente que tramitan
+     * @param num
+     * @param anio
+     * @return 
+     */
+    public List<PerFisica> getByExp(int num, int anio){
+        em = getEntityManager();       
+        String queryString = "SELECT perFis FROM PerFisica perFis "
+                + "WHERE perFis.expediente.numero = :num "
+                + "AND perFis.expediente.anio = :anio";
+        Query q = em.createQuery(queryString)
+                .setParameter("num", num)
+                .setParameter("anio", anio);
+        return q.getResultList();
+    }    
 }

@@ -16,8 +16,8 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.7-web</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
         <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>gfv3ee6</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>
         <org-netbeans-modules-projectapi.jsf_2e_language>Facelets</org-netbeans-modules-projectapi.jsf_2e_language>
-        <org-netbeans-modules-maven-jaxws._5f_C_5f_AccesoAppWebService>http://localhost:8080/AccesoAppWebService/AccesoAppWebService?WSDL</org-netbeans-modules-maven-jaxws._5f_C_5f_AccesoAppWebService>
-        <org-netbeans-modules-maven-jaxws._5f_C_5f_CentrosPobladosWebService>http://localhost:8080/CentrosPobladosWebService/CentrosPobladosWebService?WSDL</org-netbeans-modules-maven-jaxws._5f_C_5f_CentrosPobladosWebService>
-        <org-netbeans-modules-maven-jaxws._5f_C_5f_CuitAfipWs>http://localhost:8080/CuitAfipWs/CuitAfipWs?WSDL</org-netbeans-modules-maven-jaxws._5f_C_5f_CuitAfipWs>
+        <org-netbeans-modules-maven-jaxws._5f_C_5f_AccesoAppWebService>http://vmdeswebjava.medioambiente.gov.ar:8080/AccesoAppWebService/AccesoAppWebService?WSDL</org-netbeans-modules-maven-jaxws._5f_C_5f_AccesoAppWebService>
+        <org-netbeans-modules-maven-jaxws._5f_C_5f_CentrosPobladosWebService>http://vmdeswebjava.medioambiente.gov.ar:8080/CentrosPobladosWebService/CentrosPobladosWebService?WSDL</org-netbeans-modules-maven-jaxws._5f_C_5f_CentrosPobladosWebService>
+        <org-netbeans-modules-maven-jaxws._5f_C_5f_CuitAfipWs>http://vmdeswebjava.medioambiente.gov.ar:8080/CuitAfipWs/CuitAfipWs?WSDL</org-netbeans-modules-maven-jaxws._5f_C_5f_CuitAfipWs>
     </properties>
 </project-shared-configuration>
