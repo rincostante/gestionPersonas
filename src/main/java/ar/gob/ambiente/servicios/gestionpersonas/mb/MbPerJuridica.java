@@ -1018,8 +1018,8 @@ public class MbPerJuridica implements Serializable{
     }
     
     
-    /********************************************************************
-    ** Converter. Se debe actualizar la entidad y el facade respectivo **
+  /********************************************************************
+   ** Converter. Se debe actualizar la entidad y el facade respectivo **
    *********************************************************************/
     @FacesConverter(forClass = PerJuridica.class)
     public static class PerJuridicaControllerConverter implements Converter {
