@@ -4,31 +4,31 @@
 <xsd:import namespace="http://ws.gestionaplicaciones.aplicaciones.ambiente.gob.ar/" schemaLocation="http://localhost:8080/AccesoAppWebService/AccesoAppWebService?xsd=1"/>
 </xsd:schema>
 </types>
-<message name="verUsuariosPorApp">
-<part name="parameters" element="tns:verUsuariosPorApp"/>
-</message>
-<message name="verUsuariosPorAppResponse">
-<part name="parameters" element="tns:verUsuariosPorAppResponse"/>
-</message>
 <message name="verAplicaciones">
 <part name="parameters" element="tns:verAplicaciones"/>
 </message>
 <message name="verAplicacionesResponse">
 <part name="parameters" element="tns:verAplicacionesResponse"/>
 </message>
+<message name="verUsuariosPorApp">
+<part name="parameters" element="tns:verUsuariosPorApp"/>
+</message>
+<message name="verUsuariosPorAppResponse">
+<part name="parameters" element="tns:verUsuariosPorAppResponse"/>
+</message>
 <portType name="AccesoAppWebService">
-<operation name="verUsuariosPorApp">
-<input wsam:Action="http://ws.gestionaplicaciones.aplicaciones.ambiente.gob.ar/AccesoAppWebService/verUsuariosPorAppRequest" message="tns:verUsuariosPorApp"/>
-<output wsam:Action="http://ws.gestionaplicaciones.aplicaciones.ambiente.gob.ar/AccesoAppWebService/verUsuariosPorAppResponse" message="tns:verUsuariosPorAppResponse"/>
-</operation>
 <operation name="verAplicaciones">
 <input wsam:Action="http://ws.gestionaplicaciones.aplicaciones.ambiente.gob.ar/AccesoAppWebService/verAplicacionesRequest" message="tns:verAplicaciones"/>
 <output wsam:Action="http://ws.gestionaplicaciones.aplicaciones.ambiente.gob.ar/AccesoAppWebService/verAplicacionesResponse" message="tns:verAplicacionesResponse"/>
 </operation>
+<operation name="verUsuariosPorApp">
+<input wsam:Action="http://ws.gestionaplicaciones.aplicaciones.ambiente.gob.ar/AccesoAppWebService/verUsuariosPorAppRequest" message="tns:verUsuariosPorApp"/>
+<output wsam:Action="http://ws.gestionaplicaciones.aplicaciones.ambiente.gob.ar/AccesoAppWebService/verUsuariosPorAppResponse" message="tns:verUsuariosPorAppResponse"/>
+</operation>
 </portType>
 <binding name="AccesoAppWebServicePortBinding" type="tns:AccesoAppWebService">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-<operation name="verUsuariosPorApp">
+<operation name="verAplicaciones">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -37,7 +37,7 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="verAplicaciones">
+<operation name="verUsuariosPorApp">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

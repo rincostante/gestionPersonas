@@ -39,7 +39,7 @@ import javax.servlet.http.HttpSession;
 public class MbUsuario implements Serializable{
     
     // Campos para el servicio de aplicaciones
-    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/vmdeswebjava.medioambiente.gov.ar_8080/AccesoAppWebService/AccesoAppWebService.wsdl")
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/AccesoAppWebService/AccesoAppWebService.wsdl")
     private AccesoAppWebService_Service service;
     private static final Logger logger = Logger.getLogger(Usuario.class.getName());
     private Long idApp;

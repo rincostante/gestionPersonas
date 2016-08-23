@@ -124,6 +124,11 @@
             <artifactId>poi</artifactId>
             <version>3.12</version>
             <scope>compile</scope>
+        </dependency> 
+        <dependency>
+            <groupId>org.primefaces.extensions</groupId>
+            <artifactId>all-themes</artifactId>
+            <version>1.0.8</version>
         </dependency>      
     </dependencies>
 
@@ -195,7 +200,7 @@
                         </goals>
                         <configuration>
                             <wsdlFiles>
-                                <wsdlFile>vmdeswebjava.medioambiente.gov.ar_8080/AccesoAppWebService/AccesoAppWebService.wsdl</wsdlFile>
+                                <wsdlFile>localhost_8080/AccesoAppWebService/AccesoAppWebService.wsdl</wsdlFile>
                             </wsdlFiles>
                             <packageName>ar.gob.ambiente.servicios.gestionpersonas.wsClient.accesoApp</packageName>
                             <wsdlLocation>http://localhost:8080/AccesoAppWebService/AccesoAppWebService?WSDL</wsdlLocation>
@@ -210,7 +215,7 @@
                         </goals>
                         <configuration>
                             <wsdlFiles>
-                                <wsdlFile>vmdeswebjava.medioambiente.gov.ar_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl</wsdlFile>
+                                <wsdlFile>localhost_8080/CentrosPobladosWebService/CentrosPobladosWebService.wsdl</wsdlFile>
                             </wsdlFiles>
                             <packageName>ar.gob.ambiente.servicios.gestionpersonas.wsClient.centrosPoblados</packageName>
                             <wsdlLocation>http://localhost:8080/CentrosPobladosWebService/CentrosPobladosWebService?WSDL</wsdlLocation>
@@ -225,7 +230,7 @@
                         </goals>
                         <configuration>
                             <wsdlFiles>
-                                <wsdlFile>vmdeswebjava.medioambiente.gov.ar_8080/CuitAfipWs/CuitAfipWs.wsdl</wsdlFile>
+                                <wsdlFile>localhost_8080/CuitAfipWs/CuitAfipWs.wsdl</wsdlFile>
                             </wsdlFiles>
                             <packageName>ar.gob.ambiente.servicios.gestionpersonas.wsClient.validarCuit</packageName>
                             <wsdlLocation>http://localhost:8080/CuitAfipWs/CuitAfipWs?WSDL</wsdlLocation>

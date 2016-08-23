@@ -4,21 +4,78 @@
 <xsd:import namespace="http://srvafip.servicios.ambiente.gob.ar/" schemaLocation="http://localhost:8080/CuitAfipWs/CuitAfipWs?xsd=1"/>
 </xsd:schema>
 </types>
+<message name="verExpediente">
+<part name="parameters" element="tns:verExpediente"/>
+</message>
+<message name="verExpedienteResponse">
+<part name="parameters" element="tns:verExpedienteResponse"/>
+</message>
 <message name="verPersona">
 <part name="parameters" element="tns:verPersona"/>
 </message>
 <message name="verPersonaResponse">
 <part name="parameters" element="tns:verPersonaResponse"/>
 </message>
+<message name="verCuit">
+<part name="parameters" element="tns:verCuit"/>
+</message>
+<message name="verCuitResponse">
+<part name="parameters" element="tns:verCuitResponse"/>
+</message>
+<message name="verTranspXCuit">
+<part name="parameters" element="tns:verTranspXCuit"/>
+</message>
+<message name="verTranspXCuitResponse">
+<part name="parameters" element="tns:verTranspXCuitResponse"/>
+</message>
 <portType name="CuitAfipWs">
+<operation name="verExpediente">
+<input wsam:Action="http://srvafip.servicios.ambiente.gob.ar/CuitAfipWs/verExpedienteRequest" message="tns:verExpediente"/>
+<output wsam:Action="http://srvafip.servicios.ambiente.gob.ar/CuitAfipWs/verExpedienteResponse" message="tns:verExpedienteResponse"/>
+</operation>
 <operation name="verPersona">
 <input wsam:Action="http://srvafip.servicios.ambiente.gob.ar/CuitAfipWs/verPersonaRequest" message="tns:verPersona"/>
 <output wsam:Action="http://srvafip.servicios.ambiente.gob.ar/CuitAfipWs/verPersonaResponse" message="tns:verPersonaResponse"/>
 </operation>
+<operation name="verCuit">
+<input wsam:Action="http://srvafip.servicios.ambiente.gob.ar/CuitAfipWs/verCuitRequest" message="tns:verCuit"/>
+<output wsam:Action="http://srvafip.servicios.ambiente.gob.ar/CuitAfipWs/verCuitResponse" message="tns:verCuitResponse"/>
+</operation>
+<operation name="verTranspXCuit">
+<input wsam:Action="http://srvafip.servicios.ambiente.gob.ar/CuitAfipWs/verTranspXCuitRequest" message="tns:verTranspXCuit"/>
+<output wsam:Action="http://srvafip.servicios.ambiente.gob.ar/CuitAfipWs/verTranspXCuitResponse" message="tns:verTranspXCuitResponse"/>
+</operation>
 </portType>
 <binding name="CuitAfipWsPortBinding" type="tns:CuitAfipWs">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<operation name="verExpediente">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="verPersona">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="verCuit">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="verTranspXCuit">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

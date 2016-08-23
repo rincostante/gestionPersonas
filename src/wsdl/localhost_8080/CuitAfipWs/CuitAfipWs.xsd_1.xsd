@@ -2,9 +2,49 @@
 
 <xs:element name="cuitAfip" type="tns:cuitAfip"/>
 
+<xs:element name="expedienteDrp" type="tns:expedienteDrp"/>
+
+<xs:element name="verCuit" type="tns:verCuit"/>
+
+<xs:element name="verCuitResponse" type="tns:verCuitResponse"/>
+
+<xs:element name="verExpediente" type="tns:verExpediente"/>
+
+<xs:element name="verExpedienteResponse" type="tns:verExpedienteResponse"/>
+
 <xs:element name="verPersona" type="tns:verPersona"/>
 
 <xs:element name="verPersonaResponse" type="tns:verPersonaResponse"/>
+
+<xs:element name="verTranspXCuit" type="tns:verTranspXCuit"/>
+
+<xs:element name="verTranspXCuitResponse" type="tns:verTranspXCuitResponse"/>
+
+<xs:complexType name="verExpediente">
+<xs:sequence>
+<xs:element name="usuario" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verExpedienteResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:expedienteDrp" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="expedienteDrp">
+<xs:sequence>
+<xs:element name="caNumero" type="xs:string" minOccurs="0"/>
+<xs:element name="caVencimiento" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="descripcion" type="xs:string" minOccurs="0"/>
+<xs:element name="expAnio" type="xs:int"/>
+<xs:element name="expNumero" type="xs:int"/>
+<xs:element name="id" type="xs:long" minOccurs="0"/>
+<xs:element name="nombre" type="xs:string" minOccurs="0"/>
+<xs:element name="tipo" type="xs:int"/>
+<xs:element name="usuario" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
 
 <xs:complexType name="verPersona">
 <xs:sequence>
@@ -29,6 +69,30 @@
 <xs:element name="pejIVA" type="xs:string" minOccurs="0"/>
 <xs:element name="pejMO" type="xs:string" minOccurs="0"/>
 <xs:element name="pejRazonSocial" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verTranspXCuit">
+<xs:sequence>
+<xs:element name="cuit" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verTranspXCuitResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:expedienteDrp" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verCuit">
+<xs:sequence>
+<xs:element name="razonSocial" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verCuitResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:cuitAfip" minOccurs="0" maxOccurs="unbounded"/>
 </xs:sequence>
 </xs:complexType>
 </xs:schema>
