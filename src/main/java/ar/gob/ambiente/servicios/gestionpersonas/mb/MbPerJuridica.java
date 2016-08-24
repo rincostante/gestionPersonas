@@ -97,6 +97,8 @@ public class MbPerJuridica implements Serializable{
     private CuitAfip personaAfip;
     private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
     private Long cuit;    
+    private boolean noValidaCuit;
+    private String razonSocialIng;
     
     private List<PerJuridica> listaPerJuridica;
     private List<Estado> listaEstado;
@@ -164,6 +166,22 @@ public class MbPerJuridica implements Serializable{
      ****** Getters y Setters *******
      ********************************/
    
+    public String getRazonSocialIng() {
+        return razonSocialIng;
+    }
+
+    public void setRazonSocialIng(String razonSocialIng) {
+        this.razonSocialIng = razonSocialIng;
+    }
+
+    public boolean isNoValidaCuit() {
+        return noValidaCuit;
+    }
+
+    public void setNoValidaCuit(boolean noValidaCuit) {
+        this.noValidaCuit = noValidaCuit;
+    }
+
     public List<ReasignaRazonSocial> getListEstAdquiridos() {
         return listEstAdquiridos;
     }
@@ -762,6 +780,8 @@ public class MbPerJuridica implements Serializable{
      */
     public void prepareValidarCuit(){
         // seteo el objeto que recibirá los resultados de la validación
+        noValidaCuit = false;
+        razonSocialIng = "";
         personaAfip = new CuitAfip();
         cuit = Long.valueOf(0);
         
@@ -782,11 +802,17 @@ public class MbPerJuridica implements Serializable{
             CuitAfipWs port = srvCuitAfip.getCuitAfipWsPort();
             personaAfip = port.verPersona(cuit);
             
-            // Si valida seteo los datos correspondientes de la persona
-            current.setCuit(personaAfip.getPejID());
-            current.setRazonSocial(personaAfip.getPejRazonSocial());
+            if(personaAfip != null){
+                // Si valida seteo los datos correspondientes de la persona
+                current.setCuit(personaAfip.getPejID());
+                current.setRazonSocial(personaAfip.getPejRazonSocial());
+                JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
+            }else{
+                noValidaCuit = true;
+                JsfUtil.addErrorMessage("No se han podido validar los datos correspondientes al CUIT ingresado, por favor, "
+                        + "verifiquelos y de ser correctos, ingrese la razón social que corresponda en el formulario.");
+            }
             
-            JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
         } catch (Exception ex) {
             // muestro un mensaje al usuario
             JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"));
@@ -794,6 +820,20 @@ public class MbPerJuridica implements Serializable{
             logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"), ex.getMessage()});
         }
     }    
+    
+    /**
+     * Método nuevo que permite ingresar cuit y razón social sin validar mediante el servicio Afip
+     */
+    public void guardarSinValidar(){
+        if(cuit > 0 && !razonSocialIng.equals("")){
+            current.setCuit(cuit);
+            String tempRs = razonSocialIng;
+            current.setRazonSocial(tempRs.toUpperCase()); 
+            JsfUtil.addSuccessMessage("Se agregaron el CUIT y la Razón Social, puede cerrar la ventana. Luego actualice los datos generales");
+        }else{
+            JsfUtil.addErrorMessage("Los campos CUIT y Razón Social son obligatorios.");
+        }
+    }
     
     /**
      * Método para validar que el año ingresado tenga un formato válido
@@ -817,6 +857,9 @@ public class MbPerJuridica implements Serializable{
      * Método para limpiar los datos AFIP seleccionado
      */
     public void limpiarCuit(){
+        cuit = Long.valueOf(0);
+        noValidaCuit = false;
+        razonSocialIng = "";
         personaAfip = null;
         personaAfip = new CuitAfip();
         current.setRazonSocial("");

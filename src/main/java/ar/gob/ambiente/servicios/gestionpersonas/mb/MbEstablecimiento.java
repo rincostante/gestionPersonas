@@ -80,6 +80,8 @@ public class MbEstablecimiento implements Serializable{
     private CuitAfipWs_Service srvCuitAfip;
     private CuitAfip personaAfip;
     private Long cuit;
+    private boolean noValidaCuit;
+    private String razonSocialIng;
     private static final Logger logger = Logger.getLogger(Establecimiento.class.getName());
     
     private Establecimiento current;    
@@ -200,6 +202,22 @@ public class MbEstablecimiento implements Serializable{
     /********************************
      ****** Getters y Setters *******
      ********************************/
+    public boolean isNoValidaCuit() {
+        return noValidaCuit;
+    }
+
+    public void setNoValidaCuit(boolean noValidaCuit) {
+        this.noValidaCuit = noValidaCuit;
+    }
+
+    public String getRazonSocialIng() {
+        return razonSocialIng;
+    }
+
+    public void setRazonSocialIng(String razonSocialIng) {
+        this.razonSocialIng = razonSocialIng;
+    }
+
     public ReasignaRazonSocial getRsNueva() {
         return rsNueva;
     }
@@ -753,6 +771,10 @@ public class MbEstablecimiento implements Serializable{
         domicilio.setDepartamento(deptoSelected.getNombre());
         domicilio.setProvincia(provSelected.getNombre());
         
+        // paso la calle a mayúsculas
+        String tmpCalle = domicilio.getCalle().toUpperCase();
+        domicilio.setCalle(tmpCalle);
+        
         current.setDomicilio(domicilio);
         
         // verifico si hay otros Establecimientos del mismo tipo en el mismo domicilio. En cuyo caso seteo un alerta
@@ -879,7 +901,7 @@ public class MbEstablecimiento implements Serializable{
                     JsfUtil.addSuccessMessage("La Persona Jurídica se registró satisfactoriamente, por favor, cierre la ventana y actualice "
                             + "el listado mediante el botón correspondiente para seleccionarla y asignarla al Establecimiento.");
                 }else{
-                    JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("CreatePerJuridicaExistente"));
+                    JsfUtil.addErrorMessage("Ya existe una Persona Jurídica con el CUIT que está ingresando.");
                 }
             } 
             catch (Exception e) {
@@ -1024,6 +1046,10 @@ public class MbEstablecimiento implements Serializable{
 
                 current.getDomicilio().setDepartamento(deptoSelected.getNombre());
                 current.getDomicilio().setProvincia(provSelected.getNombre());
+                
+                // paso la calle a mayúsculas
+                String tmpCalle = current.getDomicilio().getCalle().toUpperCase();
+                current.getDomicilio().setCalle(tmpCalle);
                 
                 // creo un string que me vaya guardando los pasos por la transacción
                 String estTansac = "";
@@ -1242,6 +1268,7 @@ public class MbEstablecimiento implements Serializable{
         listaTipoPersonaJuridica = tipoPerJurFacade.findAllByNombre();
         Map<String,Object> options = new HashMap<>();
         options.put("contentWidth", 800);
+        options.put("contentHeight", 600);
         options.put("modal", true);
         RequestContext.getCurrentInstance().openDialog("dlgAddPerJuridica", options, null);
     }        
@@ -1291,6 +1318,8 @@ public class MbEstablecimiento implements Serializable{
      */
     public void prepareValidarCuit(){
         // seteo el objeto que recibirá los resultados de la validación
+        noValidaCuit = false;
+        razonSocialIng = "";
         personaAfip = new CuitAfip();
         cuit = Long.valueOf(0);
         
@@ -1312,16 +1341,21 @@ public class MbEstablecimiento implements Serializable{
             CuitAfipWs port = srvCuitAfip.getCuitAfipWsPort();
             personaAfip = port.verPersona(cuit);
             
-            // Si valida seteo los datos correspondientes de la persona (según el caso)
-            if(esFisica){
-                perFisica.setCuitCuil(personaAfip.getPejID());
-                perFisica.setNombreCompleto(personaAfip.getPejRazonSocial());
-            }else if(esJuridica){
-                perJuridica.setCuit(personaAfip.getPejID());
-                perJuridica.setRazonSocial(personaAfip.getPejRazonSocial());
+            if(personaAfip != null){
+                // Si valida seteo los datos correspondientes de la persona (según el caso)
+                if(esFisica){
+                    perFisica.setCuitCuil(personaAfip.getPejID());
+                    perFisica.setNombreCompleto(personaAfip.getPejRazonSocial());
+                }else if(esJuridica){
+                    perJuridica.setCuit(personaAfip.getPejID());
+                    perJuridica.setRazonSocial(personaAfip.getPejRazonSocial());
+                }
+                JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
+            }else{
+                noValidaCuit = true;
+                JsfUtil.addErrorMessage("No se han podido validar los datos correspondientes al CUIT ingresado, por favor, "
+                        + "verifiquelos y de ser correctos, ingrese la razón social que corresponda en el formulario.");
             }
-
-            JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
         } catch (Exception ex) {
             // muestro un mensaje al usuario
             JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"));
@@ -1329,6 +1363,28 @@ public class MbEstablecimiento implements Serializable{
             logger.log(Level.SEVERE, "{0} - {1}", new Object[]{ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"), ex.getMessage()});
         }
     }   
+    
+    /**
+     * Método nuevo que permite ingresar cuit y razón social sin validar mediante el servicio Afip
+     */
+    public void guardarSinValidar(){
+        if(cuit > 0 && !razonSocialIng.equals("")){
+            if(esFisica){
+                perFisica.setCuitCuil(cuit);
+                String tempRs = razonSocialIng;
+                perFisica.setNombreCompleto(tempRs.toUpperCase());
+                JsfUtil.addSuccessMessage("Se agregaron el CUIT/CUIL y el Apellido y Nombre, puede cerrar la ventana. Luego actualice los datos personales.");
+            }else if(esJuridica){
+                perJuridica.setCuit(cuit);
+                String tempRs = razonSocialIng;
+                perJuridica.setRazonSocial(tempRs.toUpperCase());
+                JsfUtil.addSuccessMessage("Se agregaron el CUIT y la Razón Social, puede cerrar la ventana. Luego actualice los datos generales.");
+            }
+
+        }else{
+            JsfUtil.addErrorMessage("Los campos CUIT y Razón Social o Apellido y Nombres son obligatorios.");
+        }
+    }    
     
     /**
      * Método para validar que el año ingresado tenga un formato válido
@@ -1352,6 +1408,8 @@ public class MbEstablecimiento implements Serializable{
      * Método para limpiar los datos AFIP seleccionado
      */
     public void limpiarCuit(){
+        noValidaCuit = false;
+        razonSocialIng = "";
         personaAfip = null;
         personaAfip = new CuitAfip();
         if(esFisica){
@@ -1448,14 +1506,13 @@ public class MbEstablecimiento implements Serializable{
             listSrv = port.buscarDeptosPorProvincia(idProv);
             
             // lleno el list con los Departamentos (según corresponda) como un objeto Entidad Servicio
-            if(esRazonSocial){
+            if(provRazSocSelected != null){
                 listDepRazSoc = new ArrayList<>();
                 for(Departamento dpt : listSrv){
                     depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
                     listDepRazSoc.add(depto);
                 }
-            }
-            else{
+            }else{
                 listDepartamentos = new ArrayList<>();
                 for(Departamento dpt : listSrv){
                     depto = new EntidadServicio(dpt.getId(), dpt.getNombre());
@@ -1640,12 +1697,13 @@ public class MbEstablecimiento implements Serializable{
      */
     private void resetRazSoc(){
         limpiarEntitadesSrvRazSoc();
-        listDepRazSoc.clear();
-        listLocRazSoc.clear();
-        listaTipoPersonaJuridica.clear();
-        perJuridica = null;
-        perFisica = null;
-        expRazSoc = null;
+        if(listDepRazSoc != null) listDepRazSoc.clear();
+        if(listLocRazSoc != null) listLocRazSoc.clear();
+        if(listaTipoPersonaJuridica != null) listaTipoPersonaJuridica.clear();
+
+        perJuridica = new PerJuridica();
+        perFisica = new PerFisica();
+        expRazSoc = new Expediente();
         esFisica = true;
         esJuridica = true;
     }
@@ -1759,8 +1817,11 @@ public class MbEstablecimiento implements Serializable{
      * @param esRazSoc
      */    
     public void provinciaChangeListener(){  
-        if(esRazonSocial) getDepartamentosSrv(provRazSocSelected.getId());
-        else getDepartamentosSrv(provSelected.getId());
+        if(provRazSocSelected != null){
+            getDepartamentosSrv(provRazSocSelected.getId());
+        }else{
+            getDepartamentosSrv(provSelected.getId());
+        }
     }   
     
     /**
@@ -1768,8 +1829,11 @@ public class MbEstablecimiento implements Serializable{
      * @param esRazSoc
      */    
     public void deptoChangeListener(){
-        if(esRazonSocial) getLocalidadesSrv(deptoRazSocSelected.getId());
-        else getLocalidadesSrv(deptoSelected.getId());
+        if(deptoRazSocSelected != null){
+            getLocalidadesSrv(deptoRazSocSelected.getId());
+        }else{
+            getLocalidadesSrv(deptoSelected.getId());
+        }
     }     
         
     

@@ -50,7 +50,7 @@
                     <h:panelGrid columns="2"> 
                     
                         <p:outputLabel value="#{bundle.LabelNombre}: " for="nombre"/>
-                        <p:inputText id="nombre" value="#{mbPerFisica.selected.nombreCompleto}" style="width: 300px" 
+                        <p:inputText id="nombre" value="#{mbPerFisica.selected.nombreCompleto}" style="width: 300px; text-transform: uppercase"
                                    requiredMessage="#{bundle.CreatePerFisicaRequiredMessage_nombre}" required="true" disabled="#{mbPerFisica.selected.cuitValidado}" 
                                    onkeyup="this.value = this.value.toUpperCase();" />  
                         
@@ -76,6 +76,7 @@
                     <h:panelGrid columns="2"> 
                         <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}: " for="calle"/> 
                         <p:inputText id="calle" value="#{mbPerFisica.selected.domicilio.calle}" 
+                                 style="width: 300px; text-transform: uppercase"
                                  requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
                    
                         <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}: " for="numero_dom"/>

@@ -110,6 +110,7 @@
                         <h:panelGrid columns="2">  
                             <p:outputLabel value="#{bundle.CreateDomicilioLabel_calle}: " for="calle"/>
                             <p:inputText id="calle" value="#{mbEstablecimiento.domicilio.calle}" 
+                                         style="width: 300px; text-transform: uppercase"
                                          requiredMessage="#{bundle.CreateDomicilioRequiredMessage_calle}" required="true"/>
 
                             <p:outputLabel value="#{bundle.CreateDomicilioLabel_numero}: " for="numero_dom"/>

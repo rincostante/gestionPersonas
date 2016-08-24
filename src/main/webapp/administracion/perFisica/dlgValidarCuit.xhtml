@@ -24,19 +24,32 @@
                                 requiredMessage="#{bundle.CreateExpedienteRequiredMessage_numero}" required="true" >
                         <f:validateLength maximum="11" minimum="11" />
                     </p:inputText>
-                    <p:outputLabel value="Apellidos y Nombres: " for="nombre" 
+
+                    <p:outputLabel value="Apellidos y Nombres: " for="nombreAfip" 
                                    rendered="#{mbPerFisica.personaAfip.pejID > 0}" />
-                    <p:inputText id="nombre" value="#{mbPerFisica.personaAfip.pejRazonSocial}" 
+                    
+                    <p:inputText id="nombreAfip" value="#{mbPerFisica.personaAfip.pejRazonSocial}" 
                                  rendered="#{mbPerFisica.personaAfip.pejID > 0}" 
                                  style="width: 300px" />
+                    
+                    <p:outputLabel value="Apellidos y Nombres: " for="nombre" 
+                                   rendered="#{mbPerFisica.noValidaCuit}" />
+                    
+                    <p:inputText id="nombre" value="#{mbPerFisica.razonSocialIng}" 
+                                 rendered="#{mbPerFisica.noValidaCuit}" 
+                                 style="width: 300px; text-transform: uppercase" />
+   
                 </h:panelGrid>
             </p:panel>
             <p:toolbar>
                 <f:facet name="left">
-                    <p:commandButton icon="ui-icon-check" value="Validar" action="#{mbPerFisica.validarCuit}" update="pnNew"/>
-                    <p:commandButton icon="ui-icon-cancel" actionListener="#{mbPerFisica.limpiarCuit}" update="nombre" value="Limpiar" style="float: right">
-                        <p:ajax update="pnNew" resetValues="true" />
+                    
+                    <p:commandButton rendered="#{not mbPerFisica.noValidaCuit}" icon="ui-icon-check" value="Validar" action="#{mbPerFisica.validarCuit}" update="frmNew"/>
+                    <p:commandButton rendered="#{mbPerFisica.noValidaCuit}" icon="ui-icon-check" value="Guardar" action="#{mbPerFisica.guardarSinValidar}" update="frmNew"/>
+                    <p:commandButton icon="ui-icon-cancel" action="#{mbPerJuridica.limpiarCuit}" update="frmNew" value="Limpiar" style="float: right" process="@this">
+                        <p:ajax update="frmNew" resetValues="true" />
                     </p:commandButton>
+
                 </f:facet>
             </p:toolbar>
         </h:form>

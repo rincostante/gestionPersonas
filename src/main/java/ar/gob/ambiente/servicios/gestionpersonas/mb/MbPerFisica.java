@@ -95,6 +95,8 @@ public class MbPerFisica implements Serializable{
     private CuitAfip personaAfip;
     private static final Logger logger = Logger.getLogger(PerFisica.class.getName());
     private Long cuit;
+    private boolean noValidaCuit;
+    private String razonSocialIng;
     
     // listados provistos por el servicio de centros poblados
     private List<EntidadServicio> listProvincias;
@@ -151,6 +153,22 @@ public class MbPerFisica implements Serializable{
     /********************************
      ****** Getters y Setters *******
      ********************************/
+    public boolean isNoValidaCuit() {
+        return noValidaCuit;
+    }
+
+    public void setNoValidaCuit(boolean noValidaCuit) {
+        this.noValidaCuit = noValidaCuit;
+    }
+
+    public String getRazonSocialIng() {
+        return razonSocialIng;
+    }
+
+    public void setRazonSocialIng(String razonSocialIng) {
+        this.razonSocialIng = razonSocialIng;
+    }
+
     public List<ReasignaRazonSocial> getListEstAdquiridos() {
         return listEstAdquiridos;
     }
@@ -505,6 +523,12 @@ public class MbPerFisica implements Serializable{
         domicilio.setDepartamento(deptoSelected.getNombre());
         domicilio.setProvincia(provSelected.getNombre());
         
+        // paso a mayúsculas
+        String tmpCalle = domicilio.getCalle().toUpperCase();
+        domicilio.setCalle(tmpCalle);
+        String tmpNombreCompleto = current.getNombreCompleto().toUpperCase();
+        current.setNombreCompleto(tmpNombreCompleto);
+        
         //Asigno domicilio
         current.setDomicilio(domicilio);
 
@@ -611,6 +635,12 @@ public class MbPerFisica implements Serializable{
                         // Actualización de datos de administración de la entidad
                         current.getAdmin().setFechaModif(date);
                         current.getAdmin().setUsModif(usLogeado); 
+                        
+                        // paso a mayúsculas
+                        String tmpCalle = current.getDomicilio().getCalle().toUpperCase();
+                        current.getDomicilio().setCalle(tmpCalle);
+                        String tmpNombreCompleto = current.getNombreCompleto().toUpperCase();
+                        current.setNombreCompleto(tmpNombreCompleto);
 
                         // Actualizo
                         getFacade().edit(current);
@@ -732,6 +762,8 @@ public class MbPerFisica implements Serializable{
      */
     public void prepareValidarCuit(){
         // seteo el objeto que recibirá los resultados de la validación
+        noValidaCuit = false;
+        razonSocialIng = "";
         personaAfip = new CuitAfip();
         cuit = Long.valueOf(0);
         
@@ -752,11 +784,17 @@ public class MbPerFisica implements Serializable{
             CuitAfipWs port = srvCuitAfip.getCuitAfipWsPort();
             personaAfip = port.verPersona(cuit);
             
-            // Si valida seteo los datos correspondientes de la persona
-            current.setCuitCuil(personaAfip.getPejID());
-            current.setNombreCompleto(personaAfip.getPejRazonSocial());
-            
-            JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
+            if(personaAfip != null){
+                // Si valida seteo los datos correspondientes de la persona
+                current.setCuitCuil(personaAfip.getPejID());
+                current.setNombreCompleto(personaAfip.getPejRazonSocial());
+                JsfUtil.addSuccessMessage("El CUIT ingresado fue validado con exito, puede cerrar la ventana. Luego actualice los datos personales");
+            }else{
+                noValidaCuit = true;
+                JsfUtil.addErrorMessage("No se han podido validar los datos correspondientes al CUIT ingresado, por favor, "
+                        + "verifiquelos y de ser correctos, ingrese el Apellido y nombre que corresponda en el formulario.");
+            }
+
         } catch (Exception ex) {
             // muestro un mensaje al usuario
             JsfUtil.addErrorMessage(ResourceBundle.getBundle("/Bundle").getString("PerFisicaCuitAfipWsError"));
@@ -766,9 +804,26 @@ public class MbPerFisica implements Serializable{
     }    
     
     /**
+     * Método nuevo que permite ingresar cuit y razón social sin validar mediante el servicio Afip
+     */
+    public void guardarSinValidar(){
+        if(cuit > 0 && !razonSocialIng.equals("")){
+            current.setCuitCuil(cuit);
+            String tempNc = razonSocialIng;
+            current.setNombreCompleto(tempNc.toUpperCase()); 
+            JsfUtil.addSuccessMessage("Se agregaron el CUIT y el Apellido y nombres, puede cerrar la ventana. Luego actualice los datos personales");
+        }else{
+            JsfUtil.addErrorMessage("Los campos CUIT y Apellido y nombres son obligatorios.");
+        }
+    }    
+    
+    /**
      * Método para limpiar los datos AFIP seleccionado
      */
     public void limpiarCuit(){
+        cuit = Long.valueOf(0);
+        noValidaCuit = false;
+        razonSocialIng = "";
         personaAfip = null;
         personaAfip = new CuitAfip();
         current.setNombreCompleto("");
